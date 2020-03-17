@@ -30,7 +30,7 @@ patch() {
 			if [ -f $SYSFONT/Condensed-$i.ttf ]; then sed -i "s/RobotoCondensed-$i./Condensed-$i./" $SYSXML; fi
 	done
 	if [ -f $SYSFONT/Mono.ttf ]; then sed -i 's/DroidSans//' $SYSXML; fi
-	if [ -f $SYSFONT/Emoji.ttf ]; then sed -i 's/NotoColorEmoji//' $SYSXML; fi
+	if [ -f $SYSFONT/Emoji.ttf ]; then sed -i 's/NotoColor//' $SYSXML; fi
 }
 
 cleanup() {
