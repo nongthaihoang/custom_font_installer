@@ -1,4 +1,4 @@
-# Custom Fonts Installer
+# Custom Font Installer
 **Custom Font Installer for Android**
 
 ![version](https://img.shields.io/badge/Version-1.0-brightgreen.svg) 
@@ -13,7 +13,7 @@ Apply custom fonts the easy way
 ## Usage
 Everything is straight forward. There is no need for terminal or anything. Just Magisk Manager and you're ready to go.  
 Do the following step by step:
-- Create a folder name ``CustomFontInstaller`` in internal storage
+- Create a folder name ``CustomFontInstaller`` in the internal storage
 - Copy your fonts into there
 - For Roboto, rename to ``<STYLE>.ttf``. ``STYLE`` are:  
 ```
@@ -41,8 +41,8 @@ Condensed-Italic
 Condensed-Light  
 Condensed-LightItalic
 ```
-- For Monospace, rename to ``Mono.ttf``
-- For Emoji, rename to ``Emoji.ttf``
+- For Monospace (optional), rename to ``Mono.ttf``
+- For Emoji (optional), rename to ``Emoji.ttf``
 - Finally, flash the CFI zip and reboot.
 
 ## Thanks
