@@ -15,32 +15,34 @@ Everything is straight forward. There is no need for terminal or anything. Just 
 Do the following step by step:
 - Create a folder name ``CustomFontInstaller`` in the internal storage
 - Copy your fonts into there
-- For Roboto, rename to ``<STYLE>.ttf``. ``STYLE`` are:  
-```
-Black  
-BlackItalic  
-Bold  
-BoldItalic  
-Medium  
-MediumItalic  
-Regular  
-Italic  
-Light  
-LightItalic  
-Thin  
-ThinItalic  
-```
-- For RobotoCondensed, rename to ``<STYLE>.ttf``. ``STYLE`` are:
-```
-Condensed-Bold  
-Condensed-BoldItalic  
-Condensed-Medium  
-Condensed-MediumItalic  
-Condensed-Regular  
-Condensed-Italic  
-Condensed-Light  
-Condensed-LightItalic
-```
+- For Roboto, rename to ``<STYLE>.ttf``.  
+  ``STYLE``:  
+  ```
+  Black  
+  BlackItalic  
+  Bold  
+  BoldItalic  
+  Medium  
+  MediumItalic  
+  Regular  
+  Italic  
+  Light  
+  LightItalic  
+  Thin  
+  ThinItalic  
+  ```
+- For Roboto Condensed, rename to ``<STYLE>.ttf``.  
+  ``STYLE``:
+  ```
+  Condensed-Bold  
+  Condensed-BoldItalic  
+  Condensed-Medium  
+  Condensed-MediumItalic  
+  Condensed-Regular  
+  Condensed-Italic  
+  Condensed-Light  
+  Condensed-LightItalic
+  ```
 - For Monospace (optional), rename to ``Mono.ttf``
 - For Emoji (optional), rename to ``Emoji.ttf``
 - Finally, flash the CFI zip and reboot.
