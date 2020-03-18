@@ -31,17 +31,17 @@ Do the following step by step:
   Thin  
   ThinItalic  
   ```
-- For Roboto Condensed, rename to ``<STYLE>.ttf``.  
+- For Roboto Condensed, rename to ``Condensed-<STYLE>.ttf``.  
   ``STYLE``:
   ```
-  Condensed-Bold  
-  Condensed-BoldItalic  
-  Condensed-Medium  
-  Condensed-MediumItalic  
-  Condensed-Regular  
-  Condensed-Italic  
-  Condensed-Light  
-  Condensed-LightItalic
+  Bold  
+  BoldItalic  
+  Medium  
+  MediumItalic  
+  Regular  
+  Italic  
+  Light  
+  LightItalic
   ```
 - For Monospace (optional), rename to ``Mono.ttf``
 - For Emoji (optional), rename to ``Emoji.ttf``
