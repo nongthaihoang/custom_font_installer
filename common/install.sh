@@ -51,6 +51,7 @@ pixel() {
 		cp $SYSFONT/Bold.ttf $DEST/GoogleSans-Bold.ttf
 		cp $SYSFONT/BoldItalic.ttf $DEST/GoogleSans-BoldItalic.ttf
 		sed -ie 3's/$/-pxl&/' $MODPROP
+		PXL=true
 	fi
 }
 
@@ -64,6 +65,7 @@ oxygen() {
 		cp $SYSFONT/Light.ttf $SYSFONT/SlateForOnePlus-Light.ttf
 		cp $SYSFONT/Thin.ttf $SYSFONT/SlateForOnePlus-Thin.ttf
 		sed -ie 3's/$/-oos&/' $MODPROP
+		OOS=true
 	fi
 }
 
@@ -113,10 +115,17 @@ miui() {
 			fi
 		done
 		sed -ie 3's/$/-miui&/' $MODPROP
+		MIUI=true
 	fi
 }
 
-rom() { pixel; oxygen; miui; }
+rom() {
+	pixel
+	if ! $PXL; then oxygen
+		if ! $OOS; then miui
+		fi
+	fi
+}
 
 ### INSTALLATION ###
 ui_print "   "
@@ -124,6 +133,8 @@ ui_print "- Installing"
 
 mkdir -p $SYSFONT $SYSETC $PRDFONT
 patch
+
+PXL=false; OOS=false; MIUI=false
 rom
 
 ### CLEAN UP ###
