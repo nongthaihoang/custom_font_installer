@@ -101,12 +101,12 @@ miui() {
 					sed -i '/\"mipro-normal\"/,/family>/{/700/,/>/s/MiLanProVF/Regular/;/stylevalue=\"340\"/d}' $SYSXML
 					sed -i '/\"mipro-regular\"/,/family>/{/400/,/>/s/MiLanProVF/Regular/;/stylevalue=\"340\"/d}' $SYSXML
 				elif [ $i = Light ]; then
-					sed -i '/\"miui-thin\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/700/,/>/s/MiLanProVF/Light/;/stylevalue/d}' $SYSXML
-					sed -i '/\"miui-light\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/700/,/>/s/MiLanProVF/Regular/;/stylevalue/d}' $SYSXML
-					sed -i '/\"mipro-thin\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/700/,/>/s/MiLanProVF/Light/;/stylevalue/d}' $SYSXML
-					sed -i '/\"mipro-extralight\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/700/,/>/s/MiLanProVF/Light/;/stylevalue/d}' $SYSXML
-					sed -i '/\"mipro-light\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/700/,/>/s/MiLanProVF/Regular/;/stylevalue/d}' $SYSXML
-					sed -i '/\"mipro-normal\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/700/,/>/s/MiLanProVF/Regular/;/stylevalue/d}' $SYSXML
+					sed -i '/\"miui-thin\"/,/family>/{/700/,/>/s/MiLanProVF/Light/;/stylevalue=\"250\"/d}' $SYSXML
+					sed -i '/\"miui-light\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/stylevalue=\"250\"/d}' $SYSXML
+					sed -i '/\"mipro-thin\"/,/family>/{/700/,/>/s/MiLanProVF/Light/;/stylevalue=\"200\"/d}' $SYSXML
+					sed -i '/\"mipro-extralight\"/,/family>/{/700/,/>/s/MiLanProVF/Light/;/stylevalue=\"250\"/d}' $SYSXML
+					sed -i '/\"mipro-light\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/stylevalue=\"200\"/d}' $SYSXML
+					sed -i '/\"mipro-normal\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/stylevalue=\"305\"/d}' $SYSXML
 				elif [ $i = Thin ]; then
 					sed -i '/\"miui-thin\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/stylevalue=\"150\"/d}' $SYSXML
 					sed -i '/\"mipro-thin\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/stylevalue=\"150\"/d}' $SYSXML
