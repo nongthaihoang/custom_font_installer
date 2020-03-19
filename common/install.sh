@@ -24,10 +24,16 @@ patch() {
 		<font weight="700" style="italic">Roboto-BoldItalic.ttf</font>\
 	</family>' $SYSXML
 	sed -i ':a;N;$!ba; s/name=\"sans-serif\"//2' $SYSXML
- 	set Black BlackItalic Bold BoldItalic Medium MediumItalic Regular Italic Light LightItalic Thin ThinItalic
+ 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
-			if [ -f $SYSFONT/$i.ttf ]; then sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i./$i./" $SYSXML; fi
-			if [ -f $SYSFONT/Condensed-$i.ttf ]; then sed -i "s/RobotoCondensed-$i./Condensed-$i./" $SYSXML; fi
+			if [ -f $SYSFONT/$i.ttf ]; then
+				sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML
+				sed -i "s/NotoSerif-$i/$i/" $SYSXML
+				sed -i "s/SourceSansPro-$i/$i/" $SYSXML
+				if [ $i = MediumItalic ]; then sed -i "s/SourceSansPro-SemiBoldItalic/$i/" $SYSXML; fi
+				if [ $i = Medium ]; then sed -i "s/SourceSansPro-SemiBold/$i/" $SYSXML; fi
+			fi
+			if [ -f $SYSFONT/Condensed-$i.ttf ]; then sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; fi
 	done
 	if [ -f $SYSFONT/Mono.ttf ]; then sed -i 's/DroidSans//' $SYSXML; fi
 	if [ -f $SYSFONT/Emoji.ttf ]; then sed -i 's/NotoColor//' $SYSXML; fi
