@@ -27,11 +27,13 @@ patch() {
 	for i do
 		if [ -f $SYSFONT/$i.ttf ]; then
 			sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML
-			sed -i "s/NotoSerif-$i/$i/" $SYSXML
-			case $i in
-				Medium*) sed -i 's/SourceSansPro-SemiBold/Medium/' $SYSXML;;
-				*) sed -i "s/SourceSansPro-$i/$i/" $SYSXML;;
-			esac
+			if [ $API -ge 29 ] && i=$(grep NotoSerif $SYSXML) && i=$(grep SourceSansPro $SYSXML); then
+				sed -i "s/NotoSerif-$i/$i/" $SYSXML
+				case $i in
+					Medium*) sed -i 's/SourceSansPro-SemiBold/Medium/' $SYSXML;;
+					*) sed -i "s/SourceSansPro-$i/$i/" $SYSXML;;
+				esac
+			fi
 		fi
 		if [ -f $SYSFONT/Condensed-$i.ttf ]; then sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; fi
 	done
