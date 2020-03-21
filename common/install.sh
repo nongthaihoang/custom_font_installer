@@ -7,7 +7,6 @@ MODPROP=$MODPATH/module.prop
 
 patch() {
 	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
-	cp $FONTDIR/* $SYSFONT
 	sed -i '/\"sans-serif\">/i \
 	<family name="sans-serif">\
 		<font weight="100" style="normal">Roboto-Thin.ttf</font>\
@@ -137,6 +136,7 @@ ui_print "   "
 ui_print "- Installing"
 
 mkdir -p $SYSFONT $SYSETC $PRDFONT
+cp $FONTDIR/* $SYSFONT
 patch
 
 PXL=false; OOS=false; MIUI=false
