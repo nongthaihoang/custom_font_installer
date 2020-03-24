@@ -44,9 +44,9 @@ patch() {
 cleanup() { rmdir -p $SYSETC $PRDFONT; }
 
 pixel() {
-	if [ -f /product/fonts/GoogleSans-Regular.ttf ]; then
+	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ]; then
 		DEST=$PRDFONT
-	elif [ -f /system/fonts/GoogleSans-Regular.ttf ]; then
+	elif [ -f $ORIGDIR/system/fonts/GoogleSans-Regular.ttf ]; then
 		DEST=$SYSFONT
 	fi
 	if [ ! -z $DEST ]; then
