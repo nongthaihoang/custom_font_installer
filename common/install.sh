@@ -125,10 +125,36 @@ miui() {
 	fi
 }
 
+lg() {
+	if i=$(grep lg-sans-serif $SYSXML); then
+		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
+		for i do
+			if [ -f $SYSFONT/$i.ttf ]; then
+				sed -i "/\"lg-sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML
+			fi
+		done
+		LG=true
+	fi
+	if [ -f $ORIGDIR/system/etc/fonts_lge.xml ]; then
+		cp $ORIGDIR/system/etc/fonts_lge.xml $SYSETC
+		LGXML=$SYSETC/fonts_lge.xml
+		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
+		for i do
+			if [ -f $SYSFONT/$i.ttf ]; then
+				sed -i "/\"default_roboto\">/,/family>/s/Roboto-$i/$i/" $LGXML
+			fi
+		done
+		LG=true
+	fi
+	if $LG; then sed -ie 3's/$/-lg&/' $MODPROP; fi
+}
+
 rom() {
 	pixel
 	if ! $PXL; then oxygen
 		if ! $OOS; then miui
+			if ! $MIUI; then lg
+			fi
 		fi
 	fi
 }
@@ -141,7 +167,7 @@ mkdir -p $SYSFONT $SYSETC $PRDFONT
 cp $FONTDIR/* $SYSFONT
 patch
 
-PXL=false; OOS=false; MIUI=false
+PXL=false; OOS=false; MIUI=false; LG=false
 rom
 
 ### CLEAN UP ###
