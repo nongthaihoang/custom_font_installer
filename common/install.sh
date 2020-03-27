@@ -7,22 +7,8 @@ MODPROP=$MODPATH/module.prop
 
 patch() {
 	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
-	sed -i '/\"sans-serif\">/i \
-	<family name="sans-serif">\
-		<font weight="100" style="normal">Roboto-Thin.ttf</font>\
-		<font weight="100" style="italic">Roboto-ThinItalic.ttf</font>\
-		<font weight="300" style="normal">Roboto-Light.ttf</font>\
-		<font weight="300" style="italic">Roboto-LightItalic.ttf</font>\
-		<font weight="400" style="normal">Roboto-Regular.ttf</font>\
-		<font weight="400" style="italic">Roboto-Italic.ttf</font>\
-		<font weight="500" style="normal">Roboto-Medium.ttf</font>\
-		<font weight="500" style="italic">Roboto-MediumItalic.ttf</font>\
-		<font weight="900" style="normal">Roboto-Black.ttf</font>\
-		<font weight="900" style="italic">Roboto-BlackItalic.ttf</font>\
-		<font weight="700" style="normal">Roboto-Bold.ttf</font>\
-		<font weight="700" style="italic">Roboto-BoldItalic.ttf</font>\
-	</family>' $SYSXML
-	sed -i ':a;N;$!ba; s/name=\"sans-serif\"//2' $SYSXML
+	sed -i '/\"sans-serif\">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
+	sed -i ':a;N;$!ba;s/name=\"sans-serif\"//2' $SYSXML
 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
 		if [ -f $SYSFONT/$i.ttf ]; then
