@@ -27,7 +27,7 @@ patch() {
 	if [ -f $SYSFONT/Emoji.ttf ]; then sed -i 's/NotoColor//' $SYSXML; fi
 }
 
-cleanup() { rmdir -p $SYSETC $PRDFONT; }
+clean_up() { rmdir -p $SYSETC $PRDFONT; }
 
 pixel() {
 	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ]; then
@@ -149,6 +149,6 @@ rom
 
 ### CLEAN UP ###
 ui_print "- Cleaning up"
-cleanup
+clean_up
 
 ui_print "   "
