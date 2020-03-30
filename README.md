@@ -6,6 +6,8 @@
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349) 
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
 [![donate](https://img.shields.io/badge/Donate-Paypal-blue.svg)](https://paypal.me/nongthaihoang)
+[![telegram](https://img.shields.io/badge/Help-Telegram-blue.svg)](https://t.me/MagiskFontsDisc)
+
  
 ## Description
 Apply custom fonts the easy way
@@ -16,35 +18,34 @@ Do the following step by step:
 - Create a folder name ``CustomFontInstaller`` in the internal storage
 - Copy your fonts into there
 - For Roboto, rename to ``<STYLE>.ttf``.  
-  ``STYLE``:  
   ```
-  Black  
-  BlackItalic  
-  Bold  
-  BoldItalic  
-  Medium  
-  MediumItalic  
-  Regular  
-  Italic  
-  Light  
-  LightItalic  
-  Thin  
-  ThinItalic  
+  Black.ttf  
+  BlackItalic.ttf  
+  Bold.ttf  
+  BoldItalic.ttf  
+  Medium.ttf  
+  MediumItalic.ttf  
+  Regular.ttf  
+  Italic.ttf  
+  Light.ttf  
+  LightItalic.ttf  
+  Thin.ttf  
+  ThinItalic.ttf  
   ```
 - For Roboto Condensed, rename to ``Condensed-<STYLE>.ttf``.  
-  ``STYLE``:
   ```
-  Bold  
-  BoldItalic  
-  Medium  
-  MediumItalic  
-  Regular  
-  Italic  
-  Light  
-  LightItalic
+  Condensed-Bold.ttf  
+  Condensed-BoldItalic.ttf  
+  Condensed-Medium.ttf  
+  Condensed-MediumItalic.ttf  
+  Condensed-Regular.ttf  
+  Condensed-Italic.ttf  
+  Condensed-Light.ttf  
+  Condensed-LightItalic.ttf
   ```
 - For Monospace (optional), rename to ``Mono.ttf``
 - For Emoji (optional), rename to ``Emoji.ttf``
+- For the rest, rename to font name you want to replace in ```/system/fonts```.
 - Finally, flash the CFI zip and reboot.
 
 ## Thanks
