@@ -43,8 +43,8 @@ Do the following step by step:
   Condensed-Light.ttf  
   Condensed-LightItalic.ttf
   ```
-- For Monospace (optional), rename to ``Mono.ttf``.  
-- For Emoji (optional), rename to ``Emoji.ttf``.  
+- For Monospace, rename to ``Mono.ttf``.  
+- For Emoji, rename to ``Emoji.ttf``.  
 - For the rest, rename to font name you want to replace in ```/system/fonts```.  
 - Finally, flash the CFI zip and reboot.  
 
