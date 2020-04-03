@@ -9,6 +9,7 @@ patch() {
 	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
 	sed -i '/\"sans-serif\">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
 	sed -i ':a;N;$!ba;s/name=\"sans-serif\"//2' $SYSXML
+	COUNT=0
 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
 		if [ -f $SYSFONT/$i.ttf ]; then
@@ -20,11 +21,22 @@ patch() {
 					*) sed -i "s/SourceSansPro-$i/$i/" $SYSXML;;
 				esac
 			fi
+			COUNT=$((COUNT + 1))
 		fi
-		if [ -f $SYSFONT/Condensed-$i.ttf ]; then sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; fi
+		if [ -f $SYSFONT/Condensed-$i.ttf ]; then
+		   	sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML
+			COUNT=$((COUNT + 1))
+	   	fi
 	done
-	if [ -f $SYSFONT/Mono.ttf ]; then sed -i 's/DroidSans//' $SYSXML; fi
-	if [ -f $SYSFONT/Emoji.ttf ]; then sed -i 's/NotoColor//' $SYSXML; fi
+	if [ -f $SYSFONT/Mono.ttf ]; then
+		sed -i 's/DroidSans//' $SYSXML
+		COUNT=$((COUNT + 1))
+	fi
+	if [ -f $SYSFONT/Emoji.ttf ]; then
+		sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML
+		COUNT=$((COUNT + 1))
+	fi
+	if [ $COUNT -eq 0 ]; then rm $SYSXML; fi
 }
 
 clean_up() { rmdir -p $SYSETC $PRDFONT; }
