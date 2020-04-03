@@ -39,7 +39,7 @@ patch() {
 	if [ $COUNT -eq 0 ]; then rm $SYSXML; fi
 }
 
-clean_up() { rmdir -p $SYSETC $PRDFONT; }
+clean_up() { rmdir -p $SYSETC $PRDFONT $SYSFONT; }
 
 pixel() {
 	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ]; then
