@@ -24,7 +24,7 @@ patch() {
 			COUNT=$((COUNT + 1))
 		fi
 		if [ -f $SYSFONT/Condensed-$i.ttf ]; then
-		   	sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML
+			sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML
 			COUNT=$((COUNT + 1))
 	   	fi
 	done
