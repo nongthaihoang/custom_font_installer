@@ -124,6 +124,10 @@ miui() {
 }
 
 lg() {
+	if i=$(grep lg-sans-serif $SYSXML); then
+		sed -i '/\"lg-sans-serif\">/,/family>/{/\"lg-sans-serif\">/!d};/\"sans-serif\">/,/family>/{/\"sans-serif\">/!H};/\"lg-sans-serif\">/G' $SYSXML
+		LG=true
+	fi
 	if [ -f $ORIGDIR/system/etc/fonts_lge.xml ]; then
 		cp $ORIGDIR/system/etc/fonts_lge.xml $SYSETC
 		LGXML=$SYSETC/fonts_lge.xml
@@ -134,8 +138,8 @@ lg() {
 			fi
 		done
 		LG=true
-		sed -ie 3's/$/-lg&/' $MODPROP
 	fi
+	if $LG; then sed -ie 3's/$/-lg&/' $MODPROP; fi
 }
 
 rom() {
