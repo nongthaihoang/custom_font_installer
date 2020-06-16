@@ -30,13 +30,6 @@ patch() {
 	for i do
 		if [ -f $SYSFONT/$i.ttf ]; then
 			sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML
-			if [ $API -ge 29 ] && i=$(grep NotoSerif $SYSXML) && i=$(grep SourceSansPro $SYSXML); then
-				sed -i "s/NotoSerif-$i/$i/" $SYSXML
-				case $i in
-					Medium*) sed -i 's/SourceSansPro-SemiBold/Medium/' $SYSXML;;
-					*) sed -i "s/SourceSansPro-$i/$i/" $SYSXML;;
-				esac
-			fi
 			COUNT=$((COUNT + 1))
 		fi
 		if [ -f $SYSFONT/Condensed-$i.ttf ]; then
@@ -59,17 +52,17 @@ clean_up() { rmdir -p $SYSETC $PRDFONT $SYSFONT; }
 
 pixel() {
 	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ]; then
-		DEST=$PRDFONT
+		DST=$PRDFONT
 	elif [ -f $ORIGDIR/system/fonts/GoogleSans-Regular.ttf ]; then
-		DEST=$SYSFONT
+		DST=$SYSFONT
 	fi
-	if [ ! -z $DEST ]; then
-		cp $SYSFONT/Regular.ttf $DEST/GoogleSans-Regular.ttf
-		cp $SYSFONT/Italic.ttf $DEST/GoogleSans-Italic.ttf
-		cp $SYSFONT/Medium.ttf $DEST/GoogleSans-Medium.ttf
-		cp $SYSFONT/MediumItalic.ttf $DEST/GoogleSans-MediumItalic.ttf
-		cp $SYSFONT/Bold.ttf $DEST/GoogleSans-Bold.ttf
-		cp $SYSFONT/BoldItalic.ttf $DEST/GoogleSans-BoldItalic.ttf
+	if [ ! -z $DST ]; then
+		cp $SYSFONT/Regular.ttf $DST/GoogleSans-Regular.ttf
+		cp $SYSFONT/Italic.ttf $DST/GoogleSans-Italic.ttf
+		cp $SYSFONT/Medium.ttf $DST/GoogleSans-Medium.ttf
+		cp $SYSFONT/MediumItalic.ttf $DST/GoogleSans-MediumItalic.ttf
+		cp $SYSFONT/Bold.ttf $DST/GoogleSans-Bold.ttf
+		cp $SYSFONT/BoldItalic.ttf $DST/GoogleSans-BoldItalic.ttf
 		sed -ie 3's/$/-pxl&/' $MODPROP
 		PXL=true
 	fi

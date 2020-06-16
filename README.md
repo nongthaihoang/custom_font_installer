@@ -1,8 +1,8 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-![version](https://img.shields.io/badge/Version-1.7-brightgreen.svg) 
-![updated](https://img.shields.io/badge/Updated-Apr_07,_2020-green.svg) 
+![version](https://img.shields.io/badge/Version-1.8-brightgreen.svg) 
+![updated](https://img.shields.io/badge/Updated-jun_17,_2020-green.svg) 
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349) 
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
 [![donate](https://img.shields.io/badge/Donate-Paypal-blue.svg)](https://paypal.me/nongthaihoang)
@@ -16,7 +16,7 @@ Apply custom fonts the easy way
 Everything is straight forward. There is no need for terminal or anything. Just Magisk Manager and you're ready to go.  
 Do the following step by step:
 - Create a folder name ``CustomFontInstaller`` in the internal storage.  
-- Copy your fonts into there.  
+- Copy your fonts into the folder.  
 - For Roboto, rename to ``<STYLE>.ttf``.  
   ```
   Black.ttf  
