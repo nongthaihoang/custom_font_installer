@@ -5,6 +5,22 @@ SYSETC=$MODPATH/system/etc
 SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
 
+back_up() {
+	ui_print "- Creating backup"
+	ui_print "   "
+	ZIP=$MODPATH/zip
+	mkdir -p $FONTDIR/backup/fonts
+	unzip -q $ZIPFILE -d $FONTDIR/backup
+	cd $FONTDIR/backup
+	cp ../* $FONTDIR/backup/fonts
+	sed -i 's/\/sdcard\/CustomFontInstaller/$MODPATH\/fonts/;8,23d;$d' common/install.sh
+	rm zip /sdcard/cfi_backup.zip
+	$ZIP -q -9 /sdcard/cfi_backup.zip -r *
+	rm $ZIP
+	cd $MODPATH
+	rm -rf $FONTDIR/backup
+}
+
 patch() {
 	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
 	sed -i '/\"sans-serif\">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
@@ -168,3 +184,4 @@ ui_print "- Cleaning up"
 clean_up
 
 ui_print "   "
+back_up
