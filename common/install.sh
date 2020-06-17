@@ -10,11 +10,13 @@ back_up() {
 	BACKUP=/sdcard/cfi_backup.zip
 	BACKUPDIR=$FONTDIR/backup
 	ZIP=$MODPATH/zip
+	ui_print "- Backing up"
+	ui_print "   "
 	mkdir -p $BACKUPDIR/fonts
 	unzip -q $ZIPFILE -d $BACKUPDIR
 	cd $BACKUPDIR
 	cp ../* $BACKUPDIR/fonts
-	sed -i 's/\/sdcard\/CustomFontInstaller/$MODPATH\/fonts/;8,23d;/back_up/d;/clean_up/s/;/; rm -rf $FONTDIR;/' common/install.sh
+	sed -i 's/\/sdcard\/CustomFontInstaller/$MODPATH\/fonts/;8,25d;/back_up/d;/clean_up/s/;/; rm -rf $FONTDIR;/' common/install.sh
 	rm zip $BACKUP
 	$ZIP -q -9 $BACKUP -r *
 	rm $ZIP
