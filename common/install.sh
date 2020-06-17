@@ -89,32 +89,32 @@ miui() {
 		for i do
 			if [ -f $SYSFONT/$i.ttf ]; then
 				if [ $i = Black ]; then
-					sed -i '/\"mipro-bold\"/,/family>/{/700/,/>/s/MiLanProVF/Black/;/stylevalue=\"700\"/d}' $SYSXML
-					sed -i '/\"mipro-heavy\"/,/family>/{/400/,/>/s/MiLanProVF/Black/;/stylevalue=\"700\"/d}' $SYSXML
+					sed -i '/"mipro-bold"/,/family>/{/700/s/MiLanProVF/Black/;/stylevalue="700"/d}' $SYSXML
+					sed -i '/"mipro-heavy"/,/family>/{/400/s/MiLanProVF/Black/;/stylevalue="700"/d}' $SYSXML
 				elif [ $i = Bold ]; then
-					sed -i '/\"mipro\"/,/family>/{/700/,/>/s/MiLanProVF/Bold/;/stylevalue=\"400\"/d}' $SYSXML
-					sed -i '/\"mipro-medium\"/,/family>/{/700/,/>/s/MiLanProVF/Bold/;/stylevalue=\"480\"/d}' $SYSXML
-					sed -i '/\"mipro-demibold\"/,/family>/{/700/,/>/s/MiLanProVF/Bold/;/stylevalue=\"540\"/d}' $SYSXML
-					sed -i '/\"mipro-semibold\"/,/family>/{/700/,/>/s/MiLanProVF/Bold/;/stylevalue=\"630\"/d}' $SYSXML
-					sed -i '/\"mipro-bold\"/,/family>/{/400/,/>/s/MiLanProVF/Bold/;/stylevalue=\"630\"/d}' $SYSXML
+					sed -i '/"mipro"/,/family>/{/700/s/MiLanProVF/Bold/;/stylevalue="400"/d}' $SYSXML
+					sed -i '/"mipro-medium"/,/family>/{/700/s/MiLanProVF/Bold/;/stylevalue="480"/d}' $SYSXML
+					sed -i '/"mipro-demibold"/,/family>/{/700/s/MiLanProVF/Bold/;/stylevalue="540"/d}' $SYSXML
+					sed -i '/"mipro-semibold"/,/family>/{/700/s/MiLanProVF/Bold/;/stylevalue="630"/d}' $SYSXML
+					sed -i '/"mipro-bold"/,/family>/{/400/s/MiLanProVF/Bold/;/stylevalue="630"/d}' $SYSXML
 				elif [ $i = Medium ]; then
-					sed -i '/\"mipro-regular\"/,/family>/{/700/,/>/s/MiLanProVF/Medium/;/stylevalue=\"400\"/d}' $SYSXML
-					sed -i '/\"mipro-medium\"/,/family>/{/400/,/>/s/MiLanProVF/Medium/;/stylevalue=\"400\"/d}' $SYSXML
-					sed -i '/\"mipro-demibold\"/,/family>/{/400/,/>/s/MiLanProVF/Medium/;/stylevalue=\"480\"/d}' $SYSXML
-					sed -i '/\"mipro-semibold\"/,/family>/{/400/,/>/s/MiLanProVF/Medium/;/stylevalue=\"540\"/d}' $SYSXML
+					sed -i '/"mipro-regular"/,/family>/{/700/s/MiLanProVF/Medium/;/stylevalue="400"/d}' $SYSXML
+					sed -i '/"mipro-medium"/,/family>/{/400/s/MiLanProVF/Medium/;/stylevalue="400"/d}' $SYSXML
+					sed -i '/"mipro-demibold"/,/family>/{/400/s/MiLanProVF/Medium/;/stylevalue="480"/d}' $SYSXML
+					sed -i '/"mipro-semibold"/,/family>/{/400/s/MiLanProVF/Medium/;/stylevalue="540"/d}' $SYSXML
 				elif [ $i = Regular ]; then
-					sed -i '/\"mipro\"/,/family>/{/400/,/>/s/MiLanProVF/Regular/;/stylevalue=\"340\"/d}' $SYSXML
-					sed -i '/\"mipro-light\"/,/family>/{/700/,/>/s/MiLanProVF/Regular/;/stylevalue=\"305\"/d}' $SYSXML
-					sed -i '/\"mipro-normal\"/,/family>/{/700/,/>/s/MiLanProVF/Regular/;/stylevalue=\"340\"/d}' $SYSXML
-					sed -i '/\"mipro-regular\"/,/family>/{/400/,/>/s/MiLanProVF/Regular/;/stylevalue=\"340\"/d}' $SYSXML
+					sed -i '/"mipro"/,/family>/{/400/s/MiLanProVF/Regular/;/stylevalue="340"/d}' $SYSXML
+					sed -i '/"mipro-light"/,/family>/{/700/s/MiLanProVF/Regular/;/stylevalue="305"/d}' $SYSXML
+					sed -i '/"mipro-normal"/,/family>/{/700/s/MiLanProVF/Regular/;/stylevalue="340"/d}' $SYSXML
+					sed -i '/"mipro-regular"/,/family>/{/400/s/MiLanProVF/Regular/;/stylevalue="340"/d}' $SYSXML
 				elif [ $i = Light ]; then
-					sed -i '/\"mipro-thin\"/,/family>/{/700/,/>/s/MiLanProVF/Light/;/stylevalue=\"200\"/d}' $SYSXML
-					sed -i '/\"mipro-extralight\"/,/family>/{/700/,/>/s/MiLanProVF/Light/;/stylevalue=\"250\"/d}' $SYSXML
-					sed -i '/\"mipro-light\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/stylevalue=\"200\"/d}' $SYSXML
-					sed -i '/\"mipro-normal\"/,/family>/{/400/,/>/s/MiLanProVF/Light/;/stylevalue=\"305\"/d}' $SYSXML
+					sed -i '/"mipro-thin"/,/family>/{/700/s/MiLanProVF/Light/;/stylevalue="200"/d}' $SYSXML
+					sed -i '/"mipro-extralight"/,/family>/{/700/s/MiLanProVF/Light/;/stylevalue="250"/d}' $SYSXML
+					sed -i '/"mipro-light"/,/family>/{/400/s/MiLanProVF/Light/;/stylevalue="250"/d}' $SYSXML
+					sed -i '/"mipro-normal"/,/family>/{/400/s/MiLanProVF/Light/;/stylevalue="305"/d}' $SYSXML
 				elif [ $i = Thin ]; then
-					sed -i '/\"mipro-thin\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/stylevalue=\"150\"/d}' $SYSXML
-					sed -i '/\"mipro-extralight\"/,/family>/{/400/,/>/s/MiLanProVF/Thin/;/stylevalue=\"200\"/d}' $SYSXML
+					sed -i '/"mipro-thin"/,/family>/{/400/s/MiLanProVF/Thin/;/stylevalue="150"/d}' $SYSXML
+					sed -i '/"mipro-extralight"/,/family>/{/400/s/MiLanProVF/Thin/;/stylevalue="200"/d}' $SYSXML
 				fi
 			fi
 		done
