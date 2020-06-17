@@ -26,13 +26,13 @@ back_up() {
 
 patch() {
 	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
-	sed -i '/\"sans-serif\">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
-	sed -i ':a;N;$!ba;s/name=\"sans-serif\"//2' $SYSXML
+	sed -i '/"sans-serif">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
+	sed -i ':a;N;$!ba;s/name="sans-serif"//2' $SYSXML
 	COUNT=0
 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
 		if [ -f $SYSFONT/$i.ttf ]; then
-			sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML
+			sed -i "/"sans-serif">/,/family>/s/Roboto-$i/$i/" $SYSXML
 			COUNT=$((COUNT + 1))
 		fi
 		if [ -f $SYSFONT/Condensed-$i.ttf ]; then
@@ -127,7 +127,7 @@ miui() {
 
 lg() {
 	if i=$(grep lg-sans-serif $SYSXML); then
-		sed -i '/\"lg-sans-serif\">/,/family>/{/\"lg-sans-serif\">/!d};/\"sans-serif\">/,/family>/{/\"sans-serif\">/!H};/\"lg-sans-serif\">/G' $SYSXML
+		sed -i '/"lg-sans-serif">/,/family>/{/"lg-sans-serif">/!d};/"sans-serif">/,/family>/{/"sans-serif">/!H};/"lg-sans-serif">/G' $SYSXML
 		LG=true
 	fi
 	if [ -f $ORIGDIR/system/etc/fonts_lge.xml ]; then
