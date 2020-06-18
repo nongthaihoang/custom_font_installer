@@ -13,9 +13,7 @@
 Apply custom fonts the easy way
 
 ## Usage
-Everything is straight forward. There is no need for terminal or anything. Just Magisk Manager and you're ready to go.  
-Do the following step by step:
-- Create a folder name ``CustomFontInstaller`` in the internal storage.  
+- Create a folder named ``CustomFontInstaller`` in the internal storage.  
 - Move your fonts into the folder.  
 - For Roboto (default), make 20 copies and rename your fonts as below:
   ```
