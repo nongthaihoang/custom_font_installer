@@ -2,7 +2,7 @@
 **Custom Font Installer for Android**
 
 ![version](https://img.shields.io/badge/Version-1.8-brightgreen.svg) 
-![updated](https://img.shields.io/badge/Updated-jun_17,_2020-green.svg) 
+![updated](https://img.shields.io/badge/Updated-Jun_17,_2020-green.svg) 
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349) 
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
 [![donate](https://img.shields.io/badge/Donate-Paypal-blue.svg)](https://paypal.me/nongthaihoang)
@@ -16,8 +16,8 @@ Apply custom fonts the easy way
 Everything is straight forward. There is no need for terminal or anything. Just Magisk Manager and you're ready to go.  
 Do the following step by step:
 - Create a folder name ``CustomFontInstaller`` in the internal storage.  
-- Copy your fonts into the folder.  
-- For Roboto, rename to ``<STYLE>.ttf``.  
+- Move your fonts into the folder.  
+- For Roboto (default), make 20 copies and rename your fonts as below:
   ```
   Black.ttf  
   BlackItalic.ttf  
@@ -30,11 +30,6 @@ Do the following step by step:
   Light.ttf  
   LightItalic.ttf  
   Thin.ttf  
-  ThinItalic.ttf  
-  ```
-- For Roboto Condensed, rename to ``Condensed-<STYLE>.ttf``.  
-  ```
-  Condensed-Bold.ttf  
   Condensed-BoldItalic.ttf  
   Condensed-Medium.ttf  
   Condensed-MediumItalic.ttf  
@@ -43,10 +38,11 @@ Do the following step by step:
   Condensed-Light.ttf  
   Condensed-LightItalic.ttf
   ```
-- For Monospace, rename to ``Mono.ttf``.  
-- For Emoji, rename to ``Emoji.ttf``.  
+- For Monospace (optional), rename to ``Mono.ttf``.  
+- For Emoji (optional), rename to ``Emoji.ttf``.  
 - For the rest, rename to font name you want to replace in ```/system/fonts```.  
 - Finally, flash the CFI zip and reboot.  
 
 ## Thanks
-[MMT-Extended](https://github.com/Zackptg5/MMT-Extended)
+- [MMT-Extended](https://github.com/Zackptg5/MMT-Extended)
+- [Cross Compiled Binaries for Android](https://github.com/Zackptg5/Cross-Compiled-Binaries-Android)
