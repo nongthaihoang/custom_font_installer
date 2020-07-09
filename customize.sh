@@ -58,7 +58,10 @@ patch() {
 	[ $count -eq 0 ] && rm $SYSXML
 }
 
-clean_up() { rmdir -p $SYSETC $PRDFONT; }
+clean_up() {
+	rm $MODPATH/LICENSE
+	rmdir -p $SYSETC $PRDFONT
+}
 
 version() { sed -i 3"s/$/-$1&/" $MODPROP; }
 
