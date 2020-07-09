@@ -13,11 +13,11 @@ backup() {
 	local zip=$MODPATH/zip
 	chmod 755 $zip
 	ui_print "- Backing up"
-	mkdir -p $backupdir/fonts
+	mkdir -p $backupdir/system/fonts
 	unzip -q $ZIPFILE -d $backupdir
 	cd $backupdir
-	cp ../* $backupdir/fonts
-	sed -i 's/\/sdcard\/CFI/$MODPATH\/fonts/;9,27d;/backup/d;/clean_up/s/;/; rm -rf $FONTDIR;/' customize.sh
+	cp ../* $backupdir/system/fonts
+	sed -i '/FONTDIR/d;9,26d;/backup/d' customize.sh
 	rm zip $backup
 	$zip -q -9 $backup -r *
 	rm $zip
@@ -163,7 +163,7 @@ rom() {
 
 ### INSTALLATION ###
 ui_print "- Installing"
-mkdir -p $SYSFONT $SYSETC $PRDFONT
+mkdir -p $SYSETC $PRDFONT
 cp $FONTDIR/* $SYSFONT || abort "! $FONTDIR: no font found"
 rename
 patch
