@@ -50,13 +50,12 @@ patch() {
 	local count=0
 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
-		[ -f $SYSFONT/$i.ttf ] && { sed -i "/"sans-serif">/,/family>/s/Roboto-$i/$i/" $SYSXML; count=$((count + 1)); }
+		[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML; count=$((count + 1)); }
 		[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
 	done
 	[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
 	[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML; count=$((count + 1)); }
 	[ $count -eq 0 ] && rm $SYSXML
-	rmdir -p $SYSFONT && abort "font not found"
 }
 
 clean_up() { rmdir -p $SYSETC $PRDFONT; }
@@ -165,7 +164,7 @@ rom() {
 ### INSTALLATION ###
 ui_print "- Installing"
 mkdir -p $SYSFONT $SYSETC $PRDFONT
-cp $FONTDIR/* $SYSFONT
+cp $FONTDIR/* $SYSFONT || abort "! $FONTDIR: no font found"
 rename
 patch
 rom
