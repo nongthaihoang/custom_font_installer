@@ -50,11 +50,11 @@ patch() {
 	local count=0
 	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 	for i do
-		[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML & count=$((count + 1)); }
-		[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML & count=$((count + 1)); }
+		[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML; count=$((count + 1)); }
+		[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
 	done
-	[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML & count=$((count + 1)); }
-	[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML & count=$((count + 1)); }
+	[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
+	[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML; count=$((count + 1)); }
 	[ $count -eq 0 ] && rm $SYSXML
 }
 
@@ -72,7 +72,7 @@ pixel() {
 	if [ $dest ]; then
 		set BoldItalic Bold MediumItalic Medium Italic Regular
 		for i do cp $SYSFONT/$i.ttf $dest/GoogleSans-$i.ttf; done
-		version pxl & PXL=true
+		version pxl; PXL=true
 	fi
 }
 
@@ -81,7 +81,7 @@ oxygen() {
 		set Black Bold Medium Regular Light Thin
 		for i do cp $SYSFONT/$i.ttf $SYSFONT/SlateForOnePlus-$i.ttf; done
 		cp $SYSFONT/Regular.ttf $SYSFONT/SlateForOnePlus-Book.ttf
-		version oos & OOS=true
+		version oos; OOS=true
 	fi
 }
 
@@ -120,7 +120,7 @@ miui() {
 				fi
 			fi
 		done
-		version miui & MIUI=true
+		version miui; MIUI=true
 	fi
 }
 
@@ -142,12 +142,12 @@ lg() {
 samsung() {
 	if grep -q Samsung $SYSXML; then
 		sed -i 's/SECRobotoLight-Bold/Medium/;s/SECRobotoLight-//;s/SECCondensed-/Condensed-/' $SYSXML
-		version sam & SAM=true
+		version sam; SAM=true
 	fi
 }
 
 rom() {
-	PXL=false & OOS=false & MIUI=false & LG=false & SAM=false
+	PXL=false; OOS=false; MIUI=false; LG=false; SAM=false
 	pixel
 	if ! $PXL; then oxygen
 		if ! $OOS; then miui
