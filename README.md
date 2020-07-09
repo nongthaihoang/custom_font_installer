@@ -17,26 +17,26 @@ Apply custom fonts the easy way
 - Move your fonts into the folder.  
 - For Roboto (default), make 20 copies and rename your fonts as below:
   ```
-  BlackItalic					-> bli.ttf
-  Black							-> bl.ttf
-  BoldItalic					-> bi.ttf
-  Bold							-> b.ttf
-  MediumItalic					-> mi.ttf
-  Medium						-> m.ttf
-  Italic						-> i.ttf
-  Regular						-> r.ttf
-  LightItalic					-> li.ttf
-  Light							-> l.ttf
-  ThinItalic					-> ti.ttf
-  Thin							-> t.ttf
-  Condensed-BoldItalic			-> cbi.ttf
-  Condensed-Bold				-> cb.ttf
-  Condensed-MediumItalic		-> cmi.ttf
-  Condensed-Medium				-> cm.ttf
-  Condensed-Italic				-> ci.ttf
-  Condensed-Regular				-> cr.ttf
-  Condensed-LightItalic			-> cli.ttf
-  Condensed-Light				-> cl.ttf
+  BlackItalic    -> bli.ttf
+  Black          -> bl.ttf
+  BoldItalic     -> bi.ttf
+  Bold           -> b.ttf
+  MediumItalic   -> mi.ttf
+  Medium         -> m.ttf
+  Italic         -> i.ttf
+  Regular        -> r.ttf
+  LightItalic    -> li.ttf
+  Light          -> l.ttf
+  ThinItalic     -> ti.ttf
+  Thin           -> t.ttf
+  Condensed-BoldItalic    -> cbi.ttf
+  Condensed-Bold          -> cb.ttf
+  Condensed-MediumItalic  -> cmi.ttf
+  Condensed-Medium        -> cm.ttf
+  Condensed-Italic        -> ci.ttf
+  Condensed-Regular       -> cr.ttf
+  Condensed-LightItalic   -> cli.ttf
+  Condensed-Light         -> cl.ttf
   ```
 - For Mono (optional), rename to ``mo.ttf``.  
 - For Emoji (optional), rename to ``e.ttf``.  
