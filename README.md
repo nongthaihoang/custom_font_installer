@@ -29,14 +29,14 @@ Apply custom fonts the easy way
   Light          -> l.ttf
   ThinItalic     -> ti.ttf
   Thin           -> t.ttf
-  Condensed-BoldItalic    -> cbi.ttf
-  Condensed-Bold          -> cb.ttf
-  Condensed-MediumItalic  -> cmi.ttf
-  Condensed-Medium        -> cm.ttf
-  Condensed-Italic        -> ci.ttf
-  Condensed-Regular       -> cr.ttf
-  Condensed-LightItalic   -> cli.ttf
-  Condensed-Light         -> cl.ttf
+  Condensed-BoldItalic     -> cbi.ttf
+  Condensed-Bold           -> cb.ttf
+  Condensed-MediumItalic   -> cmi.ttf
+  Condensed-Medium         -> cm.ttf
+  Condensed-Italic         -> ci.ttf
+  Condensed-Regular        -> cr.ttf
+  Condensed-LightItalic    -> cli.ttf
+  Condensed-Light          -> cl.ttf
   ```
 - For Mono (optional), rename to ``mo.ttf``.  
 - For Emoji (optional), rename to ``e.ttf``.  
