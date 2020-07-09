@@ -13,7 +13,6 @@ backup() {
 	local zip=$MODPATH/zip
 	chmod 755 $zip
 	ui_print "- Backing up"
-	ui_print "   "
 	mkdir -p $backupdir/fonts
 	unzip -q $ZIPFILE -d $backupdir
 	cd $backupdir
@@ -164,7 +163,6 @@ rom() {
 }
 
 ### INSTALLATION ###
-ui_print "   "
 ui_print "- Installing"
 mkdir -p $SYSFONT $SYSETC $PRDFONT
 cp $FONTDIR/* $SYSFONT
