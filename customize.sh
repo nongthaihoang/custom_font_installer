@@ -11,13 +11,14 @@ backup() {
 	local backup=/sdcard/cfi-backup.zip
 	local backupdir=$FONTDIR/backup
 	local zip=$MODPATH/zip
+	chmod 755 $zip
 	ui_print "- Backing up"
 	ui_print "   "
 	mkdir -p $backupdir/fonts
 	unzip -q $ZIPFILE -d $backupdir
 	cd $backupdir
 	cp ../* $backupdir/fonts
-	sed -i 's/\/sdcard\/CFI/$MODPATH\/fonts/;9,43d;/backup/d;/rename/d;/clean_up/s/;/; rm -rf $FONTDIR;/' customize.sh
+	sed -i 's/\/sdcard\/CFI/$MODPATH\/fonts/;9,27d;/backup/d;/clean_up/s/;/; rm -rf $FONTDIR;/' customize.sh
 	rm zip $backup
 	$zip -q -9 $backup -r *
 	rm $zip
