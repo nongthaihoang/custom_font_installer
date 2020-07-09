@@ -1,8 +1,8 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-![version](https://img.shields.io/badge/Version-1.8-brightgreen.svg) 
-![updated](https://img.shields.io/badge/Updated-Jun_17,_2020-green.svg) 
+![version](https://img.shields.io/badge/Version-1.9-brightgreen.svg) 
+![updated](https://img.shields.io/badge/Updated-Jul_09,_2020-green.svg) 
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349) 
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
 [![donate](https://img.shields.io/badge/Donate-Paypal-blue.svg)](https://paypal.me/nongthaihoang)
@@ -13,34 +13,35 @@
 Apply custom fonts the easy way
 
 ## Usage
-- Create a folder named ``CustomFontInstaller`` in the internal storage.  
+- Create a folder named ``CFI`` in the internal storage.  
 - Move your fonts into the folder.  
 - For Roboto (default), make 20 copies and rename your fonts as below:
   ```
-  Black.ttf  
-  BlackItalic.ttf  
-  Bold.ttf  
-  BoldItalic.ttf  
-  Medium.ttf  
-  MediumItalic.ttf  
-  Regular.ttf  
-  Italic.ttf  
-  Light.ttf  
-  LightItalic.ttf  
-  Thin.ttf  
-  Condensed-BoldItalic.ttf  
-  Condensed-Medium.ttf  
-  Condensed-MediumItalic.ttf  
-  Condensed-Regular.ttf  
-  Condensed-Italic.ttf  
-  Condensed-Light.ttf  
-  Condensed-LightItalic.ttf
+  BlackItalic -> bli.ttf
+  Black -> bl.ttf
+  BoldItalic -> bi.ttf
+  Bold -> b.ttf
+  MediumItalic -> mi.ttf
+  Medium -> m.ttf
+  Italic -> i.ttf
+  Regular -> r.ttf
+  LightItalic -> li.ttf
+  Light -> l.ttf
+  ThinItalic -> ti.ttf
+  Thin -> t.ttf
+  Condensed-BoldItalic -> cbi.ttf
+  Condensed-Bold -> cb.ttf
+  Condensed-MediumItalic -> cmi.ttf
+  Condensed-Medium -> cm.ttf
+  Condensed-Italic -> ci.ttf
+  Condensed-Regular -> cr.ttf
+  Condensed-LightItalic -> cli.ttf
+  Condensed-Light -> cl.ttf
   ```
-- For Monospace (optional), rename to ``Mono.ttf``.  
-- For Emoji (optional), rename to ``Emoji.ttf``.  
+- For Mono (optional), rename to ``mo.ttf``.  
+- For Emoji (optional), rename to ``e.ttf``.  
 - For the rest, rename to font name you want to replace in ```/system/fonts```.  
-- Finally, flash the CFI zip and reboot.  
+- Finally, flash the CFI zip and reboot.
 
 ## Thanks
-- [MMT-Extended](https://github.com/Zackptg5/MMT-Extended)
 - [Cross Compiled Binaries for Android](https://github.com/Zackptg5/Cross-Compiled-Binaries-Android)
