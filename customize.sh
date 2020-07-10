@@ -38,6 +38,16 @@ rename() {
 	mv $SYSFONT/l.ttf $SYSFONT/Light.ttf
 	mv $SYSFONT/ti.ttf $SYSFONT/ThinItalic.ttf
 	mv $SYSFONT/t.ttf $SYSFONT/Thin.ttf
+
+	mv $SYSFONT/cbi.ttf $SYSFONT/Condensed-BoldItalic.ttf
+	mv $SYSFONT/cb.ttf $SYSFONT/Condensed-Bold.ttf
+	mv $SYSFONT/cmi.ttf $SYSFONT/Condensed-MediumItalic.ttf
+	mv $SYSFONT/cm.ttf $SYSFONT/Condensed-Medium.ttf
+	mv $SYSFONT/ci.ttf $SYSFONT/Condensed-Italic.ttf
+	mv $SYSFONT/cr.ttf $SYSFONT/Condensed-Regular.ttf
+	mv $SYSFONT/cli.ttf $SYSFONT/Condensed-LightItalic.ttf
+	mv $SYSFONT/cl.ttf $SYSFONT/Condensed-Light.ttf
+
 	mv $SYSFONT/mo.ttf $SYSFONT/Mono.ttf
 	mv $SYSFONT/e.ttf $SYSFONT/Emoji.ttf
 }
@@ -58,7 +68,10 @@ patch() {
 	[ $count -eq 0 ] && rm $SYSXML
 }
 
-clean_up() { rmdir -p $SYSETC $PRDFONT; }
+clean_up() {
+	rm $MODPATH/LICENSE
+	rmdir -p $SYSETC $PRDFONT
+}
 
 version() { sed -i 3"s/$/-$1&/" $MODPROP; }
 
@@ -161,8 +174,9 @@ rom() {
 
 ### INSTALLATION ###
 ui_print "- Installing"
-mkdir -p $SYSETC $PRDFONT
+mkdir -p $SYSFONT $SYSETC $PRDFONT
 cp $FONTDIR/* $SYSFONT || abort "! $FONTDIR: no font found"
+chmod -R 644 $SYSFONT
 rename
 patch
 rom
