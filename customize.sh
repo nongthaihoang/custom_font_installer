@@ -175,8 +175,7 @@ rom() {
 ### INSTALLATION ###
 ui_print "- Installing"
 mkdir -p $SYSFONT $SYSETC $PRDFONT
-cp $FONTDIR/* $SYSFONT || abort "! $FONTDIR: no font found"
-chmod -R 644 $SYSFONT
+cp $FONTDIR/* $SYSFONT && chmod -R 644 $SYSFONT || abort "! $FONTDIR: no font found"
 rename
 patch
 rom

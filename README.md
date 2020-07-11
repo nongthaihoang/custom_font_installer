@@ -29,6 +29,7 @@ Apply custom fonts the easy way
   Light          -> l.ttf
   ThinItalic     -> ti.ttf
   Thin           -> t.ttf
+
   Condensed-BoldItalic     -> cbi.ttf
   Condensed-Bold           -> cb.ttf
   Condensed-MediumItalic   -> cmi.ttf
@@ -40,7 +41,7 @@ Apply custom fonts the easy way
   ```
 - For Mono (optional), rename to ``mo.ttf``.  
 - For Emoji (optional), rename to ``e.ttf``.  
-- For the rest, rename to font name you want to replace in ```/system/fonts```.  
+- For the rest (optional), rename to font name you want to replace in ```/system/fonts```.  
 - Finally, flash the CFI zip and reboot.
 
 ## Thanks
