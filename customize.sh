@@ -9,47 +9,27 @@ MODPROP=$MODPATH/module.prop
 
 backup() {
 	local backup=/sdcard/cfi-backup.zip
-	local backupdir=$FONTDIR/backup
+	local backupdir=$TMPDIR/cfi-backup
 	local zip=$MODPATH/zip
 	chmod 755 $zip
 	ui_print "- Backing up"
 	mkdir -p $backupdir/system/fonts
 	unzip -q $ZIPFILE -d $backupdir
+	cp $FONTDIR/* $backupdir/system/fonts
+	sed -i '/FONTDIR/d;9,24d;/backup/d' $backupdir/customize.sh
 	cd $backupdir
-	cp ../* $backupdir/system/fonts
-	sed -i '/FONTDIR/d;9,26d;/backup/d' customize.sh
 	rm zip $backup
 	$zip -q -9 $backup -r *
 	rm $zip
-	cd $TMPDIR
-	rm -rf $backupdir
 }
 
 rename() {
-	mv $SYSFONT/bli.ttf $SYSFONT/BlackItalic.ttf
-	mv $SYSFONT/bl.ttf $SYSFONT/Black.ttf
-	mv $SYSFONT/bi.ttf $SYSFONT/BoldItalic.ttf
-	mv $SYSFONT/b.ttf $SYSFONT/Bold.ttf
-	mv $SYSFONT/mi.ttf $SYSFONT/MediumItalic.ttf
-	mv $SYSFONT/m.ttf $SYSFONT/Medium.ttf
-	mv $SYSFONT/i.ttf $SYSFONT/Italic.ttf
-	mv $SYSFONT/r.ttf $SYSFONT/Regular.ttf
-	mv $SYSFONT/li.ttf $SYSFONT/LightItalic.ttf
-	mv $SYSFONT/l.ttf $SYSFONT/Light.ttf
-	mv $SYSFONT/ti.ttf $SYSFONT/ThinItalic.ttf
-	mv $SYSFONT/t.ttf $SYSFONT/Thin.ttf
-
-	mv $SYSFONT/cbi.ttf $SYSFONT/Condensed-BoldItalic.ttf
-	mv $SYSFONT/cb.ttf $SYSFONT/Condensed-Bold.ttf
-	mv $SYSFONT/cmi.ttf $SYSFONT/Condensed-MediumItalic.ttf
-	mv $SYSFONT/cm.ttf $SYSFONT/Condensed-Medium.ttf
-	mv $SYSFONT/ci.ttf $SYSFONT/Condensed-Italic.ttf
-	mv $SYSFONT/cr.ttf $SYSFONT/Condensed-Regular.ttf
-	mv $SYSFONT/cli.ttf $SYSFONT/Condensed-LightItalic.ttf
-	mv $SYSFONT/cl.ttf $SYSFONT/Condensed-Light.ttf
-
-	mv $SYSFONT/mo.ttf $SYSFONT/Mono.ttf
-	mv $SYSFONT/e.ttf $SYSFONT/Emoji.ttf
+	set bli BlackItalic bl Black bi BoldItalic b Bold mi MediumItalic m Medium i Italic r Regular li LightItalic l Light ti ThinItalic t Thin mo Mono e Emoji
+	for i do
+		([ -f $SYSFONT/$1.ttf ]	|| [ -f $SYSFONT/$1.otf ]) && mv $SYSFONT/$1.[to]tf $SYSFONT/$2.ttf
+		([ -f $SYSFONT/c$1.ttf ] || [ -f $SYSFONT/c$1.otf ]) && mv $SYSFONT/c$1.[to]tf $SYSFONT/Condensed-$2.ttf
+		shift 2; [ $2 ] || break
+	done
 }
 
 patch() {
@@ -175,7 +155,7 @@ rom() {
 ### INSTALLATION ###
 ui_print "- Installing"
 mkdir -p $SYSFONT $SYSETC $PRDFONT
-cp $FONTDIR/* $SYSFONT && chmod -R 644 $SYSFONT || abort "! $FONTDIR: no font found"
+cp $FONTDIR/* $SYSFONT && chmod 644 $SYSFONT/* || abort "! $FONTDIR: no font found"
 rename
 patch
 rom
