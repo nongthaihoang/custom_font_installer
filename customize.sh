@@ -26,7 +26,7 @@ backup() {
 rename() {
 	set bli BlackItalic bl Black bi BoldItalic b Bold mi MediumItalic m Medium i Italic r Regular li LightItalic l Light ti ThinItalic t Thin mo Mono e Emoji
 	for i do
-		([ -f $SYSFONT/$1.ttf ]	|| [ -f $SYSFONT/$1.otf ]) && mv $SYSFONT/$1.[to]tf $SYSFONT/$2.ttf
+		([ -f $SYSFONT/$1.ttf ] || [ -f $SYSFONT/$1.otf ]) && mv $SYSFONT/$1.[to]tf $SYSFONT/$2.ttf
 		([ -f $SYSFONT/c$1.ttf ] || [ -f $SYSFONT/c$1.otf ]) && mv $SYSFONT/c$1.[to]tf $SYSFONT/Condensed-$2.ttf
 		shift 2; [ $2 ] || break
 	done
