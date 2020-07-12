@@ -34,7 +34,6 @@ rename() {
 
 patch() {
 	[ -f $ORIGDIR/system/etc/fonts.xml ] && cp $ORIGDIR/system/etc/fonts.xml $SYSXML || abort "! $ORIGDIR/system/etc/fonts.xml: file not found"
-	cp $ORIGDIR/system/etc/fonts.xml $SYSXML
 	sed -i '/"sans-serif">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
 	sed -i ':a;N;$!ba;s/name="sans-serif"//2' $SYSXML
 	local count=0
@@ -53,11 +52,9 @@ clean_up() {
 	rmdir -p $SYSETC $PRDFONT
 }
 
-version() { sed -i 3"s/$/-$1&/" $MODPROP; }
-
 pixel() {
 	local dest
-	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ]; then
+	if [ -f $ORIGDIR/product/fonts/GoogleSans-Regular.ttf ] || [ -f $ORIGDIR/system/product/fonts/GoogleSans-Regular.ttf ]; then
 		dest=$PRDFONT
 	elif [ -f $ORIGDIR/system/fonts/GoogleSans-Regular.ttf ]; then
 		dest=$SYSFONT
@@ -65,7 +62,9 @@ pixel() {
 	if [ $dest ]; then
 		set BoldItalic Bold MediumItalic Medium Italic Regular
 		for i do cp $SYSFONT/$i.ttf $dest/GoogleSans-$i.ttf; done
-		version pxl; PXL=true
+		version pxl
+	else
+		false
 	fi
 }
 
@@ -74,7 +73,9 @@ oxygen() {
 		set Black Bold Medium Regular Light Thin
 		for i do cp $SYSFONT/$i.ttf $SYSFONT/SlateForOnePlus-$i.ttf; done
 		cp $SYSFONT/Regular.ttf $SYSFONT/SlateForOnePlus-Book.ttf
-		version oos; OOS=true
+		version oos
+	else
+		false
 	fi
 }
 
@@ -113,44 +114,42 @@ miui() {
 				fi
 			fi
 		done
-		version miui; MIUI=true
+		version miui
+	else
+		false
 	fi
 }
 
 lg() {
+	local lg=false
 	if grep -q lg-sans-serif $SYSXML; then
 		sed -i '/"lg-sans-serif">/,/family>/{/"lg-sans-serif">/!d};/"sans-serif">/,/family>/{/"sans-serif">/!H};/"lg-sans-serif">/G' $SYSXML
-		LG=true
+		lg=true
 	fi
 	if [ -f $ORIGDIR/system/etc/fonts_lge.xml ]; then
 		cp $ORIGDIR/system/etc/fonts_lge.xml $SYSETC
 		local lgxml=$SYSETC/fonts_lge.xml
 		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 		for i do [ -f $SYSFONT/$i.ttf ] && sed -i "/\"default_roboto\">/,/family>/s/Roboto-$i/$i/" $lgxml; done
-		LG=true
+		lg=true
 	fi
-	$LG && version lg
+	$lg && version lg || false
 }
 
 samsung() {
 	if grep -q Samsung $SYSXML; then
 		sed -i 's/SECRobotoLight-Bold/Medium/;s/SECRobotoLight-//;s/SECCondensed-/Condensed-/' $SYSXML
-		version sam; SAM=true
+		version sam
+	else
+		false
 	fi
 }
 
 rom() {
-	PXL=false; OOS=false; MIUI=false; LG=false; SAM=false
-	pixel
-	if ! $PXL; then oxygen
-		if ! $OOS; then miui
-			if ! $MIUI; then lg
-				if ! $LG; then samsung
-				fi
-			fi
-		fi
-	fi
+	pixel || oxygen || miui || lg || samsung
 }
+
+version() { sed -i 3"s/$/-$1&/" $MODPROP; }
 
 ### INSTALLATION ###
 ui_print "- Installing"
