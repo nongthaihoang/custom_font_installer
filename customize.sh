@@ -1,3 +1,6 @@
+# Custom Font Installer 
+# by nongthaihoang @ xda
+
 [ ! $MAGISKTMP ] && MAGISKTMP=$(magisk --path)/.magisk
 [ -d $MAGISKTMP ] && ORIGDIR=$MAGISKTMP/mirror
 FONTDIR=/sdcard/CFI
@@ -10,16 +13,16 @@ MODPROP=$MODPATH/module.prop
 backup() {
 	local backup=/sdcard/cfi-backup.zip
 	local backupdir=$TMPDIR/cfi-backup
-	local zip=$MODPATH/zip
+	local zip=$MODPATH/tools/zip
 	chmod 755 $zip
 	ui_print "- Backing up"
 	mkdir -p $backupdir/system/fonts
 	unzip -q $ZIPFILE -d $backupdir
 	cp $FONTDIR/* $backupdir/system/fonts
-	sed -i '/FONTDIR/d;9,24d;/backup/d' $backupdir/customize.sh
+	sed -i '/FONTDIR/d;12,27d;/backup/d' $backupdir/customize.sh
 	cd $backupdir
-	rm zip $backup
-	$zip -q -9 $backup -r *
+	rm tools/zip $backup
+	$zip -9q $backup -r *
 	rm $zip
 }
 
@@ -48,7 +51,7 @@ patch() {
 }
 
 clean_up() {
-	rm $MODPATH/LICENSE
+	rm -rf $MODPATH/LICENSE $MODPATH/tools
 	rmdir -p $SYSETC $PRDFONT
 }
 
@@ -62,7 +65,7 @@ pixel() {
 	if [ $dest ]; then
 		set BoldItalic Bold MediumItalic Medium Italic Regular
 		for i do cp $SYSFONT/$i.ttf $dest/GoogleSans-$i.ttf; done
-		version pxl
+		ver pxl
 	else
 		false
 	fi
@@ -73,7 +76,7 @@ oxygen() {
 		set Black Bold Medium Regular Light Thin
 		for i do cp $SYSFONT/$i.ttf $SYSFONT/SlateForOnePlus-$i.ttf; done
 		cp $SYSFONT/Regular.ttf $SYSFONT/SlateForOnePlus-Book.ttf
-		version oos
+		ver oos
 	else
 		false
 	fi
@@ -114,7 +117,7 @@ miui() {
 				fi
 			fi
 		done
-		version miui
+		ver miui
 	else
 		false
 	fi
@@ -133,34 +136,33 @@ lg() {
 		for i do [ -f $SYSFONT/$i.ttf ] && sed -i "/\"default_roboto\">/,/family>/s/Roboto-$i/$i/" $lgxml; done
 		lg=true
 	fi
-	$lg && version lg || false
+	$lg && ver lg || false
 }
 
 samsung() {
 	if grep -q Samsung $SYSXML; then
 		sed -i 's/SECRobotoLight-Bold/Medium/;s/SECRobotoLight-//;s/SECCondensed-/Condensed-/' $SYSXML
-		version sam
+		ver sam
 	else
 		false
 	fi
 }
 
 rom() {
-	pixel || oxygen || miui || lg || samsung
+	pixel || oxygen || miui || samsung || lg
 }
 
-version() { sed -i 3"s/$/-$1&/" $MODPROP; }
+ver() { sed -i 3"s/$/-$1&/" $MODPROP; }
 
 ### INSTALLATION ###
 ui_print "- Installing"
 mkdir -p $SYSFONT $SYSETC $PRDFONT
-cp $FONTDIR/* $SYSFONT && chmod 644 $SYSFONT/* || abort "! $FONTDIR: no font found"
+cp $FONTDIR/* $SYSFONT && chmod 644 $SYSFONT/* || abort "! $FONTDIR: font not found"
 rename
 patch
 rom
+backup
 
 ### CLEAN UP ###
 ui_print "- Cleaning up"
 clean_up
-
-backup
