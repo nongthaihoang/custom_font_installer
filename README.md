@@ -1,7 +1,7 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![version](https://img.shields.io/badge/Version-2.2-brightgreen.svg)](https://github.com/nongthaihoang/custom_font_installer/releases/tag/v2.1) 
+[![version](https://img.shields.io/badge/Version-2.2-brightgreen.svg)](https://github.com/nongthaihoang/custom_font_installer/releases/tag/v2.2) 
 ![updated](https://img.shields.io/badge/Updated-Sep_30,_2020-green.svg) 
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349) 
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
