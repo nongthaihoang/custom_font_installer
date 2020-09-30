@@ -9,6 +9,7 @@ PRDFONT=$MODPATH/system/product/fonts
 SYSETC=$MODPATH/system/etc
 SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
+mkdir -p $SYSFONT $SYSETC $PRDFONT
 
 backup() {
 	local backup=/sdcard/cfi-backup.zip
@@ -19,7 +20,7 @@ backup() {
 	mkdir -p $backupdir/system/fonts
 	unzip -q $ZIPFILE -d $backupdir
 	cp $FONTDIR/* $backupdir/system/fonts
-	sed -i '/FONTDIR/d;12,27d;/backup/d' $backupdir/customize.sh
+	sed -i '/FONTDIR/d;13,28d;/backup/d' $backupdir/customize.sh
 	cd $backupdir
 	rm tools/zip $backup
 	$zip -9q $backup -r *
@@ -36,18 +37,31 @@ rename() {
 }
 
 patch() {
-	[ -f $ORIGDIR/system/etc/fonts.xml ] && cp $ORIGDIR/system/etc/fonts.xml $SYSXML || abort "! $ORIGDIR/system/etc/fonts.xml: file not found"
-	sed -i '/"sans-serif">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
-	sed -i ':a;N;$!ba;s/name="sans-serif"//2' $SYSXML
-	local count=0
-	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
-	for i do
-		[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/Roboto-$i/$i/" $SYSXML; count=$((count + 1)); }
-		[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
-	done
-	[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
-	[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML; count=$((count + 1)); }
-	[ $count -eq 0 ] && rm $SYSXML
+	if [ -f $ORIGDIR/system/etc/fonts.xml ]; then
+		if ! grep -q 'family >' /system/etc/fonts.xml; then
+			find /data/adb/modules/ -type f -name fonts*xml -exec rm {} \;
+			false | cp -i /system/etc/fonts.xml $SYSXML && ver !
+		else
+			false | cp -i $ORIGDIR/system/etc/fonts.xml $SYSXML 
+		fi
+	else
+		abort "! $ORIGDIR/system/etc/fonts.xml: file not found"
+	fi
+	DEFFONT=$(sed -n '/"sans-serif">/,/family>/p' $SYSXML | grep '\-Regular.' | sed 's/.*">//;s/-.*//')
+	[ $DEFFONT ] || abort "! Unknown default font"
+	if ! grep -q 'family >' $SYSXML; then
+		sed -i '/"sans-serif">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
+		sed -i ':a;N;$!ba;s/name="sans-serif"//2' $SYSXML
+		local count=0
+		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
+		for i do
+			[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/$DEFFONT-$i/$i/" $SYSXML; count=$((count + 1)); }
+			[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
+		done
+		[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
+		[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML; count=$((count + 1)); }
+		[ $count -ne 0 ] || rm $SYSXML
+	fi
 }
 
 clean_up() {
@@ -130,7 +144,7 @@ lg() {
 		lg=true
 	fi
 	if [ -f $ORIGDIR/system/etc/fonts_lge.xml ]; then
-		cp $ORIGDIR/system/etc/fonts_lge.xml $SYSETC
+		false | cp -i $ORIGDIR/system/etc/fonts_lge.xml $SYSETC
 		local lgxml=$SYSETC/fonts_lge.xml
 		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
 		for i do [ -f $SYSFONT/$i.ttf ] && sed -i "/\"default_roboto\">/,/family>/s/Roboto-$i/$i/" $lgxml; done
@@ -141,22 +155,34 @@ lg() {
 
 samsung() {
 	if grep -q Samsung $SYSXML; then
-		sed -i 's/SECRobotoLight-Bold/Medium/;s/SECRobotoLight-//;s/SECCondensed-/Condensed-/' $SYSXML
+		[ -f $SYSFONT/Bold.ttf ] && sed -i 's/SECCondensed-/Condensed-/' $SYSXML
+		[ -f $SYSFONT/Medium.ttf ] && sed -i 's/SECRobotoLight-Bold/Medium/' $SYSXML
+		[ -f $SYSFONT/Regular.ttf ] && sed -i 's/SECRobotoLight-//' $SYSXML
 		ver sam
 	else
 		false
 	fi
 }
 
-rom() {
-	pixel || oxygen || miui || samsung || lg
+realme() {
+	if grep -q COLOROS $SYSXML; then
+		if [ -f $ORIGDIR/system/etc/fonts_base.xml ]; then
+			local ruixml=$SYSETC/fonts_base.xml
+			cp $SYSXML $ruixml
+			sed -i "/\"sans-serif\">/,/family>/s/$DEFFONT/Roboto/" $ruixml
+		fi
+		ver rui
+	else
+		false
+	fi
 }
+
+rom() { pixel || oxygen || miui || samsung || lg || realme; }
 
 ver() { sed -i 3"s/$/-$1&/" $MODPROP; }
 
 ### INSTALLATION ###
 ui_print "- Installing"
-mkdir -p $SYSFONT $SYSETC $PRDFONT
 cp $FONTDIR/* $SYSFONT && chmod 644 $SYSFONT/* || abort "! $FONTDIR: font not found"
 rename
 patch
