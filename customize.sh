@@ -59,7 +59,7 @@ patch() {
 			[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
 		done
 		[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
-		[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//;s/SamsungColor//' $SYSXML; count=$((count + 1)); }
+		[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//' $SYSXML; count=$((count + 1)); }
 		[ $count -ne 0 ] || rm $SYSXML
 	fi
 }
@@ -158,6 +158,7 @@ samsung() {
 		[ -f $SYSFONT/Bold.ttf ] && sed -i 's/SECCondensed-/Condensed-/' $SYSXML
 		[ -f $SYSFONT/Medium.ttf ] && sed -i 's/SECRobotoLight-Bold/Medium/' $SYSXML
 		[ -f $SYSFONT/Regular.ttf ] && sed -i 's/SECRobotoLight-//' $SYSXML
+		[ -f $SYSFONT/Emoji.ttf ] && sed -i 's/SamsungColor//' $SYSXML
 		ver sam
 	else
 		false
