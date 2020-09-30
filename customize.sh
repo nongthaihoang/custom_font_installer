@@ -155,7 +155,7 @@ lg() {
 
 samsung() {
 	if grep -q Samsung $SYSXML; then
-		[ -f $SYSFONT/Bold.ttf ] && sed -i 's/SECCondensed-/Condensed-/' $SYSXML
+		[ -f $SYSFONT/Condensed-Bold.ttf ] && sed -i 's/SECCondensed-/Condensed-/' $SYSXML
 		[ -f $SYSFONT/Medium.ttf ] && sed -i 's/SECRobotoLight-Bold/Medium/' $SYSXML
 		[ -f $SYSFONT/Regular.ttf ] && sed -i 's/SECRobotoLight-//' $SYSXML
 		[ -f $SYSFONT/Emoji.ttf ] && sed -i 's/SamsungColor//' $SYSXML
