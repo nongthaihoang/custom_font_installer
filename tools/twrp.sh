@@ -712,6 +712,7 @@ install_module() {
 
   cp -r $SYSETC $SYSFONT /system #TWRP
   cp -r $PRDFONT /product || cp -r $PRDFONT /system/product #TWRP
+  cp $MODPROP /sdcard/
 
   # Remove stuffs that don't belong to modules
   rm -rf \
