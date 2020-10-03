@@ -1,7 +1,7 @@
 id=customfontinstaller
 name=Custom Font Installer
-version=v2.2
-versionCode=22
+version=v2.3-pre-final
+versionCode=23
 author=nongthaihoang
 description=Apply custom fonts the easy way
 support=https://forum.xda-developers.com/apps/magisk/font-headline-fonts-nongthaihoang-t3886349

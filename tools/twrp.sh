@@ -6,8 +6,8 @@
 #
 ############################################
 
-# MAGISK_VER="e66b0bf3"
-# MAGISK_VER_CODE=20425
+# MAGISK_VER="21.0" #TWRP
+# MAGISK_VER_CODE=21000 #TWRP
 
 ###################
 # Helper Functions
@@ -104,8 +104,8 @@ ensure_bb() {
 
   # Find our busybox binary
   local bb
-  if [ -f $TMPDIR/tools/busybox ]; then
-    bb=$TMPDIR/tools/busybox
+  if [ -f $TMPDIR/tools/busybox ]; then #TWRP
+    bb=$TMPDIR/tools/busybox #TWRP
   elif [ -f $MAGISKBIN/busybox ]; then
     bb=$MAGISKBIN/busybox
   else
@@ -234,7 +234,7 @@ mount_ro_ensure() {
   $BOOTMODE && return
   local PART=$1
   local POINT=$2
-  mount_name "$PART" $POINT '-o rw'
+  mount_name "$PART" $POINT '-o rw' #TWRP
   is_mounted $POINT || abort "! Cannot mount $POINT"
 }
 
@@ -365,11 +365,12 @@ get_flags() {
       KEEPVERITY=false
     fi
   fi
+  ISENCRYPTED=false
+  grep ' /data ' /proc/mounts | grep -q 'dm-' && ISENCRYPTED=true
+  [ "$(getprop ro.crypto.state)" = "encrypted" ] && ISENCRYPTED=true
   if [ -z $KEEPFORCEENCRYPT ]; then
-    grep ' /data ' /proc/mounts | grep -q 'dm-' && FDE=true || FDE=false
-    [ -d /data/unencrypted ] && FBE=true || FBE=false
     # No data access means unable to decrypt in recovery
-    if $FDE || $FBE || ! $DATA; then
+    if $ISENCRYPTED || ! $DATA; then
       KEEPFORCEENCRYPT=true
       ui_print "- Encrypted data, keep forceencrypt"
     else
@@ -448,13 +449,7 @@ install_magisk() {
 
   # Restore the original boot partition path
   [ "$BOOTNAND" ] && BOOTIMAGE=$BOOTNAND
-
-  if ! flash_image new-boot.img "$BOOTIMAGE"; then
-    ui_print "- Compressing ramdisk to fit in partition"
-    ./magiskboot cpio ramdisk.cpio compress
-    ./magiskboot repack "$BOOTIMAGE"
-    flash_image new-boot.img "$BOOTIMAGE" || abort "! Insufficient partition size"
-  fi
+  flash_image new-boot.img "$BOOTIMAGE" || abort "! Insufficient partition size"
 
   ./magiskboot cleanup
   rm -f new-boot.img
@@ -630,6 +625,9 @@ install_module() {
   local PERSISTDIR
   command -v magisk >/dev/null && PERSISTDIR=$(magisk --path)/mirror/persist
 
+  # rm -rf $TMPDIR #TWRP
+  # mkdir -p $TMPDIR #TWRP
+
   setup_flashable
   mount_partitions
   api_level_arch_detect
@@ -638,12 +636,20 @@ install_module() {
   $BOOTMODE && boot_actions || recovery_actions
 
   # Extract prop file
+  # unzip -o "$ZIPFILE" module.prop -d $TMPDIR >&2 #TWRP
   [ ! -f $TMPDIR/module.prop ] && abort "! Unable to extract zip file!"
 
+  local MODDIRNAME
+  $BOOTMODE && MODDIRNAME=modules_update || MODDIRNAME=modules
+  local MODULEROOT=$NVBASE/$MODDIRNAME
   MODID=`grep_prop id $TMPDIR/module.prop`
   MODNAME=`grep_prop name $TMPDIR/module.prop`
   MODAUTH=`grep_prop author $TMPDIR/module.prop`
-  MODPATH=$TMPDIR
+  MODPATH=$TMPDIR #TWRP
+
+  # Create mod paths
+  # rm -rf $MODPATH 2>/dev/null #TWRP
+  # mkdir -p $MODPATH #TWRP
 
   if is_legacy_script; then
     unzip -oj "$ZIPFILE" module.prop install.sh uninstall.sh 'common/*' -d $TMPDIR >&2
@@ -666,9 +672,13 @@ install_module() {
     set_permissions
   else
     print_title "$MODNAME" "by $MODAUTH"
+    # print_title "Powered by Magisk" #TWRP
+
+    # unzip -o "$ZIPFILE" customize.sh -d $MODPATH >&2 #TWRP
 
     if ! grep -q '^SKIPUNZIP=1$' $MODPATH/customize.sh 2>/dev/null; then
       ui_print "- Extracting module files"
+      # unzip -o "$ZIPFILE" -x 'META-INF/*' -d $MODPATH >&2 #TWRP
 
       # Default permissions
       set_perm_recursive $MODPATH 0 0 0755 0644
@@ -700,8 +710,8 @@ install_module() {
     cp -af $MODPATH/sepolicy.rule $PERSISTMOD/sepolicy.rule || abort "! Insufficient partition size"
   fi
 
-  cp -r $SYSETC $SYSFONT /system
-  cp -r $PRDFONT /product || cp -r $PRDFONT /system/product
+  cp -r $SYSETC $SYSFONT /system #TWRP
+  cp -r $PRDFONT /product || cp -r $PRDFONT /system/product #TWRP
 
   # Remove stuffs that don't belong to modules
   rm -rf \
@@ -724,6 +734,7 @@ install_module() {
 [ -z $BOOTMODE ] && ps -A 2>/dev/null | grep zygote | grep -qv grep && BOOTMODE=true
 [ -z $BOOTMODE ] && BOOTMODE=false
 
+NVBASE=/data/adb
 TMPDIR=/dev/tmp
 
 # Bootsigner related stuff

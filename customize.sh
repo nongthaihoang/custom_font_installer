@@ -47,21 +47,21 @@ patch() {
 	else
 		abort "! $ORIGDIR/system/etc/fonts.xml: file not found"
 	fi
-	DEFFONT=$(sed -n '/"sans-serif">/,/family>/p' $SYSXML | grep '\-Regular.' | sed 's/.*">//;s/-.*//')
+	DEFFONT=$(sed -n '/"sans-serif">/,/family>/p' $SYSXML | grep '\-Regular.' | sed 's/.*">//;s/-.*//' | tail -1)
 	[ $DEFFONT ] || abort "! Unknown default font"
 	if ! grep -q 'family >' $SYSXML; then
 		sed -i '/"sans-serif">/,/family>/H;1,/family>/{/family>/G}' $SYSXML
 		sed -i ':a;N;$!ba;s/name="sans-serif"//2' $SYSXML
-		local count=0
-		set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
-		for i do
-			[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/$DEFFONT-$i/$i/" $SYSXML; count=$((count + 1)); }
-			[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
-		done
-		[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
-		[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//' $SYSXML; count=$((count + 1)); }
-		[ $count -ne 0 ] || rm $SYSXML
 	fi
+	local count=0
+	set BlackItalic Black BoldItalic Bold MediumItalic Medium Italic Regular LightItalic Light ThinItalic Thin
+	for i do
+		[ -f $SYSFONT/$i.ttf ] && { sed -i "/\"sans-serif\">/,/family>/s/$DEFFONT-$i/$i/" $SYSXML; count=$((count + 1)); }
+		[ -f $SYSFONT/Condensed-$i.ttf ] && { sed -i "s/RobotoCondensed-$i/Condensed-$i/" $SYSXML; count=$((count + 1)); }
+	done
+	[ -f $SYSFONT/Mono.ttf ] && { sed -i 's/DroidSans//' $SYSXML; count=$((count + 1)); }
+	[ -f $SYSFONT/Emoji.ttf ] && { sed -i 's/NotoColor//' $SYSXML; count=$((count + 1)); }
+	[ $count -ne 0 ] || rm $SYSXML
 }
 
 clean_up() {
@@ -86,7 +86,13 @@ pixel() {
 }
 
 oxygen() {
-	if [ -f $ORIGDIR/system/fonts/SlateForOnePlus-Regular.ttf ]; then
+	if grep -q OnePlus $SYSXML; then
+		if [ -f $ORIGDIR/system/etc/fonts_base.xml ]; then
+			local oosxml=$SYSETC/fonts_base.xml
+			cp $SYSXML $oosxml
+			sed -i "/\"sans-serif\">/,/family>/s/$DEFFONT/Roboto/" $oosxml
+		fi
+	elif [ -f $ORIGDIR/system/fonts/SlateForOnePlus-Regular.ttf ]; then
 		set Black Bold Medium Regular Light Thin
 		for i do cp $SYSFONT/$i.ttf $SYSFONT/SlateForOnePlus-$i.ttf; done
 		cp $SYSFONT/Regular.ttf $SYSFONT/SlateForOnePlus-Book.ttf
