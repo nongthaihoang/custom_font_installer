@@ -2,15 +2,15 @@
 **Custom Font Installer for Android**
 
 [![version](https://img.shields.io/badge/Version-3.0-brightgreen.svg)](https://github.com/nongthaihoang/custom_font_installer/releases/tag/v3.0) 
-![updated](https://img.shields.io/badge/Updated-Oct_05,_2021-green.svg) 
+![updated](https://img.shields.io/badge/Updated-Oct_05,_2021-green.svg)  
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
-[![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
-[![download](https://img.shields.io/badge/Download-↓-red.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
+[![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)  
+[![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/releases)
 [![donate](https://img.shields.io/badge/Donate-Paypal-pink.svg)](https://paypal.me/nongthaihoang)
 
  
 ## Description
-Install custom fonts manually via Magisk. (Now powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
+Install custom fonts manually via Magisk. (Powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
 
 ## Usage
 - Put your fonts in ``OhMyFont/CFI`` folder.
