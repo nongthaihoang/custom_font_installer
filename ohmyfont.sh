@@ -299,8 +299,10 @@ rom() {
         }
         set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
         while [ $2 ]; do
-            [ -f $SYSFONT/$1$X ] && ln -s /system/fonts/$1$X $PRDFONT
-            font $fa $1$X $2
+            [ -f $SYSFONT/$1$X ] && {
+                ln -s /system/fonts/$1$X $PRDFONT
+                font $fa $1$X $2
+            }
             shift 2
         done
         return
@@ -344,11 +346,11 @@ rom() {
             font sec-roboto-condensed-light $SS r $CL
             return
         }
-        font sec-roboto-light $Re$X r
-        font sec-roboto-light $Me$X b
-        font sec-roboto-condensed $Cn$Re$X r
-        font sec-roboto-condensed $Cn$Bo$X b
-        font sec-roboto-condensed-light $Cn$Li$X r
+        [ -f $SYSFONT/$Re$X ] && font sec-roboto-light $Re$X r
+        [ -f $SYSFONT/$Me$X ] && font sec-roboto-light $Me$X b
+        [ -f $SYSFONT/$Cn$Re$X ] && font sec-roboto-condensed $Cn$Re$X r
+        [ -f $SYSFONT/$Cn$Bo$X ] && font sec-roboto-condensed $Cn$Bo$X b
+        [ -f $SYSFONT/$Cn$Li$X ] && font sec-roboto-condensed-light $Cn$Li$X r
         return
     }
 
