@@ -13,7 +13,7 @@
 Install custom fonts manually via Magisk. (Powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
 
 ## Usage
-- Put your fonts in ``OhMyFont/CFI`` folder.
+- Put your fonts in `OhMyFont/CFI` folder.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
   BlackItalic      -> bli.ttf
