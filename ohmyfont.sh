@@ -275,8 +275,8 @@ bold() {
         cp `readlink -f $SYSFONT/$Me$X` `readlink -f $SYSFONT/$Re$X`
         cp `readlink -f $SYSFONT/$Me$It$X` `readlink -f $SYSFONT/$It$X`
         [ $PXL ] && {
-            ln -sf $Me$X $PRDFONT/$Re$X
-            ln -sf $Me$It$X $PRDFONT/$It$X
+            [ -f $PRDFONT/$Me$X ] && ln -sf $Me$X $PRDFONT/$Re$X
+            [ -f $PRDFONT/$Me$It$X ] && ln -sf $Me$It$X $PRDFONT/$It$X
         }
     }
 }
