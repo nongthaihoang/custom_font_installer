@@ -1,11 +1,10 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![version](https://img.shields.io/badge/Version-3.1-brightgreen.svg)]() 
 [![updated](https://img.shields.io/badge/Updated-Oct_08,_2021-green.svg)]()
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
-[![download](https://img.shields.io/badge/Download-↓-yellow.svg)]()
+[![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
 [![donate](https://img.shields.io/badge/Donate-Paypal-pink.svg)](https://paypal.me/nongthaihoang)
 
  
