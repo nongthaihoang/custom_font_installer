@@ -328,7 +328,7 @@ rom() {
 
     # MIUI
     grep -q MIUI $ORISYSXML && {
-        MIUI=`sed -n "/$FA.*\"miui\">/,$FAE{/400.*$N/{s|.*>||;p}}" $SYSXML`
+        MIUI=`sed -n "/$FA.*\"miui\"/,$FAE{/400.*$N/{s|.*>||;p}}" $SYSXML`
         [ -f $ORISYSFONT/$MIUI ] && ln -s $X $SYSFONT/$MIUI
         ver miui; return
     }
