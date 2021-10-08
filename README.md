@@ -5,12 +5,12 @@
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
-[![changelog](https://img.shields.io/badge/Changelog-↻-orange.svg)](https://github.com/nongthaihoang/custom_font_installer/commits/master)
+[![changelog](https://img.shields.io/badge/Changelog-↻-lightgrey.svg)](https://github.com/nongthaihoang/custom_font_installer/commits/master)
 [![donate](https://img.shields.io/badge/Donate-Paypal-pink.svg)](https://paypal.me/nongthaihoang)
 
  
 ## Description
-Install custom fonts manually via Magisk. (Powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
+Install custom fonts manually via Magisk/TWRP. (Powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
 
 ## Usage
 - Put your fonts in `OhMyFont/CFI` folder.
