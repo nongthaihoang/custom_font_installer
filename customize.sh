@@ -13,7 +13,9 @@ config
 ui_print '+ Font'
 mkdir $FONTS
 cp ${CFI:=$OMFDIR/CFI}/* $FONTS || ui_print "! $CFI: font not found"
+[ -f $FONTS/$SS ] || SS=
 [ -f $FONTS/$SSI ] || SSI=$SS
+[ -f $FONTS/$MS ] || MS=
 install_font
 
 src
