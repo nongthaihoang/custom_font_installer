@@ -10,9 +10,10 @@
 
  
 ## Description
-Install custom fonts manually via Magisk/TWRP. (Powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate))
+Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate)).
 
 ## Usage
+### Static fonts
 - Put your fonts in `OhMyFont/CFI` folder.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
@@ -58,3 +59,15 @@ Install custom fonts manually via Magisk/TWRP. (Powered by [OMF](https://gitlab.
 - For `emoji`, rename to `e.ttf`.
 - For the rest, name your fonts the same as the ones that you want to replace in `/system/fonts`.
 - Finally, flash the CFI zip and reboot.
+
+### Variable fonts (VF)
+All steps are the same as in static fonts. Only these are different.
+- For `sans-serif`, rename VF to `ss.ttf` (uprights) and `ssi.ttf` (italics).
+- For `monospace`, rename VF to `ms.ttf`.
+- Configure axes in the config file `OhMyFont/config.cfg`.
+
+### Note
+- You don't need to have all font files listed above, just use what available.
+- In case of `sans-serif`, there must be at least one font `r.ttf` or `ss.ttf`.
+- If using VF, get the default config file in the CFI zip.
+- For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
