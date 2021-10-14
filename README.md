@@ -69,5 +69,5 @@ All steps are the same as in static fonts. Only these are different.
 ### Note
 - You don't need to have all font files listed above, just use what available.
 - In case of `sans-serif`, there must be at least one font `r.ttf` or `ss.ttf`.
-- If using VF, get the default config file in the CFI zip.
+- If using VF, flash the CFI zip for the first time to get the default config file.
 - For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
