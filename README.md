@@ -1,7 +1,7 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![updated](https://img.shields.io/badge/Updated-Oct_14,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Oct_15,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
@@ -14,7 +14,7 @@ Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.c
 
 ## Usage
 ### Static fonts
-- Put your fonts in `OhMyFont/CFI` folder.
+- Put your fonts in this path `/sdcard/OhMyFont/CFI`.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
   BlackItalic      -> bli.ttf
@@ -61,7 +61,7 @@ Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.c
 - Finally, flash the CFI zip and reboot.
 
 ### Variable fonts (VF)
-All steps are the same as in static fonts. Only these are different.
+All steps are the same as in static fonts. Except the followings.
 - For `sans-serif`, rename VF to `ss.ttf` (uprights) and `ssi.ttf` (italics).
 - For `monospace`, rename VF to `ms.ttf`.
 - Configure axes in the config file `OhMyFont/config.cfg`.
@@ -71,4 +71,4 @@ All steps are the same as in static fonts. Only these are different.
 - In case of `sans-serif`, there must be at least one font `r.ttf` or `ss.ttf`.
 - If using VF, flash the CFI zip for the first time to get the default config file.
 - For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
-- Be aware that not every font will work on Android properly.
+- Be aware that not every font will work properly on Android.
