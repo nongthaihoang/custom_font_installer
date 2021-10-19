@@ -18,11 +18,14 @@ cp ${CFI:=$OMFDIR/CFI}/* $FONTS || ui_print "! $CFI: font not found"
 [ -f $FONTS/$MS ] || MS=
 install_font
 false | cp -i $FONTS/* $SYSFONT
+$SANS || rm $SYSXML
 
 src
 
-ui_print '+ Rom'
-rom
+$SANS && {
+    ui_print '+ Rom'
+    rom
+}
 
 bold
 finish
