@@ -293,7 +293,7 @@ romprep() {
 }
 
 rom() {
-    $SANS && $FULL && [ ${GS:=false} = false ] && {
+    $SANS && $FULL && [ ${GS:-false} = false ] && {
         local fa=google-sans.* xml=$FONTS/gsvf.xml m=verdana i
         [ $PXL ] && [ $API -lt 31 ] && {
                 m=version; local XML=$PRDXML
@@ -318,7 +318,7 @@ rom() {
 
     # Pixel
     [ $PXL ] && {
-        PXL=true; ver pxl; ${GS:=false} && return
+        PXL=true; ver pxl; ${GS:-false} && return
         local XML=$PRDXML fa=google-sans.* i
         [ $SS ] && {
             ln -s /system/fonts/$SS $PRDFONT
@@ -437,4 +437,5 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@Ìg§‹Êà4p¹1éY6¤_ŒiîKÊ¨+@(ÅÞ›¸&Yø‚yk¸	UÉ—7>Á66ÎßáAC5ÝRÒíB¢z­ƒ¡¸t×vî`!G-wNÚ'tv5tý*¦Œe&Úì7HcíÔ$íÁÙQ­@’<×Jà$w >hQWëNÇ…fyÇÜêšUkê}áÄ¯Aå"û¤‡¢]z&Òª¶yg¼D‡õ±Vê·”—ÙÂo:dâûqÐ!E@AlØ­¾?Æ¥T¨W?EçÓr+Š,ñW˜†i‘¥‡&)Ï4W„èÙZË3¯åø—œý€!_(f­;åm•0a|…Rñ¬ÂÑµºfì~2gP¥Å.*¯Ña˜L|gûT„¼ôÏ^›§e/óElß.T~13ÕÔZ)òç“=„¼w·IÆƒê¬ÌòA]>Nö8ä VŒ a'¤ìùrdXßåöK¢'¼£ÿ)_Ò:½ÿâY­Vš”¼i¤÷xœô˜Höœ·í‘¾úR     ýOàïAˆ˜ É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ«€P!        ¦š„à'ÿ£] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@ÊÏô¶¾Áâ9€øe(?¯Ó®†Øå ü¹ªÅ£)µæÇáã¯Ëñð´æ]ñ"F}/	Fžûî9´¡´‰G‹Ñ±ðHk(Ê{1ÌöoGÔËø5è-Ýè²çØ> ™2ZòuZµòekr”gÊV1ŸÃád³ñUÊÕÈ\ƒÞÂtæqà;{­ø<é=ï#ÛUÒt…ð«ËDSnS‹oÿA©sQ28Oì…ˆ-ÙùÇ#yÓµÆ1Ì~ýÉíEcjö{Ì´zîÃÙ.D¬ä&r_wÀwŠ.èõœ¯±Æ³mâL-„q©µøëÏfä{âÒÑPF|úãõ$S‰
+9Q.ŸÁ5Æ2y‘cssÈ™p~à1«¾í×(éjL¢óSiv¶ ÑÇ@81‚ó£ÕJÁö×¿¬²0æ(o‹UÔŠt¹N¿5ñéÆ¾Ç ì8~JÑéòØÜíÓ<ºÚ€P-<m†	ëXí=ÈKÏruàÿc‚ªª–ãVãýõœcì?   þO|t`6Õ Ç€P  Šý	±Ägû    YZ
