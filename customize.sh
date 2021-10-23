@@ -17,7 +17,7 @@ cp ${CFI:=$OMFDIR/CFI}/* $FONTS || ui_print "! $CFI: font not found"
 [ -f $FONTS/$SSI ] || SSI=$SS
 [ -f $FONTS/$MS ] || MS=
 install_font
-false | cp -i $FONTS/* $SYSFONT
+false | cp -i $FONTS/*.[to]tf $SYSFONT
 $SANS || rm $SYSXML
 
 src

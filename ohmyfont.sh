@@ -25,23 +25,27 @@ mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC
 
 FONTS=$MODPATH/fonts
 tar xf $MODPATH/*xz -C $MODPATH
+SH=$MODPATH/ohmyfont.sh
+tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH
 
-FA=family FAE="/\/$FA/" F=font FE="<\/$F>"
-W=weight S=style I=italic N=normal ID=index
-FF=fallbackFor FW='t el l r m sb b eb bl'
-readonly FA FAE F FE W S I N ID FF FW
+vars() {
+    FA=family FAE="/\/$FA/" F=font FE="<\/$F>"
+    W=weight S=style I=italic N=normal ID=index
+    FF=fallbackFor FW='t el l r m sb b eb bl'
+    readonly FA FAE F FE W S I N ID FF FW
 
-SE=serif SA=sans-$SE SAQ="/\"$SA\">/" SAF="$SAQ,$FAE"
-SC=$SA-condensed SCQ="/\"$SC\">/" SCF="$SCQ,$FAE"
-MO=monospace SO=$SE-$MO
-readonly SE SA SAQ SAF SC SCQ SCF MO SO
+    SE=serif SA=sans-$SE SAQ="/\"$SA\">/" SAF="$SAQ,$FAE"
+    SC=$SA-condensed SCQ="/\"$SC\">/" SCF="$SCQ,$FAE"
+    MO=monospace SO=$SE-$MO
+    readonly SE SA SAQ SAF SC SCQ SCF MO SO
 
-Bl=Black Bo=Bold EBo=Extra$Bo SBo=Semi$Bo Me=Medium
-Th=Thin Li=Light ELi=Extra$Li Re=Regular It=Italic
-Cn=Condensed- X=.ttf
-readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X
+    Bl=Black Bo=Bold EBo=Extra$Bo SBo=Semi$Bo Me=Medium
+    Th=Thin Li=Light ELi=Extra$Li Re=Regular It=Italic
+    Cn=Condensed- X=.ttf
+    readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X
 
-FB=fallback
+    FB=fallback
+}
 
 ver() { sed -i "/^version=/s|$|-$1|" $MODPROP; }
 
@@ -87,6 +91,7 @@ fallback() {
 
 prep() {
     [ -f $ORISYSXML ] || abort "! $ORISYSXML not found"
+    vars; romprep
     ! grep -q "$FA >" /system/etc/fonts.xml && {
         find /data/adb/modules/ -type f -name fonts*xml -delete
         false | cp -i /system/etc/fonts.xml $SYSXML && ver '<!>'
@@ -215,7 +220,7 @@ install_font() {
         done
         return
     }
-    ${FULL:=`valof FULL`} && {
+    $FULL && {
         [ -f $FONTS/$Re$X ] || return
         lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
         lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
@@ -281,12 +286,39 @@ bold() {
     }
 }
 
+romprep() {
+    src 0
+    [ -f $ORIPRDFONT/GoogleSans-$Re$X ] && cp $ORIPRDXML $PRDXML && \
+        PXL=true && return
+}
+
 rom() {
+    $SANS && $FULL && [ ${GS:=false} = false ] && {
+        local fa=google-sans.* xml=$FONTS/gsvf.xml m=verdana i
+        [ $PXL ] && [ $API -lt 31 ] && {
+                m=version; local XML=$PRDXML
+                xml "/$FA.*$fa/,${FAE}d"
+        }
+        [ $PXL ] && [ $API -ge 31 ] || { xml "/$m/r $xml"; XML=; }
+        [ $PXL ] || {
+            [ $SS ] && {
+                for i in r m sb b; do
+                    eval $(echo font $fa $SS $i \$U`up $i`)
+                    eval $(echo font $fa $SSI ${i}i \$I`up $i`)
+                done
+            } || {
+                set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
+                while [ $2 ]; do
+                    [ -f $SYSFONT/$1$X ] && font $fa $1$X $2
+                    shift 2
+                done
+            }
+        }
+    }
+
     # Pixel
-    readonly Gs=GoogleSans
-    [ -f $ORIPRDFONT/$Gs-$Re$X ] && cp $ORIPRDXML $PRDXML && {
-        PXL=true; ver pxl
-        [ ${GS:=`valof GS`} ]; ${GS:=false} && return
+    [ $PXL ] && {
+        PXL=true; ver pxl; ${GS:=false} && return
         local XML=$PRDXML fa=google-sans.* i
         [ $SS ] && {
             ln -s /system/fonts/$SS $PRDFONT
@@ -386,6 +418,7 @@ config() {
 
     SANS=`valof SANS` MONO=`valof MONO`
     SERF=`valof SERF` SRMO=`valof SRMO`
+    FULL=`valof FULL` GS=`valof GS`
 
     SS=`valof SS` SSI=`valof SSI`
     [ ${SSI:=$SS} ] && \
@@ -401,3 +434,7 @@ config() {
         eval $(echo S$i=\"`valof S$i`\")
     done
 }
+
+return
+PAYLOAD:
+ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@Ìg§‹Êà4p¹1éY6¤_ŒiîKÊ¨+@(ÅŞ›¸&Yø‚yk¸	UÉ—7>Á66ÎßáAC5İRÒíB¢z­ƒ¡¸t×vî`!G-wNÚ'tv5tı*¦Œe&Úì7HcíÔ$íÁÙQ­@’<×Jà$w >hQWëNÇ…fyÇÜêšUkê}áÄ¯Aå"û¤‡¢]z&Òª¶yg¼D‡õ±Vê·”—ÙÂo:dâûqĞ!E@AlØ­¾?Æ¥T¨W?EçÓr+Š,ñW˜†i‘¥‡&)Ï4W„èÙZË3¯åø—œı€!_(f­;åm•0a|…Rñ¬ÂÑµºfì~2gP¥Å.*¯Ña˜L|gûT„¼ôÏ^›§e/óElß.T~13ÕÔZ)òç“=„¼w·IÆƒê¬ÌòA]>Nö8ä VŒ a'¤ìùrdXßåöK¢'¼£ÿ)_Ò:½ÿâY­Vš”¼i¤÷xœô˜Höœ·í‘¾úR     ıOàïAˆ˜ É€P  úy÷3±Ägû    YZ
