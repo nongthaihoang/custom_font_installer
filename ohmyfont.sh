@@ -201,7 +201,7 @@ install_font() {
     rename
     $EMOJ && emoji
     $MONO && mono
-    $SANS || abort
+    $SANS || return
     cpf $SS && {
         local i j=4 k=4
         for i in m sb b eb bl; do
@@ -437,5 +437,5 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ«€P!        ¦š„à'ÿ£] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@ÊÏô¶¾Áâ9€øe(?¯Ó®†Øå ü¹ªÅ£)µæÇáã¯Ëñð´æ]ñ"F}/	Fžûî9´¡´‰G‹Ñ±ðHk(Ê{1ÌöoGÔËø5è-Ýè²çØ> ™2ZòuZµòekr”gÊV1ŸÃád³ñUÊÕÈ\ƒÞÂtæqà;{­ø<é=ï#ÛUÒt…ð«ËDSnS‹oÿA©sQ28Oì…ˆ-ÙùÇ#yÓµÆ1Ì~ýÉíEcjö{Ì´zîÃÙ.D¬ä&r_wÀwŠ.èõœ¯±Æ³mâL-„q©µøëÏfä{âÒÑPF|úãõ$S‰
-9Q.ŸÁ5Æ2y‘cssÈ™p~à1«¾í×(éjL¢óSiv¶ ÑÇ@81‚ó£ÕJÁö×¿¬²0æ(o‹UÔŠt¹N¿5ñéÆ¾Ç ì8~JÑéòØÜíÓ<ºÚ€P-<m†	ëXí=ÈKÏruàÿc‚ªª–ãVãýõœcì?   þO|t`6Õ Ç€P  Šý	±Ägû    YZ
+ý7zXZ  æÖ´FÀ¬€P!       ÀWáà'ÿ¤] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@Ï8Ù:ÞGŒsçžàpK™V¬—œv¾î'l ¹ƒÊãµFŠÅfååYuëÎ\î?9&y“à n¥\â«5oOVèoÉï—D_‡Ú)…"îíe`æ¡ÍäìŠ†:úÿ©•>œJìqnÙbè`ižªÖ>¿ÿŒ'“:±—žá^ÛzÁ]ôœÝ g3 -{V4Î¿1ä¥{¦ÿž’“{âj)uÐ‡N¹S‡ªg81¼LOú×]B-?VYmöÊ[.ávPÒ~Ù ÂiiøB
+É¼‹6ÎJ‡åj"«_Úú§ôyšB:uê•rel÷«((Ó]v€š®°5k\~êØ°¨Òàˆþ¼%plÅžÁˆµ– îcöfï²–öð3E†dÍ­HGÒÒülîoóûzßG=).Œg6ÊŽ]Àu‡N($·å…­BIî!iàÆJ•²lÓA¸¤ÎØÕû@ÊFT‰_ì“§:áÛã%äYqrxMC/¨#sznãÜvœì ­7*s´ È€P  _ª«ø±Ägû    YZ
