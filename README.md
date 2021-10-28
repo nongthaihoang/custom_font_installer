@@ -1,7 +1,7 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![updated](https://img.shields.io/badge/Updated-Oct_26,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Oct_28,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
@@ -74,6 +74,6 @@ All steps are the same as in static fonts. Except the followings.
 - Be aware that not every font will work properly on Android.
 
 ## [Extensions](https://gitlab.com/nongthaihoang/oh_my_font/-/wikis/home#extensions)
-- [Google Fonts Installer]()
-  - Download and install [Google Fonts](https://fonts.google.com/?category=Sans+Serif) easily.
-  - For sans-serif only.
+[Google Fonts Installer]()
+- Download and install [Google Fonts](https://fonts.google.com/?category=Sans+Serif) easily.
+- For sans-serif only.
