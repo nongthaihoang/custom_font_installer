@@ -12,7 +12,7 @@ config
 
 ui_print '+ Font'
 mkdir $FONTS ${CFI:=$OMFDIR/CFI}
-cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found."
+cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found"
 [ -f $FONTS/$SS ] || SS=
 [ -f $FONTS/$SSI ] || SSI=$SS
 [ -f $FONTS/$MS ] || MS=

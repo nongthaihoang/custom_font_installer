@@ -19,7 +19,7 @@
 ui_print "+ Google Fonts Installer Extension"
 
 [ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
-    ui_print "! Please remove existing fonts in $CFI"
+    ui_print "! Please remove existing fonts in $CFI."
     return
 }
 [ "${GF:=`valof GF`}" ] || return
@@ -33,7 +33,7 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
     ui_print "+ Downloading $font (${time}s timeout)"
     ui_print "  $link"
     wget --spider --no-check-certificate $link || {
-        ui_print "! $GF: no font match, make sure font name is correct"
+        ui_print "! $GF: no font match, make sure font name is correct."
         return
     }
     timeout $time wget --no-check-certificate -O $zip $link || {
@@ -61,8 +61,8 @@ done
 install_font
 [ -f $SYSFONT/$Re$X ] && {
     ui_print "  $font has been installed successfully!"
-    ui_print "  and backup to $CFI"
+    ui_print "  and backup to $CFI."
 } || {
     ui_print "! Failed: there is no Regular font style."
-    abort "  Please rename fonts manually in $CFI"
+    abort "  Please rename fonts manually in $CFI."
 }
