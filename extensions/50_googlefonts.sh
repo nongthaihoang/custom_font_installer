@@ -18,7 +18,7 @@
 
 ui_print "+ Google Fonts Installer Extension"
 
-[ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf ] && {
+[ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
     ui_print "! Please remove existing fonts in $CFI"
     return
 }
