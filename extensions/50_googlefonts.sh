@@ -62,6 +62,7 @@ install_font
 [ -f $SYSFONT/$Re$X ] && {
     ui_print "  $font has been installed successfully!"
     ui_print "  and backup to $CFI"
+    ver gfi
 } || {
     ui_print "! Failed: there is no Regular font style"
     abort "  Please rename fonts manually in $CFI"
