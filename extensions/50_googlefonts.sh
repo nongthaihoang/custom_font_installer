@@ -36,8 +36,8 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
         ui_print "! $GF: no font match, make sure font name is correct"
         return
     }
-    timeout $time wget --no-check-certificate -O $zip $link || {
-        ui_print "! Timeout"
+    timeout $time $MAGISKBIN/busybox wget --no-check-certificate -O $zip $link || {
+        ui_print "! Download failed"
         ui_print "  Please download the font manually from the above link or Google Fonts"
         ui_print "  And move/rename to $zip"
         ui_print "  Then try again"
