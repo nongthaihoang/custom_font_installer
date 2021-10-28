@@ -76,4 +76,4 @@ All steps are the same as in static fonts. Except the followings.
 ## [Extensions](https://gitlab.com/nongthaihoang/oh_my_font/-/wikis/home#extensions)
 [**Google Fonts Installer**](https://raw.githubusercontent.com/nongthaihoang/custom_font_installer/master/extensions/50_googlefonts.sh)
 - Download and install [Google Fonts](https://fonts.google.com/?category=Sans+Serif) easily.
-- For sans-serif only.
+- For sans-serif/static fonts only.
