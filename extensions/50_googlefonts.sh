@@ -9,6 +9,9 @@
 # 3. Add GF=<fontname>, e.g, GF=Open Sans, to the config file.
 # 4. Flash CFI zip and reboot.
 #
+# If download failed (slow network), just use the provided link (printed on the flashing screen)
+# to manually download font zip to OMF dir and reflash CFI.
+#
 # After installing, downloaded font zips are saved to OMF dir.
 # Font files are backup to CFI folder.
 
