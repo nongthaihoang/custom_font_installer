@@ -1,7 +1,7 @@
 # CFI Google Fonts Installer Extenstion
 # 2021/10/28
 
-# Download and install Google fonts automatically.
+# Download and install Google Fonts easily.
 #
 # Only for sans-serif font family. Steps:
 # 1. Visit: https://fonts.google.com/?category=Sans+Serif
@@ -9,17 +9,17 @@
 # 3. Add GF=<fontname>, e.g, GF=Open Sans, to the config file.
 # 4. Flash CFI zip and reboot.
 #
-# If download failed (slow network), just use the provided link (printed on the flashing screen)
-# to manually download font zip to OMF dir and reflash CFI.
+# If it failed to download the font, you can download it from Google Fonts manually,
+# move the downloaded font zip to OMF dir and reflash CFI.
 #
 # After installing, downloaded font zips are saved to OMF dir.
 # Font files are backup to CFI folder.
 
 
-ui_print "+ Google Fonts Installer Extension"
+ui_print "+ Google Fonts Installer"
 
 [ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
-    ui_print "! Please remove existing fonts in $CFI."
+    ui_print "! Fonts exist in $CFI. Do nothing"
     return
 }
 [ "${GF:=`valof GF`}" ] || return
@@ -33,14 +33,14 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
     ui_print "+ Downloading $font (${time}s timeout)"
     ui_print "  $link"
     wget --spider --no-check-certificate $link || {
-        ui_print "! $GF: no font match, make sure font name is correct."
+        ui_print "! $GF: no font match, make sure font name is correct"
         return
     }
     timeout $time wget --no-check-certificate -O $zip $link || {
         ui_print "! Timeout"
-        ui_print "  Please download the font manually from the above link."
-        ui_print "  And move/rename to $zip."
-        ui_print "  Then try again."
+        ui_print "  Please download the font manually from the above link or Google Fonts"
+        ui_print "  And move/rename to $zip"
+        ui_print "  Then try again"
         return
     }
 }
@@ -61,8 +61,8 @@ done
 install_font
 [ -f $SYSFONT/$Re$X ] && {
     ui_print "  $font has been installed successfully!"
-    ui_print "  and backup to $CFI."
+    ui_print "  and backup to $CFI"
 } || {
-    ui_print "! Failed: there is no Regular font style."
-    abort "  Please rename fonts manually in $CFI."
+    ui_print "! Failed: there is no Regular font style"
+    abort "  Please rename fonts manually in $CFI"
 }
