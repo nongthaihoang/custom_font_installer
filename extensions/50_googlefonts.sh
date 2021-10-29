@@ -30,7 +30,7 @@ local zipfile=`echo $GF | sed 's| |_|g'`.zip
 local zip=$OMFDIR/$zipfile
 local time=`valof GF_timeout`; [ ${time:=30} ]
 [ -f $zip ] && unzip -l $zip >/dev/null || {
-    ui_print "+ Downloading $font (${time}s timeout)"
+    ui_print "  Downloading $font (${time}s timeout)"
     ui_print "  $link"
     wget --spider --no-check-certificate $link || {
         ui_print "! $GF: no font match, make sure font name is correct"
