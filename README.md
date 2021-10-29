@@ -75,7 +75,7 @@ All steps are the same as in static fonts. Except the followings.
 - For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
 - Be aware that not every font will work properly on Android.
 
-## [Extensions](https://gitlab.com/nongthaihoang/oh_my_font/-/wikis/home#extensions)
-[**Google Font Installer**](https://raw.githubusercontent.com/nongthaihoang/custom_font_installer/master/extensions/50_googlefonts.sh)
-- Download and install [Google Fonts](https://fonts.google.com/?category=Sans+Serif) easily.
-- For sans-serif/static fonts only.
+## Google Font Installer
+- Download and install hundreds of fonts from [Google Fonts Library](https://fonts.google.com/?category=Sans+Serif) automatically.
+- Just add `GF=<fontname>`, e.g. `GF=Open Sans`, to the config file.
+- Only support sans-serif, static fonts for now.
