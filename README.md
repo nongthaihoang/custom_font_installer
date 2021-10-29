@@ -1,7 +1,7 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![updated](https://img.shields.io/badge/Updated-Oct_28,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Oct_29,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
@@ -17,45 +17,47 @@ Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.c
 - Put your fonts in this path `/sdcard/OhMyFont/CFI`.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
-  BlackItalic      -> bli.ttf
-  Black            -> bl.ttf
-  ExtraBoldItalic  -> ebi.ttf
-  ExtraBold        -> eb.ttf
-  BoldItalic       -> bi.ttf
-  Bold             -> b.ttf
-  SemiBoldItalic   -> sbi.ttf
-  SemiBold         -> sb.ttf
-  MediumItalic     -> mi.ttf
-  Medium           -> m.ttf
-  Italic           -> i.ttf
-  Regular          -> r.ttf
-  LightItalic      -> li.ttf
-  Light            -> l.ttf
-  ExtraLightItalic -> eli.ttf
-  ExtraLight       -> el.ttf
-  ThinItalic       -> ti.ttf
-  Thin             -> t.ttf
+  Black            -> ubl.ttf
+  ExtraBold        -> ueb.ttf
+  Bold             -> ub.ttf
+  SemiBold         -> usb.ttf
+  Medium           -> um.ttf
+  Regular          -> ur.ttf
+  Light            -> ul.ttf
+  ExtraLight       -> uel.ttf
+  Thin             -> ut.ttf
 
-  Condensed-BlackItalic      -> cbli.ttf
+  BlackItalic      -> ibl.ttf
+  ExtraBoldItalic  -> ieb.ttf
+  BoldItalic       -> ib.ttf
+  SemiBoldItalic   -> isb.ttf
+  MediumItalic     -> im.ttf
+  Italic           -> ir.ttf
+  LightItalic      -> il.ttf
+  ExtraLightItalic -> iel.ttf
+  ThinItalic       -> it.ttf
+
   Condensed-Black            -> cbl.ttf
-  Condensed-ExtraBoldItalic  -> cebi.ttf
   Condensed-ExtraBold        -> ceb.ttf
-  Condensed-BoldItalic       -> cbi.ttf
   Condensed-Bold             -> cb.ttf
-  Condensed-SemiBoldItalic   -> csbi.ttf
   Condensed-SemiBold         -> csb.ttf
-  Condensed-MediumItalic     -> cmi.ttf
   Condensed-Medium           -> cm.ttf
-  Condensed-Italic           -> ci.ttf
   Condensed-Regular          -> cr.ttf
-  Condensed-LightItalic      -> cli.ttf
   Condensed-Light            -> cl.ttf
-  Condensed-ExtraLightItalic -> celi.ttf
   Condensed-ExtraLight       -> cel.ttf
-  Condensed-ThinItalic       -> cti.ttf
   Condensed-Thin             -> ct.ttf
+
+  Condensed-BlackItalic      -> dbl.ttf
+  Condensed-ExtraBoldItalic  -> deb.ttf
+  Condensed-BoldItalic       -> db.ttf
+  Condensed-SemiBoldItalic   -> dsb.ttf
+  Condensed-MediumItalic     -> dm.ttf
+  Condensed-Italic           -> dr.ttf
+  Condensed-LightItalic      -> dl.ttf
+  Condensed-ExtraLightItalic -> del.ttf
+  Condensed-ThinItalic       -> dt.ttf
   ```
-- For `monospace`, rename to `mo.ttf`.
+- For `monospace`, rename to `mr.ttf`.
 - For `emoji`, rename to `e.ttf`.
 - For the rest, name your fonts the same as the ones that you want to replace in `/system/fonts`.
 - Finally, flash the CFI zip and reboot.

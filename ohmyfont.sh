@@ -44,6 +44,9 @@ vars() {
     Cn=Condensed- X=.ttf
     readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X
 
+    Mo=Mono- Se=Serif- So=SerifMono-
+    readonly Mo Se So
+
     FB=fallback
 }
 
@@ -182,17 +185,43 @@ lnf(){
 up() { echo $@ | tr [:lower:] [:upper:]; }
 
 rename() {
-    set bli $Bl$It bl $Bl ebi $EBo$It eb $EBo bi $Bo$It b $Bo \
-        sbi $SBo$It sb $SBo mi $Me$It m $Me i $It r $Re \
-        li $Li$It l $Li eli $ELi$It el $ELi ti $Th$It t $Th
+    for i in $FONTS/*.otf; do mv -- $i ${i%.otf}$X; done
+    set bli ibl bl ubl ebi ieb eb ueb bi ib b ub \
+        sbi isb sb usb mi im m um i ir r ur \
+        li il l ul eli iel el uel ti it t ut \
+        mo mr
     while [ $2 ]; do
-        ([ -f $FONTS/$1$X ] || [ -f $FONTS/$1.otf ]) && mv $FONTS/$1.[to]tf $FONTS/$2$X
-        ([ -f $FONTS/c$1$X ] || [ -f $FONTS/c$1.otf ]) && mv $FONTS/c$1.[to]tf $FONTS/$Cn$2$X
+        [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
         shift 2
     done
-    set mo Mono e Emoji
+    set bli bl ebi eb bi b \
+        sbi sb mi m i dr \
+        li l eli el ti t
     while [ $2 ]; do
-        ([ -f $FONTS/$1$X ] || [ -f $FONTS/$1.otf ]) && mv $FONTS/$1.[to]tf $FONTS/$2$X
+        [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/d$2$X
+        shift 2
+    done
+    set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
+    while [ $2 ]; do
+        [ -f $FONTS/u$1$X ] && mv $FONTS/u$1$X $FONTS/$2$X
+        [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/$Cn$2$X
+        [ -f $FONTS/m$1$X ] && mv $FONTS/m$1$X $FONTS/$Mo$2$X
+        [ -f $FONTS/s$1$X ] && mv $FONTS/s$1$X $FONTS/$Se$2$X
+        [ -f $FONTS/o$1$X ] && mv $FONTS/o$1$X $FONTS/$So$2$X
+        shift 2
+    done
+    set bl $Bl$It eb $EBo$It b $Bo$It sb $SBo$It m $Me$It r $It l $Li$It el $ELi$It t $Th$It
+    while [ $2 ]; do
+        [ -f $FONTS/i$1$X ] && mv $FONTS/i$1$X $FONTS/$2$X
+        [ -f $FONTS/d$1$X ] && mv $FONTS/d$1$X $FONTS/$Cn$2$X
+        [ -f $FONTS/n$1$X ] && mv $FONTS/n$1$X $FONTS/$Mo$2$X
+        [ -f $FONTS/t$1$X ] && mv $FONTS/t$1$X $FONTS/$Se$2$X
+        [ -f $FONTS/p$1$X ] && mv $FONTS/p$1$X $FONTS/$So$2$X
+        shift 2
+    done
+    set Mono $Mo$Re e Emoji
+    while [ $2 ]; do
+        [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
         shift 2
     done
 }
@@ -258,7 +287,7 @@ install_font() {
 emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 mono() {
-    cpf Mono$X && font $MO Mono$X r && return
+    cpf $MoRe$X && font $MO $MoRe$X r && return
     MS=`valof MS` MSI=`valof MSI`; cpf $MS || return
     local i j=4 k=4
     for i in m sb b eb bl; do
@@ -437,5 +466,7 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ¬€P!       ÀWáà'ÿ¤] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@Ï8Ù:ÞGŒsçžàpK™V¬—œv¾î'l ¹ƒÊãµFŠÅfååYuëÎ\î?9&y“à n¥\â«5oOVèoÉï—D_‡Ú)…"îíe`æ¡ÍäìŠ†:úÿ©•>œJìqnÙbè`ižªÖ>¿ÿŒ'“:±—žá^ÛzÁ]ôœÝ g3 -{V4Î¿1ä¥{¦ÿž’“{âj)uÐ‡N¹S‡ªg81¼LOú×]B-?VYmöÊ[.ávPÒ~Ù ÂiiøB
-É¼‹6ÎJ‡åj"«_Úú§ôyšB:uê•rel÷«((Ó]v€š®°5k\~êØ°¨Òàˆþ¼%plÅžÁˆµ– îcöfï²–öð3E†dÍ­HGÒÒülîoóûzßG=).Œg6ÊŽ]Àu‡N($·å…­BIî!iàÆJ•²lÓA¸¤ÎØÕû@ÊFT‰_ì“§:áÛã%äYqrxMC/¨#sznãÜvœì ­7*s´ È€P  _ª«ø±Ägû    YZ
+ý7zXZ  æÖ´FÀ«€P!        ¦š„à'ÿ£] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@Ó(Sù/'fÁŠ¶ùr¬õLìÖwÐVÒüp ˆ‰‘™s¤ýì8m©dß›²C=Ã˜Â%ÿm	Ç8ò'£”˜˜Cö÷8ÙÙ“Š]Á©:¤Égö¦¾—<y3›©ÀŸ`EµzX%t¥4sóNn¼‹ÞR¨IñÚÁýn¬7 ŸœÆsXW`Ç‘m9ª4èE£(`Œað¤hOˆ—*^”ßPsÃŠ¢¸râ…µ©oO~ñ³‡+×˜¹Y‘)ˆÐˆ _'Î.Ñ%º«l«ü£ H¹àMöf¤óûX©Y;ÙeüLy
+ÙtRÔÇb3Êøàñ|³ŸÔõRýëhÂ:zâìõã–C€7¶Ø ÊoÕ™­éaîE&9Ÿlr.¼˜HÕ¡	*oCVaÆaé‡Ð$hH\Åï¼³Èàóä½Y.%
+çJôîÜÝ4leî7ºù+þm€ÃºIÁ5ç[î{;‰!Ï…±ÈbJ³=D~2ˆ
+—0ÑKB#—3Ž¦(@ÂÔƒP·ô;ñýŠ*   jXî–¤7It Ç€P  Šý	±Ägû    YZ

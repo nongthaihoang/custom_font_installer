@@ -16,7 +16,7 @@
 # Font files are backup to CFI folder.
 
 
-[ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
+[ -f $CFI/ur.[to]tf -o -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
     ui_print "! Fonts exist in $CFI. Do nothing"
     return
 }
@@ -45,16 +45,24 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
 }
 ui_print "  Extracting $zipfile"
 unzip -q $zip -d $FONTS
-set bli $Bl$It bl $Bl ebi $EBo$It eb $EBo bi $Bo$It b $Bo \
-    sbi $SBo$It sb $SBo mi $Me$It m $Me i $It r $Re \
-    li $Li$It l $Li eli $ELi$It el $ELi ti $Th$It t $Th
 ui_print "  Installling $font"
+rm $CFI/*
+set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
 while [ $2 ]; do
     find $FONTS -type f -name "$font*\_$Cn$2$X" -exec mv -n {} $FONTS/c$1$X \;
     find $FONTS -type f -name "$font*-$2$X" ! \( -name "*$Cn*" -o -name "*Expanded-*" \) \
-        -exec mv -n {} $FONTS/$1$X \;
-    find $FONTS -type f -name "$font-$2$X" -exec mv -n {} $FONTS/$1$X \;
-    false | cp -i $FONTS/$1$X $FONTS/c$1$X $CFI 2>/dev/null
+        -exec mv -n {} $FONTS/u$1$X \;
+    find $FONTS -type f -name "$font-$2$X" -exec mv -n {} $FONTS/u$1$X \;
+    cp $FONTS/[uc]$1$X $CFI
+    shift 2
+done
+set bl $Bl$It eb $EBo$It b $Bo$It sb $SBo$It m $Me$It r $It l $Li$It el $ELi$It t $Th$It
+while [ $2 ]; do
+    find $FONTS -type f -name "$font*\_$Cn$2$X" -exec mv -n {} $FONTS/d$1$X \;
+    find $FONTS -type f -name "$font*-$2$X" ! \( -name "*$Cn*" -o -name "*Expanded-*" \) \
+        -exec mv -n {} $FONTS/i$1$X \;
+    find $FONTS -type f -name "$font-$2$X" -exec mv -n {} $FONTS/i$1$X \;
+    cp $FONTS/[id]$1$X $CFI
     shift 2
 done
 install_font
