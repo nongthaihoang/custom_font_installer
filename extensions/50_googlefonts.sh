@@ -38,10 +38,8 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
     }
     timeout $time $MAGISKBIN/busybox wget --no-check-certificate -O $zip $link || {
         ui_print "! Download failed"
-        ui_print "  Please download the font manually from the above link or Google Fonts"
-        ui_print "  And move/rename to $zip"
-        ui_print "  Then try again"
-        return
+        ui_print "  Please download the font manually from the link above or Google Fonts"
+        abort "  Then move/rename the downloaded font to $zip"
     }
 }
 ui_print "  Extracting $zipfile"
