@@ -16,12 +16,13 @@
 # Font files are backup to CFI folder.
 
 
+ui_print "+ Google Font Installer"
+
 [ -f $CFI/ur.[to]tf -o -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
     ui_print "! Fonts exist in $CFI. Do nothing"
     return
 }
 [ "${GF:=`valof GF`}" ] && [ -d $CFI ] || return
-ui_print "+ Google Font Installer"
 local family=`echo $GF | sed 's| |%20|g'`
 local font=`echo $GF | sed 's| ||g'`
 local link="https://fonts.google.com/download?family=$family"
@@ -46,7 +47,6 @@ local time=`valof GF_timeout`; [ ${time:=30} ]
 ui_print "  Extracting $zipfile"
 unzip -q $zip -d $FONTS
 ui_print "  Installling $font"
-rm $CFI/*
 set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
 while [ $2 ]; do
     find $FONTS -type f -name "$font*\_$Cn$2$X" -exec mv -n {} $FONTS/c$1$X \;
