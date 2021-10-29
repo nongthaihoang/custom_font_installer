@@ -1,5 +1,5 @@
 # CFI Google Font Installer Extension
-# 2021/10/28
+# 2021/10/29
 
 # Download and install Google Fonts easily.
 #
@@ -16,13 +16,12 @@
 # Font files are backup to CFI folder.
 
 
-ui_print "+ Google Font Installer"
-
 [ -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
     ui_print "! Fonts exist in $CFI. Do nothing"
     return
 }
 [ "${GF:=`valof GF`}" ] && [ -d $CFI ] || return
+ui_print "+ Google Font Installer"
 local family=`echo $GF | sed 's| |%20|g'`
 local font=`echo $GF | sed 's| ||g'`
 local link="https://fonts.google.com/download?family=$family"
