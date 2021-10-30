@@ -287,7 +287,7 @@ install_font() {
 emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 mono() {
-    cpf $MoRe$X && font $MO $MoRe$X r && return
+    cpf $Mo$Re$X && font $MO $Mo$Re$X r && return
     MS=`valof MS` MSI=`valof MSI`; cpf $MS || return
     local i j=4 k=4
     for i in m sb b eb bl; do
