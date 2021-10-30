@@ -22,7 +22,6 @@ require_new_magisk() {
 
 OUTFD=$2
 ZIPFILE=$3
-OMFDIR=/sdcard/OhMyFont
 
 mount /data 2>/dev/null
 
@@ -33,7 +32,7 @@ mount /data 2>/dev/null
     exit 0
 }
 
-[ -f $OMFDIR/twrp ] || require_new_magisk
+[ -f ${OMFDIR:=/sdcard/OhMyFont}/twrp ] || require_new_magisk
 	TMPDIR=/dev/tmp
 	rm -rf $TMPDIR
 	mkdir -p $TMPDIR
