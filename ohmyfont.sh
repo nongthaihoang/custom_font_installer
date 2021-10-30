@@ -186,21 +186,23 @@ up() { echo $@ | tr [:lower:] [:upper:]; }
 
 rename() {
     for i in $FONTS/*.otf; do mv -- $i ${i%.otf}$X; done
-    set bli ibl bl ubl ebi ieb eb ueb bi ib b ub \
-        sbi isb sb usb mi im m um i ir r ur \
-        li il l ul eli iel el uel ti it t ut \
-        mo mr
-    while [ $2 ]; do
-        [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
-        shift 2
-    done
-    set bli bl ebi eb bi b \
-        sbi sb mi m i dr \
-        li l eli el ti t
-    while [ $2 ]; do
-        [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/d$2$X
-        shift 2
-    done
+    [ -f $FONTS/[ui]*$X ] || {
+        set bli ibl bl ubl ebi ieb eb ueb bi ib b ub \
+            sbi isb sb usb mi im m um i ir r ur \
+            li il l ul eli iel el uel ti it t ut \
+            mo mr
+        while [ $2 ]; do
+            [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
+            shift 2
+        done
+    }
+    [ -f $FONTS/d*$X ] || {
+        set bli bl ebi eb bi b sbi sb mi m i dr li l eli el ti t
+        while [ $2 ]; do
+            [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/d$2$X
+            shift 2
+        done
+    }
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     while [ $2 ]; do
         [ -f $FONTS/u$1$X ] && mv $FONTS/u$1$X $FONTS/$2$X
@@ -287,7 +289,16 @@ install_font() {
 emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 mono() {
-    cpf $Mo$Re$X && font $MO $Mo$Re$X r && return
+    [ -f $FONTS/$Mo$Re$X ] && {
+        [ -f $FONTS/$Mo$It$X ] && mksty $MO 4 4 || local italic=false
+        [ -f $FONTS/$Mo$Bo$X ] && mksty $MO 7 4 3
+        set r $Re ri $It b $Bo bi $Bo$It
+        while [ $2 ]; do
+            cpf $Mo$2$X && font $MO $Mo$2$X $1
+            shift 2
+        done
+        return
+    }
     MS=`valof MS` MSI=`valof MSI`; cpf $MS || return
     local i j=4 k=4
     for i in m sb b eb bl; do
@@ -466,7 +477,5 @@ config() {
 
 return
 PAYLOAD:
-˝7zXZ  Ê÷¥F¿´ÄP!        ¶öÑ‡'ˇ£] 3 €π·h»?7‰€=Pˆc{A“6≤%@”(SÅ˘/'f¡ä∂˘r¨ıLÏ÷w–V“¸p àâëôs§˝Ï8m©dﬂõ≤C=√ò¬%ˇm	«8Ú'£îòòCˆ˜8ŸŸìä]¡©:§…gˆ¶æó<y3õ©¿ü`EµzX%t•4sÛNnºãﬁR®IÒ⁄¡˝n¨7 üú∆sXW`«ëm9™4ËE£(`åa§hOàó*^îﬂPs√ä¢∏r‚Öµ©oO~Ò≥á+◊òπYë)à–à _'Œ.—%∫´Ål´¸£ Hπ‡Mˆf§Û˚X©Yê;Ÿe¸Ly
-ŸtR‘«b3 ¯‡Ò|≥ü‘ıR˝Îh¬:z‚Ïı„ñCÄ7∂ÿ† o’ô≠ÈaÓE&9ülr.ºòH’°	*çoCVa∆aÈá–$hH\≈Ôº≥»‡Û‰ΩY.%
-ÁJÙÓ‹›4ÅleÓ7∫˘+˛mÄ√∫I¡5Á[Ó{;â!œÖ±»bJ≥=D~2à
-ó0—KB#ó3é¶(@¬‘ÉP∑Ù;Ò˝ä*   jXÓñ§7It «ÄP  ä˝	±ƒg˚    YZ
+˝7zXZ  Ê÷¥F¿≠ÄP!       ∂ÌX|‡'ˇ•] 3 €π·h»?7‰€=Pˆc{A“6≤%@÷ÍÁ¯Mªi›V5ÑçõÙ«≈g≥?]D¨•82@<¨v÷±tΩ	ÿ† ¬∏®%œõoÙl?JÙùBä'ƒ“ˆå£EBôQ Å˙ﬁ⁄ñ2å«¯–æé~F∫âoÂmÎ¡:H·(öj`»Ìö·VƒL5û^ö˘√ÏƒuÆîÇ´!‘êÆ1fs'£bzU∞‰ç√9‚æ ƒ4Útœ'∑É5êÚ≤ìØŒ’*ﬂ{u‰y-B◊ß¢kÛ0(“ÊãöËÉZv(v"›Må0a*Û\Ç9Å*Å≥ü_záΩ–n√Õ’Õä˛ïÌÿgKºæ¨b,€ ∆·¡øπ›`·¡ô>ßùi‹úÀ˜Ø|=”®Tï‡‰÷∂Z≥5ú-›‚ZËY„X2P»ˇùæ*Q∑±yæÑ¯NñçïÁ7ÅÃq”(¡.V≤A`–ëü)¨ƒ‚G<üu
+ §K6(Î°yKëéÌŒÃû^V“Ø'#z¢]Åñ`≈¶≈’o`5·ë~À†ñ<ﬁ'iÑãÊ∑b‹ﬂ     ≠QÿU+T‡ …ÄP  ˙y˜3±ƒg˚    YZ
