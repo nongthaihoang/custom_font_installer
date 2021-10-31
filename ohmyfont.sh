@@ -363,8 +363,7 @@ rom() {
     # Pixel
     [ $PXL ] && {
         ver pxl; ${GS:-false} && return; $SANS || return
-        cp $ORIPRDXML $PRDXML
-        local XML=$PRDXML fa=$Gs.* i
+        cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
         [ $SS ] && {
             ln -s /system/fonts/$SS $PRDFONT
             ln -s /system/fonts/$SSI $PRDFONT
@@ -483,6 +482,4 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%B}+ð­ç42£ö=rÚ~ÆVPÝdM¹çÀ`¥bë²¨?²A@ôPï.!ES6‘R Ië¶ù¸ükšæ'o‹àm	)±/ÐØ"þÛ\a˜¨Çæ–]êg;þÌù&r<š½™`9®‘ôÞõNµÃ¤‘EŸ·#ÇT³Ü5“îª¾ –"¡øÿâW(¶–ê“¾~¯Õ RoÌ1g
-ôï¨¸Ê¿Ì'³å/R8Áq+z–Š±œ Ïnoi0\'1Ü¨±éÐÆô‘¶—üË³‹¥×…ÉÚ¶{Úžc(opPÓ†eÒ/óZèˆƒÙÂAL™i\#ÄÈÏ:'À‚Gi‚™Ï½à"ÓÇcÃôÅÎÇ|›«DåÕê×4r±¾.eò
-‡|Gíàáá[’ð:Y¶Dºõ5(étp¾ÞŽ ­ætPQ »yLÈ\¨Í×…B}Q¿ŽPû?ê:È#p„‹¥§b?”k²<¨å<Ó¡¦ðç…þ)º¨Ru_0ÁÑi‚†A‡v      ‚tÄF¸‡ É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%B}+ðÔð¯³KbÓãû–ÎzïÄVÚûÉAêb(ŽŒGˆ@@q)ŽK8wCûUZ1“U? .!]«>Ðv‚QeïŸö€¨‡ü4‚-‡O`iH¼æ'¿ƒžâ{DšÚ B&M%ÔC?ßXWùiwºD¡ œl5¨£k­Ncl;(çRƒ.éœ#å6r©*é“¦wÐŒxi•û4“7aÝ4ž| qƒLýÀÙà¯HA‚h™wÑG iàdƒäÓdNò¯uÒQfñ;’“È`ïÌBƒ°æo‘˜Qò¦_K1?¤n6Ú¶·žñ|BHñÛsÑ/"úÖn)çgä?(5©_ÒBÙc²Ãd/£µëe»§ Üw§ZèûÓe:ñ”¼'÷ãVÍ][õ¦¢µ8\±ŸHƒ¹9²êªï^NF^KÂ¥û,¹R$–‹Óâ4šÐ³á_ô%AqGaW¿^Ô4c	å¥	û¦WœŽILð¾ÿá‹´~n]3˜Å¶¯dîÉ@½ù—r<}E     …;p7ê?G É€P  úy÷3±Ägû    YZ
