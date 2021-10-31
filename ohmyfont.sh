@@ -48,6 +48,9 @@ vars() {
     readonly Mo Se So
 
     FB=fallback
+
+    Gs=google-sans
+    readonly Gs
 }
 
 ver() { sed -i "/^version=/s|$|-$1|" $MODPROP; }
@@ -328,15 +331,16 @@ bold() {
 
 romprep() {
     src 0
-    [ -f $ORIPRDFONT/GoogleSans-$Re$X ] && cp $ORIPRDXML $PRDXML && \
+    [ -f $ORIPRDFONT/GoogleSans-$Re$X ] && grep -q $Gs $ORIPRDXML && \
         PXL=true && return
 }
 
 rom() {
+    local pxl=`valof PXL`; [ $PXL ] && [ "$pxl" = false ] && PXL=
     $SANS && $FULL && [ ${GS:-false} = false ] && {
-        local fa=google-sans.* xml=$FONTS/gsvf.xml m=verdana i
+        local fa=$Gs.* xml=$FONTS/gsvf.xml m=verdana i
         [ $PXL ] && [ $API -lt 31 ] && {
-                m=version; local XML=$PRDXML
+                m=$F.*version; local XML=$PRDXML
                 xml "/$FA.*$fa/,${FAE}d"
         }
         [ $PXL ] && [ $API -ge 31 ] || { xml "/$m/r $xml"; XML=; }
@@ -358,8 +362,9 @@ rom() {
 
     # Pixel
     [ $PXL ] && {
-        PXL=true; ver pxl; ${GS:-false} && return
-        local XML=$PRDXML fa=google-sans.* i
+        ver pxl; ${GS:-false} && return; $SANS || return
+        cp $ORIPRDXML $PRDXML
+        local XML=$PRDXML fa=$Gs.* i
         [ $SS ] && {
             ln -s /system/fonts/$SS $PRDFONT
             ln -s /system/fonts/$SSI $PRDFONT
@@ -400,7 +405,7 @@ rom() {
 
     # MIUI
     grep -q MIUI $ORISYSXML && {
-        ver miui; [ $API -eq 29 ] && return
+        ver miui; [ $API -eq 29 ] && return; $SANS || return
         MIUI=`sed -n "/$FA.*\"miui\"/,$FAE{/400.*$N/{s|.*>||;p}}" $SYSXML`
         [ -f $ORISYSFONT/$MIUI ] && ln -s $X $SYSFONT/$MIUI
         [ -f $ORISYSFONT/RobotoVF$X ] && ln -s $X $SYSFONT/RobotoVF$X
@@ -409,7 +414,7 @@ rom() {
 
     # Samsung
     grep -q Samsung $ORISYSXML && {
-        SAM=true; ver sam
+        SAM=true; ver sam; $SANS || return
         [ $SS ] && {
             font sec-roboto-light $SS r $UR
             font sec-roboto-light $SS b $UM
@@ -429,9 +434,10 @@ rom() {
     # LG
     local lg=lg-sans-serif
     grep -q $lg $SYSXML && {
+        LG=true; ver lg; $SANS || return
         local lgq="/\"$lg\">/" lgf="$lgq,$FAE"
         xml "$lqf{$lgq!d};$SAF{$SAQ!H};${lgq}G"
-        LG=true; ver lg; return
+        return
     }
 
     # LG (lgexml)
@@ -477,5 +483,6 @@ config() {
 
 return
 PAYLOAD:
-ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%@ÖêçøM»iİV5„›ôÇÅg³?]D¬¥82@<¬vÖ±t½	Ø  Â¸¨%Ï›oôl?JôBŠ'ÄÒöŒ£EB™QÊúŞÚ–2ŒÇøĞ¾~Fº‰oåmëÁ:Há(šj`ÈíšáVÄL5^šùÃìÄu®”‚«!Ô®1ğfs'£bzU°äÃ9â¾ Ä4òtÏ'·ƒ5ò²“¯ÎÕ*ß{uäy-B×§¢kó0(Òæ‹šèƒZv(v"İMŒ0a*ó\‚9*³Ÿ_z‡½ĞnÃÍÕÍŠş•íØgK¼¾¬b,Û ÆáÁ¿¹İ`áÁ™>§iÜœË÷¯|=Ó¨T•àäÖ¶Z³5œ-İâZèYãX2PÈÿ¾*Q·±y¾„øN–•ç7ÌqÓ(Á.V²A`Ğ‘Ÿ)¬ÄâG<Ÿu
-Ê¤K6(ë¡yK‘íÎÌ^VÒ¯'#z¢]–`Å¦ÅÕo`5á‘~Ë –<Ş'i„‹æ·bÜß     ­QØU+Tà É€P  úy÷3±Ägû    YZ
+ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%B}+ğ­ç42£ö=rÚ~ÆVPİdM¹çÀ`¥bë²¨?²A@ôPï.!ES6‘R Ië¶ù¸ükšæ'o‹àm	)±/ĞØ"şÛ\a˜¨Çæ–]êg;şÌù&r<š½™`9®‘ôŞõNµÃ¤‘EŸ·#ÇT³Ü5“îª¾ –"¡øÿâW(¶–ê“¾~¯Õ RoÌ1g
+ôï¨¸Ê¿Ì'³å/R8Áq+z–Š±œ Ïnoi0\'1Ü¨±éĞÆô‘¶—üË³‹¥×…ÉÚ¶{Úc(opPÓ†eÒ/óZèˆƒÙÂAL™i\#ÄÈÏ:'À‚Gi‚™Ï½à"ÓÇcÃôÅÎÇ|›«DåÕê×4r±¾.eò
+‡|Gíàáá[’ğ:Y¶Dºõ5(étp¾Ş ­ætPQ »yLÈ\¨Í×…B}Q¿Pû?ê:È#p„‹¥§b?”k²<¨å<Ó¡¦ğç…ş)º¨Ru_0ÁÑi‚†A‡v      ‚tÄF¸‡ É€P  úy÷3±Ägû    YZ
