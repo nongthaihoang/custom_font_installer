@@ -1,6 +1,7 @@
 . $MODPATH/ohmyfont.sh
 
 gfi() {
+    $SANS || return
     [ "${GF:=`valof GF`}" ] && [ -d $CFI ] || return
     ui_print "+ Google Font Installer"
     [ -f $CFI/ur.[to]tf -o -f $CFI/r.[to]tf -o -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
@@ -47,7 +48,7 @@ gfi() {
         cp $FONTS/[id]$1$X $CFI
         shift 2
     done
-    install_font
+    sans
     [ -f $SYSFONT/$Re$X ] && {
         ui_print "  $font has been installed successfully!"
         ui_print "  and backup to $CFI"
@@ -62,7 +63,7 @@ gfi() {
 ui_print '- Installing'
 
 ui_print '+ Prepare'
-prep; $FB
+prep
 
 ui_print '+ Configure'
 config
@@ -80,10 +81,8 @@ $SANS || rm $SYSXML
 gfi
 src
 
-$SANS && {
-    ui_print '+ Rom'
-    rom
-}
+ui_print '+ Rom'
+rom
 
 bold
 finish

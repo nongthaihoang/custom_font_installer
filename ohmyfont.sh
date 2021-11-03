@@ -90,7 +90,7 @@ fallback() {
     local faq fae fb
     [ $1 ] && local fa=$1; [ $fa ] || local fa=$SA
     faq="\"${fa}\"" fae="/$FA.*$faq/,$FAE"
-    [ $fa = $SA ] || fb="/<$F/s|>| $FF=$faq>|;"
+    [ $fa = $SE ] && fb="/<$F/s|>| $FF=$faq>|;"
     xml "$fae{${fb}H;2,$FAE{${FAE}G}}"
     xml ":a;N;\$!ba;s|name=$faq||2"
 }
@@ -140,6 +140,41 @@ font() {
     done
 }
 
+ab() {
+    local n=z
+    case $1 in
+        $SS|$SSI  ) n=u ;;
+        $SER|$SERI) n=s ;;
+        $MS|$MSI  ) n=m ;;
+#        $SRM|$SRMI) n=o ;;
+    esac
+    case "$3" in *i)
+        case $n in
+            u) n=i ;;
+#            s) n=t ;;
+#            m) n=n ;;
+#            o) n=p ;;
+        esac ;;
+    esac
+    [ "$2" = $SC ] && { [ $n = u ] && n=c || { [ $n = i ] && n=d; }; }
+    echo $n
+}
+
+fontab() {
+    local w=${4:-$3}; case $w in *i) w=${w%?} ;; esac
+    eval $(echo font $1 $2 $3 \$$(up `ab $2 $1 $3`$w))
+}
+
+fontinst() {
+    local i
+    [ $up ] && cpf $up
+    [ $it ] && cpf $it
+    for i in ${@:-$FW}; do
+        [ $up ] && fontab $fa $up $i
+        [ $it ] && fontab $fa $it ${i}i
+    done
+}
+
 mksty() {
     case $1 in [a-z]*) local fa=$1; shift ;; esac
     local max=${1:-9} min=${2:-1} dw=${3:-1} id=$4 di=${5:-1} fb
@@ -158,6 +193,16 @@ mksty() {
             i=4 min=4 || i=$(($i-$dw))
     done
     for i in $wght_del; do xml "$fae{/${i}00/d}"; done
+}
+
+mkstya() {
+    local wght_del i j=1 k=false
+    [ $it ] || local italic=false
+    for i in $FW; do
+        eval $(echo "[ \"\$$(up `ab $up`$i)\" ] && k=true  || wght_del=\"$wght_del $j\"")
+        j=$((j+1))
+    done
+    $k || { wght_del=; mksty 4 4; return; }; mksty
 }
 
 finish() {
@@ -231,27 +276,11 @@ rename() {
     done
 }
 
-install_font() {
-    rename
-    $EMOJ && emoji
-    $MONO && mono
-    $SANS || return
-    cpf $SS && {
-        local i j=4 k=4
-        for i in m sb b eb bl; do
-            eval $(echo "[ \"\$U`up $i`\" ] && j=$((j+1)) || break")
-        done
-        for i in l el t; do
-            eval $(echo "[ \"\$U`up $i`\" ] && k=$((k-1)) || break")
-        done
-        for i in $SA $SC; do mksty $i $j $k; done
-        cpf $SSI
-        for i in $FW; do
-            eval $(echo font $SA $SS $i \$U`up $i`)
-            eval $(echo font $SA $SSI ${i}i \$I`up $i`)
-            eval $(echo font $SC $SS $i \$C`up $i`)
-            eval $(echo font $SC $SSI ${i}i \$D`up $i`)
-        done
+sans() {
+    [ $SS ] && {
+        local up=$SS it=$SSI fa=$SA
+        $FB; mkstya; fontinst
+        [ $fa = $SA ] && { fa=$SC; mkstya; fontinst; }
         return
     }
     $FULL && {
@@ -289,6 +318,13 @@ install_font() {
     }
 }
 
+install_font() {
+    rename
+    $EMOJ && emoji
+    $MONO && mono
+    $SANS && sans
+}
+
 emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 mono() {
@@ -302,19 +338,9 @@ mono() {
         done
         return
     }
-    MS=`valof MS` MSI=`valof MSI`; cpf $MS || return
-    local i j=4 k=4
-    for i in m sb b eb bl; do
-        eval $(echo "[ \"\$M`up $i`\" ] && j=$((j+1)) || break")
-    done
-    for i in l el t; do
-        eval $(echo "[ \"\$M`up $i`\" ] && k=$((k-1)) || break")
-    done
-    [ $MSI ] || local italic=false; mksty $MO $j $k
-    for i in $FW; do
-        eval $(echo font $MO $MS $i \$M`up $i`)
-        [ $MSI ] && eval $(echo font $MO $MSI ${i}i \$M`up $i`)
-    done
+    [ $MS ] || return
+    local up=$MS it=$MSI fa=$MO
+    mkstya; fontinst
 }
 
 bold() {
@@ -466,10 +492,13 @@ config() {
     FULL=`valof FULL` GS=`valof GS`
 
     SS=`valof SS` SSI=`valof SSI`
-    [ ${SSI:=$SS} ] && \
+    MS=`valof MS` MSI=`valof MSI`
+
+    [ $SS ] && \
     for i in $FW; do i=`up $i`
         eval $(echo U$i=\"`valof U$i`\")
         eval $(echo I$i=\"`valof I$i`\")
+        [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
         eval $(echo [ \"\${I$i:=\$U$i}\" ])
         eval $(echo C$i=\"`valof C$i`\")
         eval $(echo [ \"\${C$i:=\$U$i}\" ])
@@ -482,4 +511,5 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%B}+ðÔð¯³KbÓãû–ÎzïÄVÚûÉAêb(ŽŒGˆ@@q)ŽK8wCûUZ1“U? .!]«>Ðv‚QeïŸö€¨‡ü4‚-‡O`iH¼æ'¿ƒžâ{DšÚ B&M%ÔC?ßXWùiwºD¡ œl5¨£k­Ncl;(çRƒ.éœ#å6r©*é“¦wÐŒxi•û4“7aÝ4ž| qƒLýÀÙà¯HA‚h™wÑG iàdƒäÓdNò¯uÒQfñ;’“È`ïÌBƒ°æo‘˜Qò¦_K1?¤n6Ú¶·žñ|BHñÛsÑ/"úÖn)çgä?(5©_ÒBÙc²Ãd/£µëe»§ Üw§ZèûÓe:ñ”¼'÷ãVÍ][õ¦¢µ8\±ŸHƒ¹9²êªï^NF^KÂ¥û,¹R$–‹Óâ4šÐ³á_ô%AqGaW¿^Ô4c	å¥	û¦WœŽILð¾ÿá‹´~n]3˜Å¶¯dîÉ@½ù—r<}E     …;p7ê?G É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸¢ÔÚ\»¸½fR!°Þ¬«Þ†7_Èï®9ÏL¨ÿ‡ÁIóÐ8hmlª
+·Gt½‰Þ¸ä»’ÎÔ&–áÄ«VtÌ&6ûÀT‡t7k^üÿL?‚5~{ûÁ‘/I”"ºñ>1ºí(&÷§‡5ä~Ýñ/ØVpFÅÄZ¥5¸¶I›ìø¾ûé°®Ê•¤mÝ°~îk%ûK¼žu÷Ê*€CöÉ°ó@Bš‹6 “F™öÛJ6>ä¯»€Ó)›ü·xJ§ÉûW{¨´Rê©åóaÑ®ÙÔ;é9Sä.}ÍÚ‚³ø‡ž˜£õÑ&Þ­A÷·ª|¸;mß-OÒi–Ù7_Ý½wçsûºëõ°/è¨‚,}ÐÒ‘vŒáFmðgÑi@vN¹êÐ5f³½J/¿î-­ÝÊ—žT±×o}mce•ySn°Ê“Í‘A›uJ½yé!Æ¹ò•Cºè£uE–È#Æ«9è˜ÙçE;‘jêRÐ¸teHþÁÞ}ŸTÑ)Z0©÷žRÎçò    ë°é¨™ªt É€P  úy÷3±Ägû    YZ
