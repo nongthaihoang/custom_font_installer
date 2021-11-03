@@ -48,7 +48,7 @@ gfi() {
         cp $FONTS/[id]$1$X $CFI
         shift 2
     done
-    sans
+    rename; sans
     [ -f $SYSFONT/$Re$X ] && {
         ui_print "  $font has been installed successfully!"
         ui_print "  and backup to $CFI"
