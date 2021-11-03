@@ -291,7 +291,7 @@ sans() {
         [ -f $FONTS/$It$X ] || ln -s $Re$X $FONTS/$It$X
         [ -f $FONTS/$Cn$Re$X ] || ln -s $Re$X $FONTS/$Cn$Re$X
         [ -f $FONTS/$Cn$It$X ] || ln -s $It$X $FONTS/$Cn$It$X
-        mksty; mksty $SC
+        $FB; mksty; mksty $SC
         set $Th t $ELi el $Li l $Me m $SBo sb $Bo b $EBo eb $Bl bl
         while [ $2 ]; do
             cp -P $FONTS/$1$X $SYSFONT && font $SA $1$X $2
