@@ -270,7 +270,7 @@ lnf(){
 up() { echo $@ | tr [:lower:] [:upper:]; }
 
 rename() {
-    for i in $FONTS/*.otf; do mv -- $i ${i%.otf}$X; done
+    for i in $FONTS/*.otf; do mv $i ${i%.otf}$X; done
     [ -f $FONTS/[ui]*$X ] || {
         set bli ibl bl ubl ebi ieb eb ueb bi ib b ub \
             sbi isb sb usb mi im m um i ir r ur \
