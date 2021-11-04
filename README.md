@@ -1,7 +1,7 @@
 # Custom Font Installer
 **Custom Font Installer for Android**
 
-[![updated](https://img.shields.io/badge/Updated-Nov_03,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Nov_04,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
@@ -70,7 +70,7 @@ All steps are the same as in static fonts. Except the followings.
 
 ### Note
 - You don't need to have all font files listed above, just use what available.
-- In case of `sans-serif`, there must be at least one font `ur.ttf` or `ss.ttf`.
+- For `sans-serif`, there must be at least one font `ur.ttf` or `ss.ttf`.
 - If using VF, flash the CFI zip for the first time to get the default config file.
 - For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
 - Be aware that not every font will work properly on Android.

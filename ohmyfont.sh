@@ -166,12 +166,31 @@ fontab() {
 }
 
 fontinst() {
-    local i
-    [ $up ] && cpf $up
-    [ $it ] && cpf $it
-    for i in ${@:-$FW}; do
-        [ $up ] && fontab $fa $up $i
-        [ $it ] && fontab $fa $it ${i}i
+    case $up in *$X)
+        local i
+        [ $up ] && cpf $up
+        [ $it ] && cpf $it
+        for i in ${@:-$FW}; do
+            [ $up ] && {
+                fontab $fa $up $i
+                [ $fa = $SA ] && fontab $SC $up $i
+            }
+            [ $it ] && {
+                fontab $fa $it ${i}i
+                [ $fa = $SA ] && fontab $SC $it ${i}i
+            }
+        done
+        return ;;
+    esac
+    set bli $Bl$It bl $Bl ebi $EBo$It eb $EBo bi $Bo$It b $Bo \
+        sbi $SBo$It sb $SBo mi $Me$It m $Me ri $It r $Re \
+        li $Li$It l $Li eli $ELi$It el $ELi ti $Th$It t $Th
+    while [ $2 ]; do
+        cpf $up$2$X && font $fa $up$2$X $1
+        [ $fa = $SA ] && {
+            cpf $Cn$2$X && font $SC $Cn$2$X $1 || { $FULL && font $SC $2$X $1; }
+        }
+        shift 2
     done
 }
 
@@ -196,13 +215,31 @@ mksty() {
 }
 
 mkstya() {
-    local wght_del i j=1 k=false
-    [ $it ] || local italic=false
-    for i in $FW; do
-        eval $(echo "[ \"\$$(up `ab $up`$i)\" ] && k=true  || wght_del=\"$wght_del $j\"")
-        j=$((j+1))
+    case $up in *$X)
+        local wght_del i j=1 k=false
+        [ $it ] || local italic=false
+        for i in $FW; do
+            eval $(echo [ \"\$$(up `ab $up`$i)\" ]) && k=true || wght_del="$wght_del $j"
+            j=$((j+1))
+        done
+        $k || { wght_del=; mksty 4 4; [ $fa = $SA ] && mksty $SC 4 4; return; }
+        mksty; [ $fa = $SA ] && mksty $SC
+        return ;;
+    esac
+    local i=9 italic font_del
+    set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
+        $SBo$It $SBo $Me$It $Me $It $Re \
+        $Li$It $Li $ELi$It $ELi $Th$It $Th
+    while [ $2 ]; do
+        italic=
+        [ -f $FONTS/$up$1$X ] || italic=false
+        [ -f $FONTS/$up$2$X ] && {
+            mksty $i $i
+            [ $fa = $SA ] && mksty $SC $i $i
+            font_del=false
+        }
+        i=$((i-1)); shift 2
     done
-    $k || { wght_del=; mksty 4 4; return; }; mksty
 }
 
 finish() {
@@ -216,15 +253,15 @@ lnf(){
     local i j
     while [ "$2" ]; do
         for i in $1; do
-            [ -f $FONTS/$i$X ] || {
+            [ -f $SYSFONT/$i$X ] || {
                 for j in $2; do
-                    [ -f $FONTS/$j$X ] && { ln -s $j$X $FONTS/$i$X; break; }
+                    [ -f $SYSFONT/$j$X ] && { ln -s $j$X $SYSFONT/$i$X; break; }
                 done
             }
-            [ -f $FONTS/$i$X ] || ln -s $Re$X $FONTS/$i$X
-            [ -f $FONTS/$i$It$X ] || ln -s $i$X $FONTS/$i$It$X
-            [ -f $FONTS/$Cn$i$X ] || ln -s $i$X $FONTS/$Cn$i$X
-            [ -f $FONTS/$Cn$i$It$X ] || ln -s $i$It$X $FONTS/$Cn$i$It$X
+            [ -f $SYSFONT/$i$X ] || ln -s $Re$X $SYSFONT/$i$X
+            [ -f $SYSFONT/$i$It$X ] || ln -s $i$X $SYSFONT/$i$It$X
+            [ -f $SYSFONT/$Cn$i$X ] || ln -s $i$X $SYSFONT/$Cn$i$X
+            [ -f $SYSFONT/$Cn$i$It$X ] || ln -s $i$It$X $SYSFONT/$Cn$i$It$X
         done
         shift 2
     done
@@ -240,107 +277,81 @@ rename() {
             li il l ul eli iel el uel ti it t ut \
             mo mr
         while [ $2 ]; do
-            [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
+            mv $FONTS/$1$X $FONTS/$2$X
             shift 2
         done
     }
     [ -f $FONTS/d*$X ] || {
         set bli bl ebi eb bi b sbi sb mi m i dr li l eli el ti t
         while [ $2 ]; do
-            [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/d$2$X
+            mv $FONTS/c$1$X $FONTS/d$2$X
             shift 2
         done
     }
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     while [ $2 ]; do
-        [ -f $FONTS/u$1$X ] && mv $FONTS/u$1$X $FONTS/$2$X
-        [ -f $FONTS/c$1$X ] && mv $FONTS/c$1$X $FONTS/$Cn$2$X
-        [ -f $FONTS/m$1$X ] && mv $FONTS/m$1$X $FONTS/$Mo$2$X
-        [ -f $FONTS/s$1$X ] && mv $FONTS/s$1$X $FONTS/$Se$2$X
-        [ -f $FONTS/o$1$X ] && mv $FONTS/o$1$X $FONTS/$So$2$X
+        mv $FONTS/u$1$X $FONTS/$2$X
+        mv $FONTS/c$1$X $FONTS/$Cn$2$X
+        mv $FONTS/m$1$X $FONTS/$Mo$2$X
+        mv $FONTS/s$1$X $FONTS/$Se$2$X
+        mv $FONTS/o$1$X $FONTS/$So$2$X
         shift 2
     done
-    set bl $Bl$It eb $EBo$It b $Bo$It sb $SBo$It m $Me$It r $It l $Li$It el $ELi$It t $Th$It
+    set bl $Bl$It eb $EBo$It b $Bo$It \
+        sb $SBo$It m $Me$It r $It \
+        l $Li$It el $ELi$It t $Th$It
     while [ $2 ]; do
-        [ -f $FONTS/i$1$X ] && mv $FONTS/i$1$X $FONTS/$2$X
-        [ -f $FONTS/d$1$X ] && mv $FONTS/d$1$X $FONTS/$Cn$2$X
-        [ -f $FONTS/n$1$X ] && mv $FONTS/n$1$X $FONTS/$Mo$2$X
-        [ -f $FONTS/t$1$X ] && mv $FONTS/t$1$X $FONTS/$Se$2$X
-        [ -f $FONTS/p$1$X ] && mv $FONTS/p$1$X $FONTS/$So$2$X
+        mv $FONTS/i$1$X $FONTS/$2$X
+        mv $FONTS/d$1$X $FONTS/$Cn$2$X
+        mv $FONTS/n$1$X $FONTS/$Mo$2$X
+        mv $FONTS/t$1$X $FONTS/$Se$2$X
+        mv $FONTS/p$1$X $FONTS/$So$2$X
         shift 2
     done
     set Mono $Mo$Re e Emoji
     while [ $2 ]; do
-        [ -f $FONTS/$1$X ] && mv $FONTS/$1$X $FONTS/$2$X
+        mv $FONTS/$1$X $FONTS/$2$X
         shift 2
     done
 }
 
 sans() {
+    local fa=${1:-$SA}
+    [ $SS ] ||  [ -f $FONTS/$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
     [ $SS ] && {
-        local up=$SS it=$SSI fa=$SA
-        $FB; mkstya; fontinst
-        [ $fa = $SA ] && { fa=$SC; mkstya; fontinst; }
-        return
+        local up=$SS it=$SSI
+        mkstya; fontinst; return
     }
-    $FULL && {
-        [ -f $FONTS/$Re$X ] || return
+    $FULL && [ ! -f $FONTS/$Re$X ] && return
+    $FULL && mkstya; fontinst
+    $FULL && [ $fa = $SA ] && {
         lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
         lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
         lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
-        [ -f $FONTS/$It$X ] || ln -s $Re$X $FONTS/$It$X
-        [ -f $FONTS/$Cn$Re$X ] || ln -s $Re$X $FONTS/$Cn$Re$X
-        [ -f $FONTS/$Cn$It$X ] || ln -s $It$X $FONTS/$Cn$It$X
-        $FB; mksty; mksty $SC
-        set $Th t $ELi el $Li l $Me m $SBo sb $Bo b $EBo eb $Bl bl
-        while [ $2 ]; do
-            cp -P $FONTS/$1$X $SYSFONT && font $SA $1$X $2
-            cp -P $FONTS/$1$It$X $SYSFONT && font $SA $1$It$X $2i
-            cp -P $FONTS/$Cn$1$X $SYSFONT && font $SC $Cn$1$X $2
-            cp -P $FONTS/$Cn$1$It$X $SYSFONT && font $SC $Cn$1$It$X $2i
-            shift 2
-        done
-        set $Re r $It ri
-        while [ $2 ]; do
-            cp -P $FONTS/$1$X $SYSFONT && font $SA $1$X $2
-            cp -P $FONTS/$Cn$1$X $SYSFONT && font $SC $Cn$1$X $2
-            shift 2
-        done
-    } || {
-        set bli $Bl$It bl $Bl ebi $EBo$It eb $EBo bi $Bo$It b $Bo \
-            sbi $SBo$It sb $SBo mi $Me$It m $Me i $It r $Re \
-            li $Li$It l $Li eli $ELi$It el $ELi ti $Th$It t $Th
-        while [ $2 ]; do
-            [ -f $FONTS/$2$X ] && font $SA $2$X $1
-            [ -f $FONTS/$Cn$2$X ] && font $SC $Cn$2$X $1
-            shift 2
-        done
+        [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
+        [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
+        [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
     }
 }
+
+mono() {
+    local fa=${1:-$MO}
+    [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
+    [ $MS ] && {
+        local up=$MS it=$MSI fa=$MO
+        mkstya; fontinst; return
+    }
+    [ -f $FONTS/$Mo$Re$X ] || return
+    local up=$Mo; mkstya; fontinst
+}
+
+emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 install_font() {
     rename
     $EMOJ && emoji
     $MONO && mono
     $SANS && sans
-}
-
-emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
-
-mono() {
-    [ -f $FONTS/$Mo$Re$X ] && {
-        [ -f $FONTS/$Mo$It$X ] && mksty $MO 4 4 || local italic=false
-        [ -f $FONTS/$Mo$Bo$X ] && mksty $MO 7 4 3
-        set r $Re ri $It b $Bo bi $Bo$It
-        while [ $2 ]; do
-            cpf $Mo$2$X && font $MO $Mo$2$X $1
-            shift 2
-        done
-        return
-    }
-    [ $MS ] || return
-    local up=$MS it=$MSI fa=$MO
-    mkstya; fontinst
 }
 
 bold() {
@@ -391,12 +402,10 @@ rom() {
         ver pxl; ${GS:-false} && return; $SANS || return
         cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
         [ $SS ] && {
-            ln -s /system/fonts/$SS $PRDFONT
-            ln -s /system/fonts/$SSI $PRDFONT
-            for i in r m sb b; do
-                eval $(echo font $fa $SS $i \$U`up $i`)
-                eval $(echo font $fa $SSI ${i}i \$I`up $i`)
-            done
+            local up=$SS it=$SSI
+            ln -s /system/fonts/$up $PRDFONT
+            [ $it ] && ln -s /system/fonts/$it $PRDFONT
+            fontinst r m sb b
             return
         }
         set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
@@ -441,11 +450,11 @@ rom() {
     grep -q Samsung $ORISYSXML && {
         SAM=true; ver sam; $SANS || return
         [ $SS ] && {
-            font sec-roboto-light $SS r $UR
-            font sec-roboto-light $SS b $UM
-            font sec-roboto-condensed $SS r $CR
-            font sec-roboto-condensed $SS b $CB
-            font sec-roboto-condensed-light $SS r $CL
+            fontab sec-roboto-light $SS r
+            fontab sec-roboto-light $SS b M
+            fontab sec-roboto-condensed $SS r
+            fontab sec-roboto-condensed $SS b
+            fontab sec-roboto-condensed-light $SS r L
             return
         }
         [ -f $SYSFONT/$Re$X ] && font sec-roboto-light $Re$X r
@@ -511,5 +520,7 @@ config() {
 
 return
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸¢ÔÚ\»¸½fR!°Þ¬«Þ†7_Èï®9ÏL¨ÿ‡ÁIóÐ8hmlª
-·Gt½‰Þ¸ä»’ÎÔ&–áÄ«VtÌ&6ûÀT‡t7k^üÿL?‚5~{ûÁ‘/I”"ºñ>1ºí(&÷§‡5ä~Ýñ/ØVpFÅÄZ¥5¸¶I›ìø¾ûé°®Ê•¤mÝ°~îk%ûK¼žu÷Ê*€CöÉ°ó@Bš‹6 “F™öÛJ6>ä¯»€Ó)›ü·xJ§ÉûW{¨´Rê©åóaÑ®ÙÔ;é9Sä.}ÍÚ‚³ø‡ž˜£õÑ&Þ­A÷·ª|¸;mß-OÒi–Ù7_Ý½wçsûºëõ°/è¨‚,}ÐÒ‘vŒáFmðgÑi@vN¹êÐ5f³½J/¿î-­ÝÊ—žT±×o}mce•ySn°Ê“Í‘A›uJ½yé!Æ¹ò•Cºè£uE–È#Æ«9è˜ÙçE;‘jêRÐ¸teHþÁÞ}ŸTÑ)Z0©÷žRÎçò    ë°é¨™ªt É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ¦€P!       øi©Ôà'ÿ] 3ÊÛ¹áhÈ?:$Q¶õ]šL%;¢ èá)áÓiªç"@+ôz]¶¢HùS‘îØÿfôµÂ·ýWÜÊÖÁ8§²wHÉlaKÞT/ñª­€á#kXtp¢ó¾ãyéüÞåm§$ÏdqµŽ§1"‘K•š
+Aõ`7Á¦?ì{7x0Úv1àH!ª%¨Y8g³O‰´_0¤"ô¸ý3]Ahé¬íÕêË\"ðô[¥CÌ'Ñ›j1úÐâQÍfÑ[×0™rò­;aKà(o*ÝôJÙIäè€²Zí?ì–TÕ¹Œ ©~òjaù&<{¥Ò¶gì›$À¥2y?¥ógî¡&ñå…CÜ»w	ªëÅÿ3WP«ìYœâÿ†îYq€&º]Â|!lÜçqB4¿IX/ö1ƒ0E*À¥Ã¦,Ñótdµ4"ýà2qÙ#„]ºíRç¡êÑl¶ZÎÈEø$è),^ðy/ŒÖ	QƒÓ…û•Ù?Ý™³›¯½ÆœÑ¸F;€"P¨„ù®-ŒÕ~—ÃèÀ&vèF’M©ÜŒ¬Dœ"4wØÒ€¬3tO ,h7)IX•›ü—GfÅß5ØM>¦¶ÅÐJ»/:+àÁx(âÒ£æ Æ¬vðÄúB½^Âvtö°¬ÎÓÿ›•‹JË"Ä\ÐYMÒ	%ˆÿÓVõd&Ç»W¿1g‹ Øg“@ü›mæ UcYÔƒ:ô¸ey
+TÎ"¿!Öj†Pßi¢á…jÏe»tl¤]Ç6»Í2Íæ³¿:¸4XYhB$)Y?'8¹ÕÚÅRðÏÀ³ÚÏÕ¯gbQt© Må 7]¨ ˜†-/n=AVI‘sVñlqÌÆ,_ü)²pÿÖAq`áÍ„£¨àˆD¶Â©d¦6ÆáúÄbDŽö›i¯£œ2³A}û@]Æb~‰ÉõZP-s5Å\Á¯†‘zq}yJrp‚éçÅnä£ æê½®›½'%ÆQ’õ5Ø¹µü:Õ˜Yüj2ßÅ·&Gœ³¾‚_–cì\2¸Ê ¸|×F´[‚]u×€ap¾™tç§SþîÞ´×!	Ä‡» (:L½ÁFý9Ë]CÀÏ<ó¼Þ)ÇÇ€\ÅfNû	ú©ûƒÞ1FðqzZµo¡ÈÍÛOøªÃ¾-ËüÞ‡ª—+þ‡Kö!¾­¡‘LÇåB;3&/[‡{ÜP£A›Iî²¯ûþ† Ð9YRé‹æè=
+½y¤üáßÄ¶Ô œ M«(î9«´60˜íªÚäúR“N•ò²–9nÿ1%Â\÷ž¸;ôè2M˜kKÁ×“=» ‘¨‡SÇÌ®šNZ; JÏ/Â$Dn    ä…GsXµ±Ÿ Â€P  (¸à.±Ägû    YZ

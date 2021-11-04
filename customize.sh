@@ -72,7 +72,7 @@ ui_print '+ Font'
 mkdir $FONTS ${CFI:=$OMFDIR/CFI}
 cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found"
 [ -f $FONTS/$SS ] || SS=
-[ -f $FONTS/$SSI ] || SSI=$SS
+[ -f $FONTS/`valof SSI` ] || { [ "`valof IR`" ] && SSI=$SS; } || SSI=
 [ -f $FONTS/$MS ] || MS=
 install_font
 false | cp -i $FONTS/*.[to]tf $SYSFONT
