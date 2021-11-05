@@ -143,10 +143,10 @@ font() {
 ab() {
     local n=z
     case $1 in
-        $SS|$SSI  ) n=u ;;
-        $SER|$SERI) n=s ;;
-        $MS|$MSI  ) n=m ;;
-#        $SRM|$SRMI) n=o ;;
+        ${ORISS:=$SS}|${ORISSI:=$SSI}    ) n=u ;;
+        ${ORISER:=$SER}|${ORISERI:=$SERI}) n=s ;;
+        ${ORIMS:=$MS}|${ORIMS:=$MSI}     ) n=m ;;
+        ${ORISRM:=$SRM}|${ORISRMI:=$SRMI}) n=o ;;
     esac
     case "$3" in *i)
         case $n in
@@ -271,23 +271,6 @@ up() { echo $@ | tr [:lower:] [:upper:]; }
 
 rename() {
     for i in $FONTS/*.otf; do mv $i ${i%.otf}$X; done
-    [ -f $FONTS/[ui]*$X ] || {
-        set bli ibl bl ubl ebi ieb eb ueb bi ib b ub \
-            sbi isb sb usb mi im m um i ir r ur \
-            li il l ul eli iel el uel ti it t ut \
-            mo mr
-        while [ $2 ]; do
-            mv $FONTS/$1$X $FONTS/$2$X
-            shift 2
-        done
-    }
-    [ -f $FONTS/d*$X ] || {
-        set bli bl ebi eb bi b sbi sb mi m i dr li l eli el ti t
-        while [ $2 ]; do
-            mv $FONTS/c$1$X $FONTS/d$2$X
-            shift 2
-        done
-    }
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     while [ $2 ]; do
         mv $FONTS/u$1$X $FONTS/$2$X
@@ -308,7 +291,7 @@ rename() {
         mv $FONTS/p$1$X $FONTS/$So$2$X
         shift 2
     done
-    set Mono $Mo$Re e Emoji
+    set e Emoji
     while [ $2 ]; do
         mv $FONTS/$1$X $FONTS/$2$X
         shift 2
@@ -334,6 +317,17 @@ sans() {
     }
 }
 
+serf() {
+    local fa=${1:-$SE}
+    [ $SER ] ||  [ -f $FONTS/$Se$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
+    [ $SER ] && {
+        local up=$SER it=$SERI fa=$SE
+        mkstya; fontinst; return
+    }
+    [ -f $FONTS/$Se$Re$X ] || return
+    local up=$Se; mkstya; fontinst
+}
+
 mono() {
     local fa=${1:-$MO}
     [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
@@ -345,13 +339,26 @@ mono() {
     local up=$Mo; mkstya; fontinst
 }
 
-emoji() { cpf Emoji$X && font und-Zsye Emoji$X r; }
+srmo() {
+    local fa=${1:-$SO}
+    [ $SRM ] ||  [ -f $FONTS/$So$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
+    [ $SRM ] && {
+        local up=$SRM it=$SRMI fa=$SO
+        mkstya; fontinst; return
+    }
+    [ -f $FONTS/$So$Re$X ] || return
+    local up=$So; mkstya; fontinst
+}
+
+emoj() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
 install_font() {
     rename
-    $EMOJ && emoji
-    $MONO && mono
     $SANS && sans
+    $MONO && mono
+    $SERF && serf
+    $SRMO && srmo
+    $EMOJ && emoj
 }
 
 bold() {
@@ -502,25 +509,29 @@ config() {
 
     SS=`valof SS` SSI=`valof SSI`
     MS=`valof MS` MSI=`valof MSI`
+    SER=`valof SER` SERI=`valof SERI`
+    SRM=`valof SRM` SRMI=`valof SRMI`
 
-    [ $SS ] && \
     for i in $FW; do i=`up $i`
-        eval $(echo U$i=\"`valof U$i`\")
-        eval $(echo I$i=\"`valof I$i`\")
-        [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
-        eval $(echo [ \"\${I$i:=\$U$i}\" ])
-        eval $(echo C$i=\"`valof C$i`\")
-        eval $(echo [ \"\${C$i:=\$U$i}\" ])
-        eval $(echo D$i=\"`valof D$i`\")
-        eval $(echo [ \"\${D$i:=\$I$i}\" ])
-        eval $(echo M$i=\"`valof M$i`\")
-        eval $(echo S$i=\"`valof S$i`\")
+        [ $SS ] && {
+            eval $(echo U$i=\"`valof U$i`\")
+            eval $(echo I$i=\"`valof I$i`\")
+            [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
+            eval $(echo [ \"\${I$i:=\$U$i}\" ])
+            eval $(echo C$i=\"`valof C$i`\")
+            eval $(echo [ \"\${C$i:=\$U$i}\" ])
+            eval $(echo D$i=\"`valof D$i`\")
+            eval $(echo [ \"\${D$i:=\$I$i}\" ])
+        }
+        [ $MS ] && eval $(echo M$i=\"`valof M$i`\")
+        [ $SER ] && eval $(echo S$i=\"`valof S$i`\")
+        [ $SRM ] && eval $(echo O$i=\"`valof O$i`\")
     done
 }
 
 return
 PAYLOAD:
-˝7zXZ  Ê÷¥F¿¶ÄP!       ¯i©‘‡'ˇ] 3 €π·h»?:$Q∂ı]öL%;¢ Ë·)·”i™Á"@+Ùz]Å∂¢H˘SëÓÿˇfÙµ¬∑˝W‹ ÷¡8ß≤wH…laKﬁT/Ò™≠Ä·#kXÅtp¢Ûæ„yÈ¸ﬁÂmß$œdqµéß1"ëKïö
-Aı`7¡¶?Ï{7x0⁄v1‡H!™%®Y8g≥Oâ¥_0§"Ù∏˝3]AhÈ¨Ì’ÍÀ\"Ù[•CÃ'—õj1˙–‚QÕf—[◊0ôrÚ≠;aK‡(o*›ÙJŸI‰ËÄ≤ZÌ?ÏñT’πå ©~Úja˘&<{•“∂gÏõ$¿•2y?•ÛgÓ°&ÒÂÖC‹ªw	™Î≈ˇ3WP´ÏYú‚ˇÜÅÓYqÄ&∫]¬|!l‹ÁqB4øIX/ˆ1É0E*¿ù•√¶,—Ûtdµ4"˝‡2qŸ#Ñ]∫ÌRÁ°Í—l∂ZŒ»E¯$Ë),^yç/å÷	QÉ”Ö˚ïŸ?ê›ô≥õØΩ∆ú—∏F;Ä"P®Ñ˘Æ-å’~ó√Ë¿&vùËFíM©‹å¨Dú"4wÿ“Ä¨3tO†,h7)IXïõ¸óGf≈ﬂ5èÿM>¶∂≈–Jª/:+‡¡x(‚“£Ê ∆¨vƒ˙BΩ^¬vtˆ∞¨Œ”ˇõïãJÀ"ƒ\–YM“	%àˇ”Vıd&«ªWø1gã ÿgì@¸õmÊ UcY‘É:Ù∏ey
-TŒ"ø!÷jÜPﬂi¢·Öjœeªtêl§]«6ªÕ2ÕÊ≥ø:∏4XYhB$)Y?'8πç’⁄≈Rœ¿≥⁄œ’ØgbQt© MÂ 7]® òÜ-/nù=AVIësVÒlqÃ∆,_¸)≤pˇ÷Aq`·ÕÑ£®‡àD∂¬©d¶6∆·˙ƒbDéˆõiØù£ú2≥A}˚@]∆b~â…ıZP-s5≈\¡ØÜëzq}êyJrpÇÈÁ≈n‰£ ÊÍΩÆõΩ'%∆Qíı5ÿπµ¸:’òY¸j2ﬂ≈∑&Gú≥æÇ_ñcÏ\2∏ †∏|◊F¥[Ç]u◊ÄapæôtÁßS˛Óﬁ¥◊!	ƒáª (:LΩ¡F˝9À]C¿œ<Ûºﬁ)««Ä\≈fN˚	˙©˚Éﬁ1FqzZµo°»Õ€O¯™√êæê-À¸ﬁçá™ó+˛áKˆ!æ≠°ëL«ÂB;3&/[á{‹P£AõIÓ≤Ø˚˛Ü –9YRÈãÊË=
-Ωy§¸·ﬂƒ∂‘ êú†M´(Ó9´¥60òÌ™⁄‰˙RìNïÚ≤ñ9nˇ1%¬\˜û∏;ùÙÅË2MòkK¡◊ì=ª ë®áS«ÃÆöNZ;†Jœ/¬$Dn    ‰ÖGsXµ±ü ¬ÄP  (∏‡.±ƒg˚    YZ
+˝7zXZ  Ê÷¥F¿©ÄP!       ›=Ç‡'ˇ!] 3 €π·h»?:$Q∂ı]öL%;¢ Ë·)·”i™Á"@+Ùz]Å∂¢H˘SëÓÿˇfÙµ¬∑˝W‹ ÷¡8ß≤wH…laKﬁT/Ò™≠Ä·#kXÅtp¢Ûæ„yÈ¸ﬁÂmß$œdqµéß1"ëKïö
+Aı`7¡¶?Ï{7x0⁄v1‡H!™%®Y8g≥Oâ¥_0§"Ù∏˝3]AhÈ¨Ì’ÍÀ\"Ù[•CÃ'—õj1˙–‚QÕf—[◊0ôrÚ≠;aK‡(o*›ÙJŸI‰ËÄ≤ZÌ?ÏñT’πå ©~Úja˘&<{•“∂gÏõ$¿•2y?•ÛgÓ°&ÒÂÖC‹ªw	™Î≈ˇ3WP´ÏYú‚ˇÜÅÓYqÄ&∫]¬|!l‹ÁqB4øIX/ˆ1É0E*¿ù•√¶,—Ûtdµ4"˝‡2qŸ#Ñ]∫ÌRÁ°Í—l∂ZŒ»E¯$Ë),^yç/å÷	QÉ”Ö˚ïŸ?ê›ô≥õØΩ∆ú—∏F;Ä"P®Ö9òw»¶ÇãË∞#¶/«è±‘FÂΩŸ$)âdpΩ~Ç'÷§à‘ê´-Aı-bˆ9w (#ópË\Ä2ü*@˚™2‘¯aâˇN√ã!ò~∏⁄“Çª¬%’[Ñ)f~Ö:e iiŒƒ ø- ı˚∫UœŒ' ÊÔü${<ŸÒæn∞ç√¯˜k^é}»rﬂ«√˛*."çö∂∂˝bQö|ÇãÔN"ñ‘6˚œ' aáª"6+9f’P:dkHñüäGT]nÅ˜±	±√á0ot€?TÇÑrZØÓ˝Àv« Ìÿ3ÿƒú`ßß√Qïó	\CÊ¯
+yø‹ô¿{∆
+äZh∏°rVÓƒºqSUñ%««|µ˜zZﬁÔ.IPÈsÔ u5`›%ª*@°8Äø*O¥Ø{∏·/;ÎÑ@øK‡<÷'OÕWπ«e„Ë®ôÑ∏Jß§€å«¨≠íglö@ˆO≤›~Ò/xŒA@W2«ﬂ¨èr¶Üj…√y≈ˇ-m√∑HÃ¬î®±¡›;%∂Í◊√”—9	g0 "˚<´*Yo–£ƒfÔ$‰¨∏‡ô0[D1>ßÎ \x‡ï≈<ö#Ú8Iä˙]®Ã3ÕÓPWG”v-˝gYó$&N›o&˛!#7Øc®<(<@‚ıK.¨„ŸÌŒ:¨!Ö"	'“-{«Û¡ª3yãaâ0˛€ä–ƒß~œ0µ\ ≈dxàà(!dnú⁄¢¢Åó¨°Ä¬ÍØ&7g©cü»¡ácÀ(—“iÁ[W•é$âî«‰µ¶5≈d·ﬁ©Õh√J£a∞ 	¢€™‘€>µÙg ia§¥jÃ^»ÕØı†U@Ç<…c6∂π≥‡∑Û©G"È†    9†Àªcû O ≈ÄP  êàÂ3±ƒg˚    YZ
