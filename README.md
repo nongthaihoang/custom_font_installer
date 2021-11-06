@@ -76,6 +76,6 @@ All steps are the same as in static fonts. Except the followings.
 - Be aware that not every font will work properly on Android.
 
 ## Google Font Installer
-- Download and install hundreds of fonts from [Google Fonts Library](https://fonts.google.com/?category=Sans+Serif) easily.
+- Download and install [Google Fonts](https://fonts.google.com) easily.
 - Just add `GF=<fontname>`, e.g. `GF=Open Sans`, to the config file.
-- Only support sans-serif/static fonts for now.
+- Static font only.
