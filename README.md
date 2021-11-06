@@ -64,7 +64,7 @@ Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.c
 
 ### Variable fonts (VF)
 All steps are the same as in static fonts. Except the followings.
-- For `sans-serif`, rename VF to `ss.ttf` (uprights) and `ssi.ttf` (italics).
+- For `sans-serif`, rename VF to `ss.ttf` (upright) and `ssi.ttf` (italic).
 - For `monospace`, rename VF to `ms.ttf`.
 - Configure axes in the config file `OhMyFont/config.cfg`.
 
@@ -78,4 +78,4 @@ All steps are the same as in static fonts. Except the followings.
 ## Google Font Installer
 - Download and install [Google Fonts](https://fonts.google.com) easily.
 - Just add `GF=<fontname>`, e.g. `GF=Open Sans`, to the config file.
-- Static font only.
+- Static fonts only.
