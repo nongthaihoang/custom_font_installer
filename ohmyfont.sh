@@ -303,9 +303,7 @@ rename() {
         set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
             $SBo$It $SBo $Me$It $Me $It $Re \
             $Li$It $Li $ELi$It $ELi $Th$It $Th
-        for i do;
-            mv $FONTS/$i$X $FONTS/$Sa$i$X
-        done
+        for i do mv $FONTS/$i$X $FONTS/$Sa$i$X; done
         rm $FONTS/$Cn*$X
     }
 }
@@ -381,12 +379,14 @@ install_font() {
                 [ -f $SYSFONT/$f$i$X ] && ln -s $f$i$X $SYSFONT/$i$X
             done
         }
-        lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
-        lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
-        lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
-        [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
-        [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
-        [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
+        $FULL && [ ! $SS ] || {
+            lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
+            lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
+            lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
+            [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
+            [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
+            [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
+        }
     }
     $MONO && {
         [ ${MONO:-true} = true ] && mono
