@@ -26,7 +26,7 @@ gfi_dl() {
 
 gfi_ren() {
     local fa=${1:-$SA} i
-    case $fa in $SA) i=u ;; $SE) i=s ;; $MO) i=m ;; $SO) i=o ;; esac
+    case $fa in $SA) i=u ;; $SC) i=c ;; $SE) i=s ;; $MO) i=m ;; $SO) i=o ;; esac
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     while [ $2 ]; do
         [ $i = u ] && {
@@ -39,7 +39,7 @@ gfi_ren() {
         cp $CFI/$i$1$X $CFI
         shift 2
     done
-    case $fa in $SA) i=i ;; $SE) i=t ;; $MO) i=n ;; $SO) i=p ;; esac
+    case $fa in $SA) i=i ;; $SC) i=d ;; $SE) i=t ;; $MO) i=n ;; $SO) i=p ;; esac
     set bl $Bl$It eb $EBo$It b $Bo$It sb $SBo$It m $Me$It r $It l $Li$It el $ELi$It t $Th$It
     while [ $2 ]; do
         [ $i = i ] && {
@@ -57,7 +57,7 @@ gfi_ren() {
 
 gfi() {
     $SANS || $SERF || $MONO || $SRMO || return
-    GF=`valof GF` GF_mono=`valof GF_mono`
+    GF=`valof GF` GF_condensed=`valof GF_condensed` GF_mono=`valof GF_mono`
     GF_serif=`valof GF_serif` GF_serif_mono=`valof GF_serif_mono`
     [ "$GF" ] || [ "$GF_mono" ] || [ "$GF_serif" ] || [ "$GF_serif_mono" ] && \
     [ -d $CFI ] || return
@@ -65,19 +65,37 @@ gfi() {
     ui_print "+ Google Font Installer"
     local font gfidir=$FONTS/gfi; mkdir $gfidir
 
-    $SANS && [ "$GF" ] && {
-        ui_print "> Sans Serif"
-        [ -f $CFI/ur.[to]tf -o  -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
-            ui_print "  Fonts exist in $CFI. Do nothing!"
-        } || {
-            gfi_dl $GF
-            ui_print "  Preparing $font"
-            gfi_ren $SA
-            [ -f $CFI/ur$X ] && {
-                ui_print "  $font has been saved to $CFI!"
+    $SANS && {
+        [ "$GF" ] && {
+            ui_print "> Sans Serif"
+            [ -f $CFI/ur.[to]tf -o  -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
+                ui_print "  Fonts exist in $CFI. Do nothing!"
             } || {
-                ui_print "! Failed: there is no Regular font style"
-                abort "  Please rename fonts manually in $CFI"
+                gfi_dl $GF
+                ui_print "  Preparing $font"
+                gfi_ren $SA
+                [ -f $CFI/ur$X ] && {
+                    ui_print "  $font has been saved to $CFI!"
+                } || {
+                    ui_print "! Failed: there is no Regular font style"
+                    abort "  Please rename fonts manually in $CFI"
+                }
+            }
+        }
+        [ "$GF_condensed" ] && {
+            ui_print "> Sans Serif Condensed"
+            [ -f $CFI/cr.[to]tf -o  -f $CFI/$Cn$Re.[to]tf ] && {
+                ui_print "  Fonts exist in $CFI. Do nothing!"
+             || {
+                gfi_dl $GF_condensed
+                ui_print "  Preparing $font"
+                gfi_ren $SC
+                [ -f $CFI/cr$X ] && {
+                    ui_print "  $font has been saved to $CFI!"
+                } || {
+                    ui_print "! Failed: there is no Regular font style"
+                    abort "  Please rename fonts manually in $CFI"
+                }
             }
         }
     }
