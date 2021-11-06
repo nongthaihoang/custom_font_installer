@@ -299,6 +299,15 @@ rename() {
         mv $FONTS/$1$X $FONTS/$2$X
         shift 2
     done
+    [ $Sa ] && {
+        set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
+            $SBo$It $SBo $Me$It $Me $It $Re \
+            $Li$It $Li $ELi$It $ELi $Th$It $Th
+        for i do;
+            mv $FONTS/$i$X $FONTS/$Sa$i$X
+        done
+        rm $FONTS/$Cn*$X
+    }
 }
 
 sans() {
