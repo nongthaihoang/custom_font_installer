@@ -379,7 +379,7 @@ install_font() {
                 [ -f $SYSFONT/$f$i$X ] && ln -s $f$i$X $SYSFONT/$i$X
             done
         }
-        $FULL && [ ! $SS ] || {
+        $FULL && [ ! $SS ] && {
             lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
             lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
