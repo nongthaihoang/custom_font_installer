@@ -324,7 +324,7 @@ serf() {
     local fa=${1:-$SE}
     [ $SER ] ||  [ -f $FONTS/$Se$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
     [ $SER ] && {
-        local up=$SER it=$SERI fa=$SE
+        local up=$SER it=$SERI
         mkstya; fontinst; return
     }
     [ -f $FONTS/$Se$Re$X ] || return
@@ -335,7 +335,7 @@ mono() {
     local fa=${1:-$MO}
     [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
     [ $MS ] && {
-        local up=$MS it=$MSI fa=$MO
+        local up=$MS it=$MSI
         mkstya; fontinst; return
     }
     [ -f $FONTS/$Mo$Re$X ] || return
@@ -346,7 +346,7 @@ srmo() {
     local fa=${1:-$SO}
     [ $SRM ] ||  [ -f $FONTS/$So$Re$X ] && [ $fa = $SA -o $fa = $SE ] && $FB
     [ $SRM ] && {
-        local up=$SRM it=$SRMI fa=$SO
+        local up=$SRM it=$SRMI
         mkstya; fontinst; return
     }
     [ -f $FONTS/$So$Re$X ] || return
@@ -558,7 +558,7 @@ config() {
 
     ORISS=$SS    ORISSI=$SSI
     ORISER=$SER  ORISERI=$SERI
-    ORIMS=$MS    ORIMS=$MSI
+    ORIMS=$MS    ORIMSI=$MSI
     ORISRM=$SRM  ORISRMI=$SRMI
 
     for i in $FW; do i=`up $i`
