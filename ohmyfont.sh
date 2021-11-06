@@ -142,11 +142,12 @@ font() {
 
 ab() {
     local n=z
+    [ $ups ] && n=$ups
     case $1 in
-        ${ORISS:=$SS}|${ORISSI:=$SSI}    ) n=u ;;
-        ${ORISER:=$SER}|${ORISERI:=$SERI}) n=s ;;
-        ${ORIMS:=$MS}|${ORIMS:=$MSI}     ) n=m ;;
-        ${ORISRM:=$SRM}|${ORISRMI:=$SRMI}) n=o ;;
+        $ORISS |$ORISSI ) n=u ;;
+        $ORISER|$ORISERI) n=s ;;
+        $ORIMS |$ORIMSI ) n=m ;;
+        $ORISRM|$ORISRMI) n=o ;;
     esac
     case "$3" in *i)
         case $n in
@@ -154,7 +155,8 @@ ab() {
 #            s) n=t ;;
 #            m) n=n ;;
 #            o) n=p ;;
-        esac ;;
+        esac
+        [ $its ] && n=$its ;;
     esac
     [ "$2" = $SC ] && { [ $n = u ] && n=c || { [ $n = i ] && n=d; }; }
     echo $n
@@ -188,7 +190,7 @@ fontinst() {
     while [ $2 ]; do
         cpf $up$2$X && font $fa $up$2$X $1
         [ $fa = $SA ] && {
-            cpf $Cn$2$X && font $SC $Cn$2$X $1 || { $FULL && font $SC $2$X $1; }
+            cpf $Cn$2$X && font $SC $Cn$2$X $1 || { $FULL && font $SC $up$2$X $1; }
         }
         shift 2
     done
@@ -272,9 +274,10 @@ up() { echo $@ | tr [:lower:] [:upper:]; }
 rename() {
     for i in $FONTS/*.otf; do mv $i ${i%.otf}$X; done
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
+    [ ${SANS:-true} = true ] && Sa= || Sa=Sans-; readonly Sa
     while [ $2 ]; do
-        mv $FONTS/u$1$X $FONTS/$2$X
-        mv $FONTS/c$1$X $FONTS/$Cn$2$X
+        mv $FONTS/u$1$X $FONTS/$Sa$2$X
+        [ ${SANS:-true} = true ] && mv $FONTS/c$1$X $FONTS/$Cn$2$X
         mv $FONTS/m$1$X $FONTS/$Mo$2$X
         mv $FONTS/s$1$X $FONTS/$Se$2$X
         mv $FONTS/o$1$X $FONTS/$So$2$X
@@ -284,8 +287,8 @@ rename() {
         sb $SBo$It m $Me$It r $It \
         l $Li$It el $ELi$It t $Th$It
     while [ $2 ]; do
-        mv $FONTS/i$1$X $FONTS/$2$X
-        mv $FONTS/d$1$X $FONTS/$Cn$2$X
+        mv $FONTS/i$1$X $FONTS/$Sa$2$X
+        [ ${SANS:-true} = true ] && mv $FONTS/d$1$X $FONTS/$Cn$2$X
         mv $FONTS/n$1$X $FONTS/$Mo$2$X
         mv $FONTS/t$1$X $FONTS/$Se$2$X
         mv $FONTS/p$1$X $FONTS/$So$2$X
@@ -305,16 +308,9 @@ sans() {
         local up=$SS it=$SSI
         mkstya; fontinst; return
     }
-    $FULL && [ ! -f $FONTS/$Re$X ] && return
+    [ ${SANS:-true} = true ] || local up=$Sa
+    $FULL && [ ! -f $FONTS/$Sa$Re$X ] && return
     $FULL && mkstya; fontinst
-    $FULL && [ $fa = $SA ] && {
-        lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
-        lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
-        lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
-        [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
-        [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
-        [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
-    }
 }
 
 serf() {
@@ -352,12 +348,51 @@ srmo() {
 
 emoj() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
+sans_serif() { true; }
+serif() { true; }
+monospace() { true; }
+serif_monospace() { true; }
+
 install_font() {
     rename
-    $SANS && sans
-    $MONO && mono
-    $SERF && serf
-    $SRMO && srmo
+    $SANS && {
+        [ ${SANS:-true} = true ] && sans
+        [ "$SANS" = $SE ] && serf $SA && SS=$ORISER SSI=$ORISERI
+        [ "$SANS" = $MO ] && mono $SA && SS=$ORIMS SSI=$ORIMSI
+        [ "$SANS" = serif_$MO ] && srmo $SA && SS=$ORISRM SSI=$ORISRMI
+        $FULL && [ "$SANS:-true" != true ] && {
+            local f
+            set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
+                $SBo$It $SBo $Me$It $Me $It $Re \
+                $Li$It $Li $ELi$It $ELi $Th$It $Th
+            [ "$SANS" = $SE ] && f=$Se
+            [ "$SANS" = $MO ] && f=$Mo
+            [ "$SANS" = serif_$MO ] && f=$So
+            [ $f ] && for i do
+                [ -f $SYSFONT/$f$i$X ] && ln -s $f$i$X $SYSFONT/$i$X
+            done
+        }
+        lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
+        lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
+        lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
+        [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
+        [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
+        [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
+    }
+    $MONO && {
+        [ ${MONO:-true} = true ] && mono
+        [ "$MONO" = serif_$MO ] && srmo $MO && MS=$ORISRM MSI=$ORISRMI
+    }
+    $SERF && {
+        [ ${SERF:-true} = true ] && serf
+        [ "$SERF" = sans_$SE ] && sans $SE && SER=$ORISS SERI=$ORISSI
+        [ "$SERF" = $MO ] && mono $SE && SER=$ORIMS SERI=$ORIMSI
+        [ "$SERF" = serif_$MO ] && srmo $SE && SER=$ORISRM SERI=$ORISRMI
+    }
+    $SRMO && {
+        [ ${SRMO:-true} = true ] && srmo
+        [ "$SRMO" = $MO ] && mono $SO && SRM=$ORIMS SRMI=$ORIMSI
+    }
     $EMOJ && emoj
 }
 
@@ -507,25 +542,28 @@ config() {
     SERF=`valof SERF` SRMO=`valof SRMO`
     FULL=`valof FULL` GS=`valof GS`
 
-    SS=`valof SS` SSI=`valof SSI`
-    MS=`valof MS` MSI=`valof MSI`
+    SS=`valof SS`   SSI=`valof SSI`
+    MS=`valof MS`   MSI=`valof MSI`
     SER=`valof SER` SERI=`valof SERI`
     SRM=`valof SRM` SRMI=`valof SRMI`
 
+    ORISS=$SS    ORISSI=$SSI
+    ORISER=$SER  ORISERI=$SERI
+    ORIMS=$MS    ORIMS=$MSI
+    ORISRM=$SRM  ORISRMI=$SRMI
+
     for i in $FW; do i=`up $i`
-        [ $SS ] && {
-            eval $(echo U$i=\"`valof U$i`\")
-            eval $(echo I$i=\"`valof I$i`\")
-            [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
-            eval $(echo [ \"\${I$i:=\$U$i}\" ])
-            eval $(echo C$i=\"`valof C$i`\")
-            eval $(echo [ \"\${C$i:=\$U$i}\" ])
-            eval $(echo D$i=\"`valof D$i`\")
-            eval $(echo [ \"\${D$i:=\$I$i}\" ])
-        }
-        [ $MS ] && eval $(echo M$i=\"`valof M$i`\")
-        [ $SER ] && eval $(echo S$i=\"`valof S$i`\")
-        [ $SRM ] && eval $(echo O$i=\"`valof O$i`\")
+        eval $(echo U$i=\"`valof U$i`\")
+        eval $(echo I$i=\"`valof I$i`\")
+        [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
+        eval $(echo [ \"\${I$i:=\$U$i}\" ])
+        eval $(echo C$i=\"`valof C$i`\")
+        eval $(echo [ \"\${C$i:=\$U$i}\" ])
+        eval $(echo D$i=\"`valof D$i`\")
+        eval $(echo [ \"\${D$i:=\$I$i}\" ])
+        eval $(echo M$i=\"`valof M$i`\")
+        eval $(echo S$i=\"`valof S$i`\")
+        eval $(echo O$i=\"`valof O$i`\")
     done
 }
 
