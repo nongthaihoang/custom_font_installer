@@ -86,7 +86,7 @@ gfi() {
             ui_print "> Sans Serif Condensed"
             [ -f $CFI/cr.[to]tf -o  -f $CFI/$Cn$Re.[to]tf ] && {
                 ui_print "  Fonts exist in $CFI. Do nothing!"
-             || {
+            } || {
                 gfi_dl $GF_condensed
                 ui_print "  Preparing $font"
                 gfi_ren $SC
