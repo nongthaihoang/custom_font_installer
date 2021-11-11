@@ -176,6 +176,7 @@ cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found"
 ORISS=$SS ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
 ORIMS=$MS ORIMS=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 install_font
+[ $Sa ] && rm $FONTS/[cd]*.[to]tf
 false | cp -i $FONTS/*.[to]tf $SYSFONT
 $SANS || $SERF || $MONO || $SRMO || $EMOJ || rm $SYSXML
 
