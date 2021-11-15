@@ -1,5 +1,4 @@
 # Custom Font Installer
-**Custom Font Installer for Android**
 
 [![updated](https://img.shields.io/badge/Updated-Nov_11,_2021-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
@@ -8,9 +7,8 @@
 [![changelog](https://img.shields.io/badge/Changelog-↻-lightgrey.svg)](https://github.com/nongthaihoang/custom_font_installer/commits/master)
 [![donate](https://img.shields.io/badge/Donate-Paypal-pink.svg)](https://paypal.me/nongthaihoang)
 
- 
 ## Description
-Install custom fonts manually via Magisk/TWRP (powered by [OMF](https://gitlab.com/nongthaihoang/omftemplate)).
+CFI is a flash-able zip (based on [OMF](https://gitlab.com/nongthaihoang/omftemplate)) that allows installing custom fonts manually via Magisk/TWRP.
 
 ## Usage
 ### Static fonts
@@ -72,7 +70,7 @@ All steps are the same as in static fonts. Except the followings.
 - You don't need to have all font files listed above, just use what available.
 - For `sans-serif`, there must be at least one font `ur.ttf` or `ss.ttf`.
 - If using VF, flash the CFI zip for the first time to get the default config file.
-- For TWRP support, download [twrp](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
+- For TWRP support, download the [TWRP](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract to `OhMyFont` folder.
 - Be aware that not every font will work properly on Android.
 
 ## Google Font Installer
