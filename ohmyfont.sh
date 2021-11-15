@@ -382,40 +382,42 @@ lnf(){
 }
 
 rename() {
-    for i in $FONTS/*.otf; do mv $i ${i%.otf}$X; done
+    local x=.[ot]tf i
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     [ ${SANS:-true} = true ] && Sa= || Sa=Sans-; readonly Sa
     while [ $2 ]; do
-        mv $FONTS/u$1$X $FONTS/$Sa$2$X
-        [ $Sa ] || mv $FONTS/c$1$X $FONTS/$Cn$2$X
-        mv $FONTS/m$1$X $FONTS/$Mo$2$X
-        mv $FONTS/s$1$X $FONTS/$Se$2$X
-        mv $FONTS/o$1$X $FONTS/$So$2$X
+        mv $FONTS/u$1$x $FONTS/$Sa$2$X
+        [ $Sa ] || mv $FONTS/c$1$x $FONTS/$Cn$2$X
+        mv $FONTS/m$1$x $FONTS/$Mo$2$X
+        mv $FONTS/s$1$x $FONTS/$Se$2$X
+        mv $FONTS/o$1$x $FONTS/$So$2$X
         shift 2
     done
     set bl $Bl$It eb $EBo$It b $Bo$It \
         sb $SBo$It m $Me$It r $It \
         l $Li$It el $ELi$It t $Th$It
     while [ $2 ]; do
-        mv $FONTS/i$1$X $FONTS/$Sa$2$X
-        [ $Sa ] || mv $FONTS/d$1$X $FONTS/$Cn$2$X
-        mv $FONTS/n$1$X $FONTS/$Mo$2$X
-        mv $FONTS/t$1$X $FONTS/$Se$2$X
-        mv $FONTS/p$1$X $FONTS/$So$2$X
+        mv $FONTS/i$1$x $FONTS/$Sa$2$X
+        [ $Sa ] || mv $FONTS/d$1$x $FONTS/$Cn$2$X
+        mv $FONTS/n$1$x $FONTS/$Mo$2$X
+        mv $FONTS/t$1$x $FONTS/$Se$2$X
+        mv $FONTS/p$1$x $FONTS/$So$2$X
         shift 2
     done
     set e Emoji
     while [ $2 ]; do
-        mv $FONTS/$1$X $FONTS/$2$X
+        mv $FONTS/$1$x $FONTS/$2$X
         shift 2
     done
-    [ $Sa ] && {
-        set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
-            $SBo$It $SBo $Me$It $Me $It $Re \
-            $Li$It $Li $ELi$It $ELi $Th$It $Th
-        for i do mv $FONTS/$i$X $FONTS/$Sa$i$X; done
-        rm $FONTS/$Cn*$X
-    }
+    set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
+        $SBo$It $SBo $Me$It $Me $It $Re \
+        $Li$It $Li $ELi$It $ELi $Th$It $Th
+    for i do
+        [ $Sa ] && {
+            mv $FONTS/$i$x $FONTS/$Sa$i$X
+            rm $FONTS/$Cn*$x
+        } || mv $FONTS/$i$x $FONTS/$i$X
+    done
 }
 
 sans() {
