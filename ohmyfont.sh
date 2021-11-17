@@ -104,6 +104,9 @@ rom() {
             ln -s /system/fonts/$up $PRDFONT
             [ $it ] && ln -s /system/fonts/$it $PRDFONT
             fontinst r m sb b
+            local gs=GoogleSans-
+            mv $PRDFONT/$up $gs$Re$X && xml "s|$up|$gs$Re$X|"
+            [ $it ] && mv $PRDFONT/$it $gs$It$X && xml "s|$it|$gs$It$X|"
             return
         }
         set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
