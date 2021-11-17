@@ -168,7 +168,7 @@ rom() {
     grep -q $lg $SYSXML && {
         LG=true; ver lg; $SANS || return
         local lgq="/\"$lg\">/" lgf="$lgq,$FAE"
-        xml "$lqf{$lgq!d};$SAF{$SAQ!H};${lgq}G"
+        xml "$lgf{$lgq!d};$SAF{$SAQ!H};${lgq}G"
         return
     }
 
