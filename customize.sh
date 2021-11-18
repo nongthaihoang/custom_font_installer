@@ -173,6 +173,25 @@ cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found"
 [ -f $FONTS/$MS ] || MS=; [ -f $FONTS/$MSI ] || MSI=
 [ -f $FONTS/$SER ] || SER=; [ -f $FONTS/$SERI ] || SERI=
 [ -f $FONTS/$SRM ] || SRM=; [ -f $FONTS/$SRMI ] || SRMI=
+
+DS=DroidSans SSP=SourceSanPro
+[ $SS ] && {
+    mv $FONTS/$SS $FONTS/$DS$X && SS=$DS$X
+    [ $SSI = $SS ] || { mv $FONTS/$SSI $FONTS/$DS-$Bo$X && SSI=$DS-$Bo$X; }
+}
+[ $MS ] && {
+    mv $FONTS/$MS $FONTS/$SSP-$SBo$X && MS=$SSP-$SBo$X
+    [ $MSI = $MS ] || { mv $FONTS/$MSI $FONTS/$SSP-$SBo$It$X && MSI=$SSP-$SBo$It$X; }
+}
+[ $SER ] && {
+    mv $FONTS/$SER $FONTS/$SSP-$Re$X && SER=$SSP-$Re$X
+    [ $SERI = $SER ] || { mv $FONTS/$SERI $FONTS/$SSP-$It$X && SERI=$SSP-$It$X; }
+}
+[ $SRM ] && {
+    mv $FONTS/$SRM $FONTS/$SSP-$Bo$X && SRM=$SSP-$Bo$X
+    [ $SRMI = $SRM ] || { mv $FONTS/$SRMI $FONTS/$SSP-$Bo$It$X && SRMI=$SSP-$Bo$It$X; }
+}
+
 ORISS=$SS ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
 ORIMS=$MS ORIMS=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 install_font
