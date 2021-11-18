@@ -25,8 +25,7 @@ ZIPFILE=$3
 
 mount /data 2>/dev/null
 
-[ -f ${OMFDIR:=/sdcard/OhMyFont}/twrp ] && {
-    ps | grep zygote | grep -qv grep && return
+[ -f ${OMFDIR:=/sdcard/OhMyFont}/twrp ] && ! ps | grep zygote | grep -qv grep && {
 	TMPDIR=/dev/tmp
 	rm -rf $TMPDIR
 	mkdir -p $TMPDIR
