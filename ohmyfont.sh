@@ -72,7 +72,7 @@ romprep() {
 
 rom() {
     local pxl=`valof PXL`; [ $PXL ] && [ "$pxl" = false ] && PXL=
-    $SANS && $FULL && [ ${GS:-false} = false ] && {
+    $SANS && $FULL && [ $GS = false ] && {
         local fa=$Gs.* xml=$FONTS/gsvf.xml m=verdana i
         [ $PXL ] && [ $API -lt 31 ] && {
                 m=$F.*version; local XML=$PRDXML
@@ -95,10 +95,18 @@ rom() {
         }
     }
 
+    local ssp sspq sspf
+    ssp=source-sans-pro sspq="/\"$ssp\">/" sspf="$sspq,$FAE"
+    xml "$sspq i<alias name=\"$ssp\" to=\"$SA\" />"
+    xml "${sspf}d"; xml "s|to=\"$ssp\"|to=\"$SA\"|"
+    
     # Pixel
     [ $PXL ] && {
-        ver pxl; ${GS:-false} && return; $SANS || return
+        ver pxl; $GS && return; $SANS || return
         cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
+        local lt ltq ltf; lt=lato ltq="/\"$lt\">/" ltf="$ltq,$FAE"
+        xml "$ltq i<alias name=\"$lt\" to=\"$Gs-text\" />"
+        xml "${ltf}d"; xml "s|to=\"$lt\"|to=\"$Gs-text\"|"
         [ $SS ] && {
             local up=$SS it=$SSI
             ln -s /system/fonts/$up $PRDFONT
@@ -254,7 +262,7 @@ font() {
 
 ab() {
     local n=z
-    [ $ups ] && n=$ups
+    [ $ups ] && n=$ups || \
     case $1 in
         $ORISS |$ORISSI ) n=u ;;
         $ORISER|$ORISERI) n=s ;;
@@ -387,7 +395,7 @@ lnf(){
 rename() {
     local x=.[ot]tf i
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
-    [ ${SANS:-true} = true ] && Sa= || Sa=Sans-; readonly Sa
+    [ $SANS = true ] && Sa= || Sa=Sans-; readonly Sa
     while [ $2 ]; do
         mv $FONTS/u$1$x $FONTS/$Sa$2$X
         [ $Sa ] || mv $FONTS/c$1$x $FONTS/$Cn$2$X
@@ -436,7 +444,7 @@ sans() {
         local up=$SS it=$SSI
         mkstya; fontinst; return
     }
-    [ ${SANS:-true} = true ] || local up=$Sa
+    [ $SANS = true ] || local up=$Sa
     $FULL && [ ! -f $FONTS/$Sa$Re$X ] && return
     $FULL && mkstya; fontinst
 }
@@ -522,15 +530,14 @@ config() {
     SERF=`valof SERF` SRMO=`valof SRMO`
     FULL=`valof FULL` GS=`valof GS`
 
-    SS=`valof SS`   SSI=`valof SSI`
-    MS=`valof MS`   MSI=`valof MSI`
-    SER=`valof SER` SERI=`valof SERI`
-    SRM=`valof SRM` SRMI=`valof SRMI`
+    ${SANS:=true}; ${SERF:=true}; ${MONO:=true}
+    ${SRMO:=true}; ${LAST:=true}; ${GS:=false}
 
-    ORISS=$SS    ORISSI=$SSI
-    ORISER=$SER  ORISERI=$SERI
-    ORIMS=$MS    ORIMSI=$MSI
-    ORISRM=$SRM  ORISRMI=$SRMI
+    SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
+    SER=`valof SER` SERI=`valof SERI` SRM=`valof SRM` SRMI=`valof SRMI`
+
+    ORISS=$SS    ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
+    ORIMS=$MS    ORIMSI=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 
     for i in $FW; do i=`up $i`
         eval $(echo U$i=\"`styof U$i`\")
@@ -555,19 +562,19 @@ serif_monospace() { true; }
 install_font() {
     rename
     $SANS && {
-        if [ ${SANS:-true} = true ]; then sans
-        elif [ "$SANS" = $SE ]; then serf $SA; SS=$ORISER SSI=$ORISERI
-        elif [ "$SANS" = $MO ]; then mono $SA; SS=$ORIMS SSI=$ORIMSI
-        elif [ "$SANS" = serif_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI
+        if [ $SANS = true ]; then sans
+        elif [ $SANS = $SE ]; then serf $SA; SS=$ORISER SSI=$ORISERI
+        elif [ $SANS = $MO ]; then mono $SA; SS=$ORIMS SSI=$ORIMSI
+        elif [ $SANS = serif_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI
         fi
         $FULL && [ $Sa ] && {
             local f
             set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
                 $SBo$It $SBo $Me$It $Me $It $Re \
                 $Li$It $Li $ELi$It $ELi $Th$It $Th
-            [ "$SANS" = $SE ] && f=$Se
-            [ "$SANS" = $MO ] && f=$Mo
-            [ "$SANS" = serif_$MO ] && f=$So
+            [ $SANS = $SE ] && f=$Se
+            [ $SANS = $MO ] && f=$Mo
+            [ $SANS = serif_$MO ] && f=$So
             [ $f ] && for i do
                 [ -f $SYSFONT/$f$i$X ] && ln -s $f$i$X $SYSFONT/$i$X
             done
@@ -582,20 +589,20 @@ install_font() {
         }
     }
     $MONO && {
-        if [ ${MONO:-true} = true ]; then mono
-        elif [ "$MONO" = serif_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI
+        if [ $MONO = true ]; then mono
+        elif [ $MONO = serif_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI
         fi
     }
     $SERF && {
-        if [ ${SERF:-true} = true ]; then serf
-        elif [ "$SERF" = sans_$SE ]; then sans $SE; SER=$ORISS SERI=$ORISSI
-        elif [ "$SERF" = $MO ]; then mono $SE; SER=$ORIMS SERI=$ORIMSI
-        elif [ "$SERF" = serif_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI
+        if [ $SERF = true ]; then serf
+        elif [ $SERF = sans_$SE ]; then sans $SE; SER=$ORISS SERI=$ORISSI
+        elif [ $SERF = $MO ]; then mono $SE; SER=$ORIMS SERI=$ORIMSI
+        elif [ $SERF = serif_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI
         fi
     }
     $SRMO && {
-        if [ ${SRMO:-true} = true ]; then srmo
-        elif [ "$SRMO" = $MO ]; then mono $SO; SRM=$ORIMS SRMI=$ORIMSI
+        if [ $SRMO = true ]; then srmo
+        elif [ $SRMO = $MO ]; then mono $SO; SRM=$ORIMS SRMI=$ORIMSI
         fi
     }
     $EMOJ && emoj
