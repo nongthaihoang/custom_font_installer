@@ -23,6 +23,19 @@ SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC
 
+$BOOTMODE || {
+    BACKUP=`find $ORIPRDFONT $ORIPRDETC $ORISYSFONT $ORISYSETC $ORISYSEXTETC -type f -name '*~'`
+    [ -f $OMFDIR/twrp -a -f $OMFDIR/coreutils -a -f $OMFDIR/module.prop -a -n "$BACKUP" ] && {
+        ui_print '- Uninstalling'
+        for i in $BACKUP; do mv $i ${i%?}; done
+        rm $OMFDIR/module.prop
+        $BOOTMODE || recovery_cleanup
+        rm -rf $TMPDIR
+        ui_print '- Done'
+        exit 0
+    }
+}
+
 FONTS=$MODPATH/fonts
 tar xf $MODPATH/*xz -C $MODPATH
 SH=$MODPATH/ohmyfont.sh
