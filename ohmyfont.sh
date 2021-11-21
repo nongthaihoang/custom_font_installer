@@ -95,18 +95,18 @@ rom() {
         }
     }
 
-    local ssp sspq sspf
-    ssp=source-sans-pro sspq="/\"$ssp\">/" sspf="$sspq,$FAE"
-    xml "$sspq i<alias name=\"$ssp\" to=\"$SA\" />"
-    xml "${sspf}d"; xml "s|to=\"$ssp\"|to=\"$SA\"|"
+    local af afq aff to=to=\"$SA\"
+    af=source-sans-pro afq="/\"$af\">/" aff="$afq,$FAE"
+    xml "$afq i<alias name=\"$af\" $to />"
+    xml "${aff}d"; xml "s|to=\"$af\"|$to|"
     
     # Pixel
     [ $PXL ] && {
         ver pxl; $GS && return; $SANS || return
         cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
-        local lt ltq ltf; lt=lato ltq="/\"$lt\">/" ltf="$ltq,$FAE"
-        xml "$ltq i<alias name=\"$lt\" to=\"$Gs-text\" />"
-        xml "${ltf}d"; xml "s|to=\"$lt\"|to=\"$Gs-text\"|"
+        to=to=\"$Gs-text\" af=lato afq="/\"$af\">/" aff="$afq,$FAE"
+        xml "$afq i<alias name=\"$af\" $to />"
+        xml "${aff}d"; xml "s|to=\"$af\"|$to|"
         [ $SS ] && {
             local up=$SS it=$SSI
             ln -s /system/fonts/$up $PRDFONT
@@ -310,7 +310,8 @@ fontinst() {
     while [ $2 ]; do
         cpf $up$2$X && font $fa $up$2$X $1
         $condensed && [ $fa = $SA ] && {
-            cpf ${up%?}$Cn$2$X && font $SC ${up%?}$Cn$2$X $1 || { $FULL && font $SC $up$2$X $1; }
+            cpf ${up%?}$Cn$2$X && font $SC ${up%?}$Cn$2$X $1 || \
+                { $FULL && font $SC $up$2$X $1; }
         }
         shift 2
     done
@@ -341,10 +342,15 @@ mkstya() {
         local wght_del i j=1 k=false
         [ $it ] || local italic=false
         for i in $FW; do
-            eval $(echo [ \"\$$(up `ab $up`$i)\" ]) && k=true || wght_del="$wght_del $j"
+            eval $(echo [ \"\$$(up `ab $up`$i)\" ]) && k=true || \
+                wght_del="$wght_del $j"
             j=$((j+1))
         done
-        $k || { wght_del=; mksty 4 4; $condensed && [ $fa = $SA ] && mksty $SC 4 4; return; }
+        $k || {
+            wght_del=; mksty 4 4
+            $condensed && [ $fa = $SA ] && mksty $SC 4 4
+            return
+        }
         mksty; $condensed && [ $fa = $SA ] && mksty $SC
         return ;;
     esac
