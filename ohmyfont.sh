@@ -29,7 +29,7 @@ $BOOTMODE || {
         ui_print '- Uninstalling'
         for i in $BACKUP; do mv $i ${i%?}; done
         rm $OMFDIR/module.prop
-        $BOOTMODE || recovery_cleanup
+        recovery_cleanup
         rm -rf $TMPDIR
         ui_print '- Done'
         exit 0
