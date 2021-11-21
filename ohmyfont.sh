@@ -52,7 +52,10 @@ up() { echo $@ | tr [:lower:] [:upper:]; }
 
 src() {
     local l=`find $OMFDIR -maxdepth 1 -type f -name '*.sh' -exec basename {} \; | sort` i
-    [ "$1" = 0 ] && l=`echo "$l" | grep '^0'` || l=`echo "$l" | grep '^[^0]'`
+    if [ "$1" = 0 ]; then l=`echo "$l" | grep '^0'`
+    elif [ "$1" = 9 ]; then l=`echo "$l" | grep '^9'`
+    else l=`echo "$l" | grep '^[^09]'`
+    fi
     for i in $l; do
         ui_print "+ Source $i"
         . $OMFDIR/$i
