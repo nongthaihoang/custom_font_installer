@@ -35,8 +35,7 @@ xml() {
     [ ${XML:=$SYSXML} ]
     case $XML_LIST in
         *$XML*) ;;
-        *)
-            sed -i '/<!--.*-->/d;/<!--/,/-->/d' $XML
+        *)  sed -i '/<!--.*-->/d;/<!--/,/-->/d' $XML
             sed -i "s|'|\"|g" $XML
             sed -i "/<$F .*>/s|>|\n&|" $XML
             sed -i "/[[:blank:]]<$F/{:a;N;/>/!ba;s|\n||g}" $XML
@@ -51,11 +50,11 @@ xml() {
 up() { echo $@ | tr [:lower:] [:upper:]; }
 
 src() {
-    local l=`find $OMFDIR -maxdepth 1 -type f -name '*.sh' -exec basename {} \; | sort` i
+    local l=`find $OMFDIR -maxdepth 1 -type f -name '*.sh' \
+        -exec basename {} \; | sort` i
     if [ "$1" = 0 ]; then l=`echo "$l" | grep '^0'`
     elif [ "$1" = 9 ]; then l=`echo "$l" | grep '^9'`
-    else l=`echo "$l" | grep '^[^09]'`
-    fi
+    else l=`echo "$l" | grep '^[^09]'`; fi
     for i in $l; do
         ui_print "+ Source $i"
         . $OMFDIR/$i
@@ -85,13 +84,13 @@ rom() {
         [ $PXL ] || {
             [ $SS ] && {
                 for i in r m sb b; do
-                    eval $(echo font $fa $SS $i \$U`up $i`)
-                    eval $(echo font $fa $SSI ${i}i \$I`up $i`)
+                    eval font $fa $SS $i \$U`up $i`
+                    eval font $fa $SSI ${i}i \$I`up $i`
                 done
             } || {
                 set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
                 while [ $2 ]; do
-                    [ -f $SYSFONT/$1$X ] && font $fa $1$X $2
+                    eval "[ $"$1" ] && font $fa $"$1$X" $2"
                     shift 2
                 done
             }
@@ -122,9 +121,9 @@ rom() {
         }
         set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
         while [ $2 ]; do
-            [ -f $SYSFONT/$1$X ] && {
-                ln -s /system/fonts/$1$X $PRDFONT
-                font $fa $1$X $2
+            eval [ $"$1" ] && {
+                eval ln -s /system/fonts/$"$1$X" $PRDFONT
+                eval font $fa $"$1$X" $2
             }
             shift 2
         done
@@ -169,11 +168,11 @@ rom() {
             fontab sec-roboto-condensed-light $SS r L
             return
         }
-        [ -f $SYSFONT/$Re$X ] && font sec-roboto-light $Re$X r
-        [ -f $SYSFONT/$Me$X ] && font sec-roboto-light $Me$X b
-        [ -f $SYSFONT/$Cn$Re$X ] && font sec-roboto-condensed $Cn$Re$X r
-        [ -f $SYSFONT/$Cn$Bo$X ] && font sec-roboto-condensed $Cn$Bo$X b
-        [ -f $SYSFONT/$Cn$Li$X ] && font sec-roboto-condensed-light $Cn$Li$X r
+        eval "[ $"$Re" ] && font sec-roboto-light $"$Re$X" r"
+        eval "[ $"$Me" ] && font sec-roboto-light $"$Me$X" b"
+        eval "[ $"Cn$Re" ] && font sec-roboto-condensed $"Cn$Re$X" r"
+        eval "[ $"Cn$Bo" ] && font sec-roboto-condensed $"Cn$Bo$X" b"
+        eval "[ $"Cn$Li" ] && font sec-roboto-condensed-light $"Cn$Li$X" r"
         return
     }
 
@@ -287,7 +286,7 @@ ab() {
 
 fontab() {
     local w=${4:-$3}; case $w in *i) w=${w%?} ;; esac
-    eval $(echo font $1 $2 $3 \$$(up `ab $2 $1 $3`$w))
+    eval font $1 $2 $3 \$$(up `ab $2 $1 $3`$w)
 }
 
 fontinst() {
@@ -311,11 +310,11 @@ fontinst() {
         sbi $SBo$It sb $SBo mi $Me$It m $Me ri $It r $Re \
         li $Li$It l $Li eli $ELi$It el $ELi ti $Th$It t $Th
     while [ $2 ]; do
-        cpf $up$2$X && font $fa $up$2$X $1
-        $condensed && [ $fa = $SA ] && {
-            cpf ${up%?}$Cn$2$X && font $SC ${up%?}$Cn$2$X $1 || \
-                { $FULL && font $SC $up$2$X $1; }
-        }
+        cpf $up$2$X && font $fa $up$2$X $1 && \
+            $condensed && [ $fa = $SA ] && {
+                cpf ${up%?}$Cn$2$X && font $SC ${up%?}$Cn$2$X $1 || \
+                    { $FULL && font $SC $up$2$X $1; }
+            }
         shift 2
     done
 }
@@ -345,7 +344,7 @@ mkstya() {
         local wght_del i j=1 k=false
         [ $it ] || local italic=false
         for i in $FW; do
-            eval $(echo [ \"\$$(up `ab $up`$i)\" ]) && k=true || \
+            eval [ \"\$$(up `ab $up`$i)\" ] && k=true || \
                 wght_del="$wght_del $j"
             j=$((j+1))
         done
@@ -387,15 +386,14 @@ lnf(){
     local i j
     while [ "$2" ]; do
         for i in $1; do
-            [ -f $SYSFONT/$i$X ] || {
+            eval [ $"$i" ] || \
                 for j in $2; do
-                    [ -f $SYSFONT/$j$X ] && { ln -s $j$X $SYSFONT/$i$X; break; }
+                    eval "[ $"$j" ] && { $i=$"$j"; break; }"
                 done
-            }
-            [ -f $SYSFONT/$i$X ] || ln -s $Re$X $SYSFONT/$i$X
-            [ -f $SYSFONT/$i$It$X ] || ln -s $i$X $SYSFONT/$i$It$X
-            [ -f $SYSFONT/$Cn$i$X ] || ln -s $i$X $SYSFONT/$Cn$i$X
-            [ -f $SYSFONT/$Cn$i$It$X ] || ln -s $i$It$X $SYSFONT/$Cn$i$It$X
+            eval "[ $"$i" ] || $i=$"$Re""
+            eval "[ $"$i$It" ] || $i$It=$"$i""
+            eval "[ $"Cn$i" ] || Cn$i=$"$i""
+            eval "[ $"Cn$i$It" ] || Cn$i$It=$"$i$It""
         done
         shift 2
     done
@@ -549,17 +547,17 @@ config() {
     ORIMS=$MS    ORIMSI=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 
     for i in $FW; do i=`up $i`
-        eval $(echo U$i=\"`styof U$i`\")
-        eval $(echo I$i=\"`styof I$i`\")
-        [ $SSI ] || { eval $(echo [ \"\$I$i\" ]) && SSI=$SS; }
-        eval $(echo [ \"\${I$i:=\$U$i}\" ])
-        eval $(echo C$i=\"`styof C$i`\")
-        eval $(echo [ \"\${C$i:=\$U$i}\" ])
-        eval $(echo D$i=\"`styof D$i`\")
-        eval $(echo [ \"\${D$i:=\$I$i}\" ])
-        eval $(echo M$i=\"`styof M$i`\")
-        eval $(echo S$i=\"`styof S$i`\")
-        eval $(echo O$i=\"`styof O$i`\")
+        eval U$i=\"`styof U$i`\"
+        eval I$i=\"`styof I$i`\"
+        [ $SSI ] || { eval [ \"\$I$i\" ] && SSI=$SS; }
+        eval [ \"\${I$i:=\$U$i}\" ]
+        eval C$i=\"`styof C$i`\"
+        eval [ \"\${C$i:=\$U$i}\" ]
+        eval D$i=\"`styof D$i`\"
+        eval [ \"\${D$i:=\$I$i}\" ]
+        eval M$i=\"`styof M$i`\"
+        eval S$i=\"`styof S$i`\"
+        eval O$i=\"`styof O$i`\"
     done
 }
 
@@ -574,45 +572,40 @@ install_font() {
         if [ $SANS = true ]; then sans
         elif [ $SANS = $SE ]; then serf $SA; SS=$ORISER SSI=$ORISERI
         elif [ $SANS = $MO ]; then mono $SA; SS=$ORIMS SSI=$ORIMSI
-        elif [ $SANS = serif_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI
-        fi
-        $FULL && [ $Sa ] && {
-            local f
-            set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
-                $SBo$It $SBo $Me$It $Me $It $Re \
-                $Li$It $Li $ELi$It $ELi $Th$It $Th
-            [ $SANS = $SE ] && f=$Se
-            [ $SANS = $MO ] && f=$Mo
-            [ $SANS = serif_$MO ] && f=$So
-            [ $f ] && for i do
-                [ -f $SYSFONT/$f$i$X ] && ln -s $f$i$X $SYSFONT/$i$X
-            done
-        }
-        $FULL && [ ! $SS ] && [ -f $SYSFONT/$Re$X ] && {
+        elif [ $SANS = serif_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI; fi
+        local f; [ $Sa ] && \
+        if [ $SANS = $SE ]; then f=$Se
+        elif [ $SANS = $MO ]; then f=$Mo
+        elif [ $SANS = serif_$MO ]; then f=$So; fi
+        set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
+            $SBo$It $SBo $Me$It $Me $It $Re \
+            $Li$It $Li $ELi$It $ELi $Th$It $Th
+        for i do
+            [ -f $SYSFONT/$f$i$X ] && eval $i=$f$i
+            [ -f $SYSFONT/${f%?}$Cn$i$X ] && eval Cn$i=${f%?}$Cn$i
+        done
+        $FULL && [ ! $SS ] && [ -f $SYSFONT/$f$Re$X ] && {
+            eval "[ $"$It" ] || $It=$"$Re""
+            eval "[ $"Cn$Re" ] || Cn$Re=$"$Re""
+            eval "[ $"Cn$It" ] || Cn$It=$"$It""
             lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
             lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
-            [ -f $SYSFONT/$It$X ] || ln -s $Re$X $SYSFONT/$It$X
-            [ -f $SYSFONT/$Cn$Re$X ] || ln -s $Re$X $SYSFONT/$Cn$Re$X
-            [ -f $SYSFONT/$Cn$It$X ] || ln -s $It$X $SYSFONT/$Cn$It$X
         }
     }
     $MONO && {
         if [ $MONO = true ]; then mono
-        elif [ $MONO = serif_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI
-        fi
+        elif [ $MONO = serif_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI; fi
     }
     $SERF && {
         if [ $SERF = true ]; then serf
         elif [ $SERF = sans_$SE ]; then sans $SE; SER=$ORISS SERI=$ORISSI
         elif [ $SERF = $MO ]; then mono $SE; SER=$ORIMS SERI=$ORIMSI
-        elif [ $SERF = serif_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI
-        fi
+        elif [ $SERF = serif_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI; fi
     }
     $SRMO && {
         if [ $SRMO = true ]; then srmo
-        elif [ $SRMO = $MO ]; then mono $SO; SRM=$ORIMS SRMI=$ORIMSI
-        fi
+        elif [ $SRMO = $MO ]; then mono $SO; SRM=$ORIMS SRMI=$ORIMSI; fi
     }
     $EMOJ && emoj
 }
@@ -653,7 +646,4 @@ trap restart 0
 return
 
 PAYLOAD:
-˝7zXZ  Ê÷¥F¿ØÄP!       ∏ñˇz‡'ˇ'] 3 €π·h»?:$Q∂ı]öL%;¢ Ë·)·”i™Á"@+Ùz]Å∂¢H˘SëÓÿˇfÙµ¬∑˝W‹ ÷¡8ß≤wH…laKﬁT/Ò™≠Ä·#kXÅtp¢Ûæ„yÈ¸ﬁÂmß$œdqµéß1"ëKïö
-Aı`7¡¶?Ï{7x0⁄v1‡H!™%®Y8g≥Oâ¥_0§"Ù∏˝3]AhÈ¨Ì’ÍÀ\"Ù[•CÃ'—õj1˙–‚QÕf—[◊0ôrÚ≠;aK‡(o*›ÙJŸI‰ËÄ≤ZÌ?ÏñT’πå ©~Úja˘&<{•“∂gÏõ$¿•2y?•ÛgÓ°&ÒÂÖC‹ªw	™Î≈ˇ3WP´ÏYú‚ˇÜÅÓYqÄ&∫]¬|!l‹ÁqB4øIX/ˆ1É0E*¿ù•√¶,—Ûtdµ4"˝‡2qŸ#Ñ]∫ÌRÁ°Í—l∂ZŒ»E¯$Ë),^yç/å÷	QÉ”Ö˚ïŸ?ê›ô≥õØΩ∆ú—∏F;Ä"P®¶∞ÿßŸÍd˛ «_+NëÌúC1Ü£;ßt,6RyÂÛBÜI&C<{Ö5ô[ªkƒí/πÇÔ4®Ù>ƒåÿui˜îÉ¡∑c`=™W&ÁB´ÄÍz˝çSüv€àƒ86$∂†åÊóè≈Óèê¢ÇÀâ˝˝Û√=)-?i~~ÿÍûËCπ‡U[/ØKÅ⁄q3^p«œÎK ù…DJÿ‘'O®VQRO«}∫ÿ9HæÿÃﬂ;n
-Ÿë &]Ω`1µ8`Á∞‰Õ&bå»gÃ]êtE⁄H–·
-_ƒ¿ˇº+¡∂f÷†>;…¶πEs£!èpœ≈á°kÄ∆»ìåËwi_'2Yö•jÅ¯èUÿ-‚ÔGhÆp\Ì˜ÉÑJ¨¸`ﬂ˜ºû˝YÇP∞”rﬂß›I#[≥Í⁄rõá‘…|â˙ëU°∆oÀ˙§*\¥/È*˙6ªÚúû&´:¿ˇ«a®∫Z”'ÚÕJÅ[Û-|;EN±õ_˙ük˝Õ˝„ì P·x#«>Ô∂7F%§1ÇÉHç¶;uÁG™a3f€	3˙«FåsZN<ˆLx∞Ö∂|ûœvÔ*ƒyAë[)õ¸ajÍ◊ÙÌdç1°çä_Å‡É©{âôñ`÷Áüπ64Iπá∂‘≤>›rK‹Ùô(…ﬁÂÚ6Ú ò}P∫‰Z·È	Ñ+=^ö∏U¢∑q ƒ«ìøîó-÷Ω{ıïáú{3l€xÂ[&*í∏4´‚ˆØ<_ßcªCÎZè⁄⁄dnÆãòipVú”ò››Xrô4£§™äû4Læ tœvb◊_cÎÆ?w#ÅÓ	æ°MB7òcê≠háA@Æ‘®∆F˘Ü@èò`¸ {pe©#‚*<∫áX){’∂`  õÛlVÈÓ/ ÀÄP  ‡ÈÔ	±ƒg˚    YZ
+˝7zXZ  Ê÷¥F¿¨ÄP!       ¿W·‡'ˇ§] 3 €π·h»?7‰€=Pˆc{A“6≤∏E∞Ó®;IVZ›œ>1˜!T)Á∫G⁄sÍöıØ>FÜ#MI-+≈∏≥˙Õ,·‚:ãˆ$í∂9ç4…≤‡÷ùÔ¢πPl¿9o ©±/=ØÛ/´>ã«“À¸Ló?J ﬂºD∑ve≤ `XÿY{ Ω=Xé!'/ØM>-,ä˙≈B =å¥¿éQPøøŒ˚´u@·_ ú¡√vky∞ròMcÈ\]˛ó§ ˙ö˝˚.˝E%À@WÍÌO.Ùı˘z8]ÛªU]\=˜p&z¬µ∏_°Ñ¢îÒﬁ*[#Egæ7¿gô.Ò≠A≈=:j˛?Ç∂z∑ƒ¯kæxÅ'›•∫Ú®è}√U~Oÿxà8ı˚&Á·D –°r≈	Î_˜oñ¬ˆÔë.ò ƒvñµ.ò$R¯ˆü*§ 1Œ9Û_Å2929ﬁÍ∂ì™/π‰[yI§`eo´É¢–÷GTJ‚ ªá√hAîoäâj≤l∏©•q˝Ùò)/ÈûqÕ˛;G%Á≥o÷ {ëë%ê{ »ÄP  _™´¯±ƒg˚    YZ
