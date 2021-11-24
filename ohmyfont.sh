@@ -105,12 +105,13 @@ rom() {
     # Pixel
     [ $PXL ] && {
         ver pxl; $GS && return; $SANS || return
+        GS_italic=`valof GS_italic`; ${GS_italic:=false}
         cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
         to=to=\"$Gs-text\" af=lato afq="/\"$af\">/" aff="$afq,$FAE"
         xml "$afq i<alias name=\"$af\" $to />"
         xml "${aff}d"; xml "s|to=\"$af\"|$to|"
         [ $SS ] && {
-            local up=$SS it=$SSI
+            local up=$SS it; $GS_italic && it= || it=$SSI
             ln -s /system/fonts/$up $PRDFONT
             [ $it ] && ln -s /system/fonts/$it $PRDFONT
             fontinst r m sb b
@@ -119,7 +120,8 @@ rom() {
             [ $it ] && mv $PRDFONT/$it $PRDFONT/$gs$It$X && xml "s|$it|$gs$It$X|"
             return
         }
-        set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
+        $GS_italic && set $Bo b $SBo sb $Me m $Re r || \
+            set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
         while [ $2 ]; do
             eval [ $"$1" ] && {
                 eval ln -s /system/fonts/$"$1$X" $PRDFONT
@@ -642,6 +644,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸E°îÑ€‡€#LÑÆç¯ñÇZôvc)“€WbŽ)AÿCø,v:^Ù1¿ÓQ²a½¢þè{^b¤×!/Aòü?îÜÓ~°sÎ[BåD¾è*ùÝî='Ò	;dæá¡‘®ON"?ŽÏ‹ß7Â;—³‚X¡ÅÅK[úÙûÊÞ9fÁëø¹úøb:ßB€¼Æ>¦âŸú++‹®îKwð×«®]X¦ƒR+šä|‡ž£ä.ïü2	íÃ,}ªoáÚœ–¬Ð†§ß¡ ×)»+þ½ü²Ün¢WSTsâœœäÃ	æônÚ•”@Ä³úE¢øý
-¦‘4‚ÛÍuôÖ—• ‘—Ù
-ÈŒðû«Ý‚=6ž-ÕX£cÒ5»œ¢Ü ©-oêU¶e4º!Wpº‚‰õ èË¬ˆN›le'ŸLëRª+iØ]!jÊ±ÿŒÆ½3’Ñ	G¼•_c8I6:[Žª³Ñu²›°QÏ¬†ô¾·ó•—O ·Sç\Ò½Ò†}ªxh éwÁY(A§éY÷éðñæ    |º«|ŒpL Ê€P  Tcµ±Ägû    YZ
+ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸E°ï>7*˜ñ‘
+¢yÂ‘vˆµóLöåÏvÿÃ(*ä)ºe½ØÎXø5Vý.®£î³&.ÅËö_^ (úWüÃ)¨å£ºÜF×d¬åI}{¥ŸUM½OZ…ÃsFNSÂøÍÆÉu–¥¸+ôeÝ\n¦MJdëpPUÅýR_L›ð±] rê¦cºV¯WëëÕFpŸÛ¿X‰¥dÁ£ð9#‡ôÞª³’_„vÐê#hÿªMIz²GJ½ÍUöT Ý9ü¶ˆÝºø+êˆÊÒ™,ˆ”j)€0”3FFrA©Tß}ü–¨·4ÏA$žsà¿ö›†;²@‡&!Ô¸óÃ®].•¤ª }ÀB^›UÛ|ÄåâWÿMÓç0®‚p…¦i:P‡ÒCc©HÐ6‘Sg>=Óµì£±"Ò/¥}[kýwý†Õœ,ƒ°„|¹³ÍÏÁ=n‹ÀÆ¼&`ÕU‚­ÛþtŒÎå…g®¨«Õd[HQ.7o4æš¢¥3Óé˜ô"JLëa    Qº9èµgé Ê€P  Tcµ±Ägû    YZ
