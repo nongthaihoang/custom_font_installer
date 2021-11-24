@@ -511,6 +511,14 @@ srmo() {
 
 emoj() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
+bold() {
+    [ $SS ] && return
+    $BOLD && {
+        eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
+        eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
+    }
+}
+
 valof() {
     sed -n "s|^$1[[:blank:]]*=[[:blank:]]*||p" $UCONF | \
     sed 's|[[:blank:]][[:blank:]]*| |g;s| $||' | \
@@ -612,14 +620,6 @@ install_font() {
     $EMOJ && emoj
 }
 
-bold() {
-    [ $SS ] && return
-    $BOLD && {
-        eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
-        eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
-    }
-}
-
 finish() {
     find $MODPATH/* -maxdepth 0 ! \( -name 'system' -o -name 'module.prop' \) -exec rm -rf {} \;
     find $MODPATH/* -type d -delete 2>/dev/null
@@ -644,5 +644,6 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸E°ï>7*˜ñ‘
-¢yÂ‘vˆµóLöåÏvÿÃ(*ä)ºe½ØÎXø5Vý.®£î³&.ÅËö_^ (úWüÃ)¨å£ºÜF×d¬åI}{¥ŸUM½OZ…ÃsFNSÂøÍÆÉu–¥¸+ôeÝ\n¦MJdëpPUÅýR_L›ð±] rê¦cºV¯WëëÕFpŸÛ¿X‰¥dÁ£ð9#‡ôÞª³’_„vÐê#hÿªMIz²GJ½ÍUöT Ý9ü¶ˆÝºø+êˆÊÒ™,ˆ”j)€0”3FFrA©Tß}ü–¨·4ÏA$žsà¿ö›†;²@‡&!Ô¸óÃ®].•¤ª }ÀB^›UÛ|ÄåâWÿMÓç0®‚p…¦i:P‡ÒCc©HÐ6‘Sg>=Óµì£±"Ò/¥}[kýwý†Õœ,ƒ°„|¹³ÍÏÁ=n‹ÀÆ¼&`ÕU‚­ÛþtŒÎå…g®¨«Õd[HQ.7o4æš¢¥3Óé˜ô"JLëa    Qº9èµgé Ê€P  Tcµ±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸ˆþStþ:n-#x€8\-¬-bZw¯#=¶h¸N;F)R@Fr¶H‹Ð¤
+ÏŒË†9!5„"øÐ*h™2CLkSì%Îo|{äS•NY’<,âÞ*Îi¡Íùê]¤º¯þÌ´Ë´’ ’Û”–Œ|†ø:.Ç»¤âÖ²ÍYHAÿSÝX °êÍDaÖþPoñªc?çê¢pœÙ`êK$"b#ÂKžï]ÑÛ®z“’ æÚiäÙ ?hD1™J=IE±š“[åè«¦ãÍÒ4Ï¿ÜÖ~
+ paèO!!Yþ—}€5wÑÅ) ç€÷Ûõ®Ùm<«œ`¹Gý{Oüã	>g@ÃŒˆ¶° þr`ý5oª‡¡d¹¼È1ëùâ^Úñ$eTöŽu“–aŽgñúÓ\I…¸u/D‡#½'=«;>X eÕN„ú+D~k5wŠ¢µ&Ðn¡déNÔ‰x=ÐÚUÔäöð×ç»JÝK4h¦úfW"ZuKØmt©”¸Ê     n`bôS?Ô‚ É€P  úy÷3±Ägû    YZ
