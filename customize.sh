@@ -204,7 +204,6 @@ src
 ui_print '+ Rom'
 rom
 
-bold
 finish
 
 [ -d $SYSFONT ] || abort "! No font installed"

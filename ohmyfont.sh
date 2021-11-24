@@ -533,18 +533,17 @@ config() {
         cp $UCONF $UCONF~; cp $dconf $UCONF; ui_print '  Reset'
     }
 
-    SANS=`valof SANS` MONO=`valof MONO`
-    SERF=`valof SERF` SRMO=`valof SRMO`
-    FULL=`valof FULL` GS=`valof GS`
+    SANS=`valof SANS` MONO=`valof MONO` SERF=`valof SERF` SRMO=`valof SRMO`
+    FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD`
 
-    ${SANS:=true}; ${SERF:=true}; ${MONO:=true}
-    ${SRMO:=true}; ${LAST:=true}; ${GS:=false}
+    ${SANS:=true}; ${SERF:=true}; ${MONO:=true}; ${SRMO:=true}
+    ${LAST:=true}; ${GS:=false};  ${BOLD:=false}
 
     SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
     SER=`valof SER` SERI=`valof SERI` SRM=`valof SRM` SRMI=`valof SRMI`
 
-    ORISS=$SS    ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
-    ORIMS=$MS    ORIMSI=$MSI ORISRM=$SRM  ORISRMI=$SRMI
+    ORISS=$SS ORISSI=$SSI ORISER=$SER ORISERI=$SERI
+    ORIMS=$MS ORIMSI=$MSI ORISRM=$SRM ORISRMI=$SRMI
 
     for i in $FW; do i=`up $i`
         eval U$i=\"`styof U$i`\"
@@ -592,6 +591,7 @@ install_font() {
             lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
         }
+        bold
     }
     $MONO && {
         if [ $MONO = true ]; then mono
@@ -611,14 +611,10 @@ install_font() {
 }
 
 bold() {
-    BOLD=`valof BOLD`; [ $SS ] && return
-    ${BOLD:=false} && {
-        cp `readlink -f $SYSFONT/$Me$X` `readlink -f $SYSFONT/$Re$X`
-        cp `readlink -f $SYSFONT/$Me$It$X` `readlink -f $SYSFONT/$It$X`
-        [ $PXL ] && {
-            [ -f $PRDFONT/$Me$X ] && ln -sf $Me$X $PRDFONT/$Re$X
-            [ -f $PRDFONT/$Me$It$X ] && ln -sf $Me$It$X $PRDFONT/$It$X
-        }
+    [ $SS ] && return
+    $BOLD && {
+        eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
+        eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
     }
 }
 
@@ -646,4 +642,6 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ¬€P!       ÀWáà'ÿ¤] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸E°î¨;IVZÝÏ>1÷!T)çºGÚsêšõ¯>F†#MI-+Å¸³úÍ,áâ:‹ö$’¶94É²àÖï¢¹PlÀ9oÊ©±/=¯ó/«>‹ÇÒËüL—?J ß¼D·ve² `XØY{ ½=XŽ!'/ð¯M>-,ŠúÅB =Œ´ÀŽQP¿¿Îû«u@á_ œÁÃvky°r˜Mcé\]þ—¤Êúšýû.ýE%Ë@WêíO.ôõùz8]ó»U]\=÷p&zÂµ¸_¡„¢”ñÞ*[#Eg¾7Àg™.ñ­AÅ=:jþ?‚¶z·Äøk¾x'Ý¥ºò¨}ÃU~OØxˆ8õû&çáDÊÐ¡rÅ	ë_÷o–Âöï‘.˜ Äv–µ.˜$RøöŸ*¤Ê1Î9ó_2929Þê¶“ª/¹ä[yI¤`eo«ƒ¢ÐÖGTJâÊ»‡ÃhA”oŠ‰j²l¸©¥qýô˜)/éžðqÍþ;G%ç³oÖ {‘‘%{ È€P  _ª«ø±Ägû    YZ
+ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸E°îÑ€‡€#LÑÆç¯ñÇZôvc)“€WbŽ)AÿCø,v:^Ù1¿ÓQ²a½¢þè{^b¤×!/Aòü?îÜÓ~°sÎ[BåD¾è*ùÝî='Ò	;dæá¡‘®ON"?ŽÏ‹ß7Â;—³‚X¡ÅÅK[úÙûÊÞ9fÁëø¹úøb:ßB€¼Æ>¦âŸú++‹®îKwð×«®]X¦ƒR+šä|‡ž£ä.ïü2	íÃ,}ªoáÚœ–¬Ð†§ß¡ ×)»+þ½ü²Ün¢WSTsâœœäÃ	æônÚ•”@Ä³úE¢øý
+¦‘4‚ÛÍuôÖ—• ‘—Ù
+ÈŒðû«Ý‚=6ž-ÕX£cÒ5»œ¢Ü ©-oêU¶e4º!Wpº‚‰õ èË¬ˆN›le'ŸLëRª+iØ]!jÊ±ÿŒÆ½3’Ñ	G¼•_c8I6:[Žª³Ñu²›°QÏ¬†ô¾·ó•—O ·Sç\Ò½Ò†}ªxh éwÁY(A§éY÷éðñæ    |º«|ŒpL Ê€P  Tcµ±Ägû    YZ
