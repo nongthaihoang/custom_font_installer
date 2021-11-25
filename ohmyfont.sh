@@ -97,19 +97,14 @@ rom() {
         }
     }
 
-    local af afq aff to=to=\"$SA\"
-    af=source-sans-pro afq="/\"$af\">/" aff="$afq,$FAE"
-    xml "$afq i<alias name=\"$af\" $to />"
-    xml "${aff}d"; xml "s|to=\"$af\"|$to|"
+   falias source-sans-pro
     
     # Pixel
     [ $PXL ] && {
         ver pxl; $GS && return; $SANS || return
         GS_italic=`valof GS_italic`; ${GS_italic:=false}
         cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
-        to=to=\"$Gs-text\" af=lato afq="/\"$af\">/" aff="$afq,$FAE"
-        xml "$afq i<alias name=\"$af\" $to />"
-        xml "${aff}d"; xml "s|to=\"$af\"|$to|"
+        falias lato $Gs-text
         [ $SS ] && {
             local up=$SS it; $GS_italic && it= || it=$SSI
             ln -s /system/fonts/$up $PRDFONT
@@ -511,6 +506,13 @@ srmo() {
 
 emoj() { cpf Emoji$X && font und-Zsye Emoji$X r; }
 
+falias() {
+    local fa faq fae to=to=\"${2:-$SA}\"
+    fa=${1:?} faq="/\"$fa\">/" fae="$faq,$FAE"
+    xml "$faq i<alias name=\"$fa\" $to />"
+    xml "${fae}d"; xml "s|to=\"$fa\"|$to|"
+}
+
 bold() {
     [ $SS ] && return
     $BOLD && {
@@ -644,6 +646,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸ˆþStþ:n-#x€8\-¬-bZw¯#=¶h¸N;F)R@Fr¶H‹Ð¤
-ÏŒË†9!5„"øÐ*h™2CLkSì%Îo|{äS•NY’<,âÞ*Îi¡Íùê]¤º¯þÌ´Ë´’ ’Û”–Œ|†ø:.Ç»¤âÖ²ÍYHAÿSÝX °êÍDaÖþPoñªc?çê¢pœÙ`êK$"b#ÂKžï]ÑÛ®z“’ æÚiäÙ ?hD1™J=IE±š“[åè«¦ãÍÒ4Ï¿ÜÖ~
- paèO!!Yþ—}€5wÑÅ) ç€÷Ûõ®Ùm<«œ`¹Gý{Oüã	>g@ÃŒˆ¶° þr`ý5oª‡¡d¹¼È1ëùâ^Úñ$eTöŽu“–aŽgñúÓ\I…¸u/D‡#½'=«;>X eÕN„ú+D~k5wŠ¢µ&Ðn¡déNÔ‰x=ÐÚUÔäöð×ç»JÝK4h¦úfW"ZuKØmt©”¸Ê     n`bôS?Ô‚ É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ¬€P!       ÀWáà'ÿ¤] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸F‡ë¼]¹~îêW`m+³$Duõ¼žuÂÖØ‹‹«ŸHýõwr\eÍV•èÀZ¬F=ßH—·w*9û^<€	Æ—øYõÞ»=ì"fqÙ—Ëåè+8j†Z©àû¨+µÍçZë¬‹ÞZõOý¹»#g»“}ÿ
+*gý‚FÂÂêªUØ'·VÒe?MŽÚ%u{=‚ð‡ãåŒivm*Âú»H‰tá€†R¾Úwâ§Œª2Ü|C+&Áÿà³ç=ì¥Võ/êx„x“Ìœ4Ó~nì’Ž£²Ì@IÍÑù&#Ù:1¸nëš6`nî<oåÙƒ‚*<ÕÒ¤>º5ß¹^¦‡Æçˆ{gs£ovO-nÈu%±ÈhŽFod¯`šÇµÇRÌ&#à~_ßÇ#þJÊprë83ãØJL‘¶,¦€+JN©ËèYõ›Ø³DT†*Ísj¬¿ŒE\ÃƒvLß‘Pd€Xyr#×b•¡~DEi7:¦À€*PTóv@ ™“dÅË%Êõ È€P  _ª«ø±Ägû    YZ
