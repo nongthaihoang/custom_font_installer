@@ -372,11 +372,12 @@ mkstya() {
 fallback() {
     local faq fae fb
     [ $1 ] && local fa=$1; [ $fa ] || local fa=$SA
-    faq="\"${fa}\"" fae="/$FA.*$faq/,$FAE"
-    [ $fa = $SE ] && fb="/<$F/s|>| $FF=$faq>|;"
+    faq="\"$fa\"" fae="/$FA.*$faq/,$FAE"
+    [ $fa = $SA ] || fb="/<$F/s|>| $FF=$faq>|;"
+    [ $name ] && name=name=\"$name\" fb=
     xml "$fae{${fb}H;2,$FAE{${FAE}G}}"
-    [ $name ] && name="name=\"$name\""
     xml ":a;N;\$!ba;s|name=$faq|$name|2"
+    [ "$fb" ] && xml "$fae{s| $FF=$faq||}"
 }
 
 lnf(){
@@ -438,11 +439,8 @@ rename() {
 sans() {
     local fa=${1:-$SA}
     [ $SS ] ||  [ -f $FONTS/$Sa$Re$X ] && {
-        if [ $fa = $SA ]; then $FB
-        elif [ $fa = $SE ]; then fallback
-        elif [ $fa = $MO -o $fa = $SO ]; then
-            local name=$fa-def; fallback
-        fi
+        [ $fa = $SA ] && $FB || {
+        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
     }
     [ $SS ] && {
         local up=$SS it=$SSI
@@ -456,11 +454,8 @@ sans() {
 serf() {
     local fa=${1:-$SE}
     [ $SER ] ||  [ -f $FONTS/$Se$Re$X ] && {
-        if [ $fa = $SA ]; then $FB
-        elif [ $fa = $SE ]; then fallback
-        elif [ $fa = $MO -o $fa = $SO ]; then
-            local name=$fa-def; fallback
-        fi
+        [ $fa = $SA ] && $FB || {
+        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
     }
     [ $SER ] && {
         local up=$SER it=$SERI
@@ -473,11 +468,8 @@ serf() {
 mono() {
     local fa=${1:-$MO}
     [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && {
-        if [ $fa = $SA ]; then $FB
-        elif [ $fa = $SE ]; then fallback
-        elif [ $fa = $MO -o $fa = $SO ]; then
-            local name=$fa-def; fallback
-        fi
+        [ $fa = $SA ] && $FB || {
+        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
     }
     [ $MS ] && {
         local up=$MS it=$MSI
@@ -490,11 +482,8 @@ mono() {
 srmo() {
     local fa=${1:-$SO}
     [ $SRM ] ||  [ -f $FONTS/$So$Re$X ] && {
-        if [ $fa = $SA ]; then $FB
-        elif [ $fa = $SE ]; then fallback
-        elif [ $fa = $MO -o $fa = $SO ]; then
-            local name=$fa-def; fallback
-        fi
+        [ $fa = $SA ] && $FB || {
+        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
     }
     [ $SRM ] && {
         local up=$SRM it=$SRMI
@@ -646,5 +635,7 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ¬€P!       ÀWáà'ÿ¤] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¸F‡ë¼]¹~îêW`m+³$Duõ¼uÂÖØ‹‹«ŸHıõwr\eÍV•èÀZ¬F=ßH—·w*9û^<€	Æ—øYõŞ»=ì"fqÙ—Ëåè+8j†Z©àû¨+µÍçZë¬‹ŞZõOı¹»#g»“}ÿ
-*gı‚FÂÂêªUØ'·VÒe?MÚ%u{=‚ğ‡ãåŒivm*Âú»H‰tá€†R¾Úwâ§Œª2Ü|C+&Áÿà³ç=ì¥Võ/êx„x“Ìœ4Ó~nì’£²Ì@IÍÑù&#Ù:1¸nëš6`nî<oåÙƒ‚*<ÕÒ¤>º5ß¹^¦‡Æçˆ{gs£ovO-nÈu%±ÈhFod¯`šÇµÇRÌ&#à~_ßÇ#şJÊprë83ãØJL‘¶,¦€+JN©ËèYõ›Ø³DT†*Ísj¬¿ŒE\ÃƒvLß‘Pd€Xyr#×b•¡~DEi7:¦À€*PTóv@ ™“dÅË%Êõ È€P  _ª«ø±Ägû    YZ
+ı7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²'… *ê=ø£ O4°1~L|OÖæ–‡r$ÀH§ÑùCá>ñ‡MbPLdz™Ìît,ŞÕéª$MÅ]ÜØä³¦ğäÂ$¥µoÑ+]aêœ#DÏ}Ÿ½¸]tÏ¶äşÁñ•C…tÕiOµ<èÑğGí<èà
+4ºpqáöo'“h
+L;Ye².îQcæÄ°ıÛ]s+EóÙ­W©gÉ>Äõx4³^Ö(ëáDİø«	ú
+8m†åWiiPs&2E¦€U0²êÈX–¯K»»ØZ„JÜ4¹ò»¯R«ñû²R"€ÑÂ@`):—|ˆ¥‚©wHÜè=‹¤íÎêµLO¶g• µ@ ñaMÃ¢Y{ÕtdúˆR®Z5òÂîK…aDq}2Øşê™vbO"gc{ã7Ä'šº?¾TÔpnåãÍ5Õ$¸ñ®È|RóÊï‘c„KÿÄp,Œëkš$³5/Û¢˜·‚q$fñù8Îh2×D .CÙÏ'ıP*Ô,õ x³:    f.I³¤Ò Ê€P  Tcµ±Ägû    YZ
