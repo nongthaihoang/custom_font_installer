@@ -377,7 +377,8 @@ fallback() {
     [ $name ] && name=name=\"$name\" fb=
     xml "$fae{${fb}H;2,$FAE{${FAE}G}}"
     xml ":a;N;\$!ba;s|name=$faq|$name|2"
-    [ "$fb" ] && xml "$fae{s| $FF=$faq||}"
+    [ "$fb" ] && xml "$fae{s| $FF=$faq||
+        s| postScriptName=\".*\"||}"
 }
 
 lnf(){
@@ -635,7 +636,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²'… *ê=ø£ O4°1~L|OÖæ–‡r$ÀH§ÑùCá>ñ‡MbPLdz™ÌîŽt,ÞÕéª$MÅ]ÜØä³¦ðäÂ$¥µoÑ+]aêœ#DÏ}Ÿ½¸]tžÏ¶äþÁñ•C…tÕiOµ<èÑðGí<èà
-4ºpqáöo'“h
-L;Ye².îQcæÄ°ýÛ]s+EóÙ­W©gÉ>Äõx4³^Ö(ëáDÝø«	ú
-8m†åWiiPs&2E¦€U0²êÈX–¯K»»ØZ„JÜ4¹ò»¯R«ñû²R"€ÑÂ@`):—|ˆ¥‚©wHÜè=‹¤íÎêµLO¶g• µ@ ñaMÃ¢Y{ÕtdúˆR®Z5òÂîK…aDq}2Øþê™vbO"gc{ã7Ä'šº?¾TÔpnåãÍ5Õ$¸ñ®È|RóÊï‘c„KÿÄp,Œëkš$³Ž5/Û¢˜·‚q$fñù8ŽÎh2×D .CÙÏ'ýP*Ô,õ x³:    f.I³¤Ò Ê€P  Tcµ±Ägû    YZ
+ý7zXZ  æÖ´FÀ¯€P!       )6à'ÿ§] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²'…ãr•„€ô­óÎ§r½¹Õ5·/R÷ü‹×˜Ÿ™Q6{IZ@{¤g€—¢vÊ¥ªRÉ£R#h<"·gù2f»èÅÊ÷¶k2üä´]V#‹º,kg¾]|³ªóß=ÑÉ¾·g¢´j‚¼×­Y´àæKwU¸jßPtr'L9i¬Œû^þk<³!ùéù Í•	Å[üš]fÞåä[6É$ ˜òýè­Tk\ø+5ÍLÞ?i0´r4ÆçÁHÓË¢“b0®¾ÅPãG2MÁiÃF²—Ö“­Û‹b¢iYŽr4°–”Å¶6·x¶Pš<”Aiíù¯Ò¬OëA![Gñ»‰Ì¸î
+àvyv´>,}hŽ s°»·AmŽ›¿¢3Ä»<4^ŽÒ? XÎ«Ë8Þ*®ˆ]=Þ¢dœÙjŠÀW¤ÝkÒ4Õ,YÌèÈY£AÁè÷DóÛ€ÛøÅÉ­“Ðj•K™¼’¹6–…A¥ÜjÙíi›%ã"ãÁ%B^•Ê™:¿†   ‚“7ŒØ÷ Ë€P  ñØ?~±Ägû    YZ
