@@ -187,6 +187,8 @@ rom() {
         cp $SYSXML $SYSETC/fonts_lge.xml
         LGE=true; ver lgexml; return
     }
+
+    src 9
 }
 
 vars() {
@@ -210,8 +212,8 @@ vars() {
 
     FB=fallback
 
-    Gs=google-sans
-    readonly Gs
+    Gs=google-sans RR=Roboto-$Re$X RS=RobotoStatic-$Re$X
+    readonly Gs RR RS
 }
 
 prep() {
@@ -511,6 +513,63 @@ bold() {
     }
 }
 
+fontspoof() {
+    [ $API -ge 31 ] || return
+    $SANS || $SERF || $MONO || $SRMO || return
+    xml "s|$RS|$RR|"; local id=' index=' ttfs i j k=0 
+    for i in "$Sa" $Se $Mo $So; do
+        for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
+            $Re $It $Me $Me$It $SBo $SBo$It \
+            $Bo $Bo$It $EBo $EBo$It $Bl $Bl$It
+        do
+            [ -f $SYSFONT/$i$j$X ] && {
+                ttfs="$ttfs $SYSFONT/$i$j$X"
+                xml "s|>$i$j$X|$id\"$k\">$RS|"
+                eval "$i$j"ID=$k; k=$((k+1))
+            }
+            [ -f $SYSFONT/${i%?}$Cn$j$X ] && {
+                ttfs="$ttfs $SYSFONT/${i%?}$Cn$j$X"
+                xml "s|>${i%?}$Cn$j$X|$id\"$k\">$RS|"
+                eval "${i%?}Cn$j"ID=$k; k=$((k+1))
+            }
+        done
+    done
+    [ "$ttfs" ] && afdko || return
+    ui_print '+ Font spoofing'
+    otf2otc -o $SYSFONT/$RS $ttfs >/dev/null
+
+    if [ $PXL ]; then
+        [ $SS ] && return
+        for i in $Re $It $Me $Me$It $SBo $SBo$It $Bo $Bo$It; do
+            eval mv $SYSFONT/$"$i$X" $PRDFONT
+        done
+        local XML=$PRDXML la=Lato-
+        for i in $Re $It $Me $Me$It $Bo $Bo$It; do
+            eval ln -s $"$i$X" $PRDFONT/$la$i$X
+            eval $(echo "xml \"s|>\$$i$X|>$la$i$X|\"")
+        done
+        eval $(echo "xml \"s|>\$$SBo$X|>$la$Me$X|\"")
+        eval $(echo "xml \"s|>\$$SBo$It$X|>$la$Me$It$X|\"")
+    elif [ $OOS ]; then
+        cp $SYSXML $SYSETC/fonts_slate.xml
+    elif [ $OOS11 ]; then
+        cp $SYSXML $SYSETC/fonts_base.xml
+    elif [ $COS ]; then
+        cp $SYSXML $SYSEXTETC/fonts_base.xml
+    elif [ $LGE ]; then
+        cp $SYSXML $SYSETC/fonts_lge.xml
+    fi
+
+    for i in "$Sa" $Se $Mo $So; do
+        for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
+            $Re $It $Me $Me$It $SBo $SBo$It \
+            $Bo $Bo$It $EBo $EBo$It $Bl $Bl$It
+        do
+            rm $SYSFONT/$i$j$X $SYSFONT/${i%?}$Cn$j$X
+        done
+    done
+}
+
 valof() {
     sed -n "s|^$1[[:blank:]]*=[[:blank:]]*||p" $UCONF | \
     sed 's|[[:blank:]][[:blank:]]*| |g;s| $||' | \
@@ -636,5 +695,4 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ®€P!       mÈ9 à'ÿ¦] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%JÎ¢Ÿ÷Žâ#d—óß4Œø­r¶€=þ|©~ŽŠ²Ý–ÿ P~ýhÿc=hÆ?ÛŸ…>´¶ï¸À}’îØBAgˆ§ü_ˆVúbé2Ã~Ùu¹­AhÁæ~{*½·³Kê¯SG¶Ï6þˆ@Àöþéñm:ëh9	š·¬`ÆxH4!Ä©ó)ê”‚)dPŸx°¡c
-û£““îsÐE¬¡G3ÀU8òb¯€õ)j·0›á£zú7y¹K&ÙB)ƒc^xQœŽ5ý¢¨v‚—=pwâÿ>\*ŠÌŸ÷ëG©šËÒÐ/sJ3DÆ©4*úÕ¨¥µ±’´gžEÅœQŠ9¯i#€º%ª#%Y\1äv¸‘Pfá2ôŒÅ·wäG^¸ÏjŸ=8žøää” 	NÇœ-ÖÈ¶"4€ºU™ž`“®õË£5ZN&áä,ž69Ä9,gœ‰‰Œ´ú]›C`#fvqvbÇc,™µmŠJ¤¢}p[´Žž‹H   c«ÒÆöêSû Ê€P  Tcµ±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J'U—5'íÞú™Êªà‚È&%Šýj™ „·Å†”uyb™è0Qòa±îÎÛÝÆìOy/B÷‘ßÍÕw7Æpû#ÖP—V"«·Îæ®¿+ÿêôÜ¼r¢û[(HqÉh+Å•™±ë|ñ”4fÆ>à-ú#=4ÅQÿ¨![z´ØÀ“Š?{‡Òn‹\~'Æ ›€®ù&%z©	þ»®y½}ÓäéGP~jŠBqùjÐ=\J9€Á#º6F)ÜÍÒÐºf™xâæ%qûs‚Û³`t10ˆàƒú£KT'\ [2réøJîØjùÁ}ˆ‡™£ÀýµFŽzbA(¿¦ü„`â;aO>ÚÓ~Ñå¥²›Ï IY”‡‚Ìè9	3O^Å{Ù·EŸò)öšðÇØv6§ô­Ãp¶ï‹sU­¨z7K§wÛÿ|ÒveÉÎìSDYE¤°R ÃdÚ† ™ôˆÄ)Þæì™T'ü"¦OÝ±f†™žQˆCÊÔû_1ÇR    }ä2P+Ÿ É€P  úy÷3±Ägû    YZ

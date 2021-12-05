@@ -203,7 +203,7 @@ src
 
 ui_print '+ Rom'
 rom
-
+fontspoof
 finish
 
 [ -d $SYSFONT ] || abort "! No font installed"
