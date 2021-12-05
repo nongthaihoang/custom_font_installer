@@ -516,6 +516,7 @@ bold() {
 fontspoof() {
     [ $API -ge 31 ] || return
     $SANS || $SERF || $MONO || $SRMO || return
+    afdko || return
     xml "s|$RS|$RR|"; local id=' index=' ttfs i j k=0 
     for i in "$Sa" $Se $Mo $So; do
         for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
@@ -534,7 +535,7 @@ fontspoof() {
             }
         done
     done
-    [ "$ttfs" ] && afdko || return
+    [ "$ttfs" ] || return
     ui_print '+ Font spoofing'
     otf2otc -o $SYSFONT/$RS $ttfs >/dev/null
 
@@ -543,30 +544,26 @@ fontspoof() {
         for i in $Re $It $Me $Me$It $SBo $SBo$It $Bo $Bo$It; do
             eval mv $SYSFONT/$"$i$X" $PRDFONT
         done
-        local XML=$PRDXML la=Lato-
+        local XML=$PRDXML la=Lato- zs=ZillaSlab-
+        falias zilla-slab-medium $Gs
         for i in $Re $It $Me $Me$It $Bo $Bo$It; do
             eval ln -s $"$i$X" $PRDFONT/$la$i$X
             eval $(echo "xml \"s|>\$$i$X|>$la$i$X|\"")
         done
-        eval $(echo "xml \"s|>\$$SBo$X|>$la$Me$X|\"")
-        eval $(echo "xml \"s|>\$$SBo$It$X|>$la$Me$It$X|\"")
-    elif [ $OOS ]; then
-        cp $SYSXML $SYSETC/fonts_slate.xml
-    elif [ $OOS11 ]; then
-        cp $SYSXML $SYSETC/fonts_base.xml
-    elif [ $COS ]; then
-        cp $SYSXML $SYSEXTETC/fonts_base.xml
-    elif [ $LGE ]; then
-        cp $SYSXML $SYSETC/fonts_lge.xml
-    fi
+        eval ln -s $"$SBo$X" $PRDFONT/$zs$SBo$X
+        eval ln -s $"$SBo$It$X" $PRDFONT/$zs$SBo$It$X
+        eval $(echo "xml \"s|>\$$SBo$X|>$zs$SBo$X|\"")
+        eval $(echo "xml \"s|>\$$SBo$It$X|>$zs$SBo$It$X|\"")
+    elif [ $OOS ]; then cp $SYSXML $SYSETC/fonts_slate.xml
+    elif [ $OOS11 ]; then cp $SYSXML $SYSETC/fonts_base.xml
+    elif [ $COS ]; then cp $SYSXML $SYSEXTETC/fonts_base.xml
+    elif [ $LGE ]; then cp $SYSXML $SYSETC/fonts_lge.xml; fi
 
     for i in "$Sa" $Se $Mo $So; do
         for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
             $Re $It $Me $Me$It $SBo $SBo$It \
             $Bo $Bo$It $EBo $EBo$It $Bl $Bl$It
-        do
-            rm $SYSFONT/$i$j$X $SYSFONT/${i%?}$Cn$j$X
-        done
+        do rm $SYSFONT/$i$j$X $SYSFONT/${i%?}$Cn$j$X; done
     done
 }
 
@@ -676,6 +673,7 @@ finish() {
     find $MODPATH/* -type d -delete 2>/dev/null
     find $MODPATH/system -type d -exec chmod 755 {} \;
     find $MODPATH/system -type f -exec chmod 644 {} \;
+    [ "$AFDKO" = true ] && umount -r $PYTHON && rmdir -p $PYTHON
 }
 
 restart() {
@@ -695,4 +693,6 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J'U—5'íÞú™Êªà‚È&%Šýj™ „·Å†”uyb™è0Qòa±îÎÛÝÆìOy/B÷‘ßÍÕw7Æpû#ÖP—V"«·Îæ®¿+ÿêôÜ¼r¢û[(HqÉh+Å•™±ë|ñ”4fÆ>à-ú#=4ÅQÿ¨![z´ØÀ“Š?{‡Òn‹\~'Æ ›€®ù&%z©	þ»®y½}ÓäéGP~jŠBqùjÐ=\J9€Á#º6F)ÜÍÒÐºf™xâæ%qûs‚Û³`t10ˆàƒú£KT'\ [2réøJîØjùÁ}ˆ‡™£ÀýµFŽzbA(¿¦ü„`â;aO>ÚÓ~Ñå¥²›Ï IY”‡‚Ìè9	3O^Å{Ù·EŸò)öšðÇØv6§ô­Ãp¶ï‹sU­¨z7K§wÛÿ|ÒveÉÎìSDYE¤°R ÃdÚ† ™ôˆÄ)Þæì™T'ü"¦OÝ±f†™žQˆCÊÔû_1ÇR    }ä2P+Ÿ É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%˜|j*÷þøhÓÎKc”‘¤K77àQ‹…`~UAã]5lÒåÏÙ²+ÈúóC4Kív€S[£Ã3ûQ²Ë“Ëql»"Jüðçs-3:¡í;äâÁÊ"U yâ(^·œJoHÅ§[Ž«7k_RñË«mãjñoþA¿~®@oI'‘LÙo}£iJ¶Ú ¿Â-ñ˜mïº1øA2:».I^[¼!Ey;S»°–’ÞàÙšË+ÿ'R´÷½¡S‡þ±øÀðU§•yû
+ƒ]sN`L±¾ù‘Ÿ0i¥É§ŽuÏ±+èl®›¶×	='l¸O%
+”û‡NÇT{¾4¹i…ßÚ‚s2ôÊ†N[M½¦å0ÐNä¤ÄÆ {÷Ø©NûºJÅÂTËÚÐPœ	bˆÃD*çò<Ûª_‚³ÍÜPñ¹g „îŸG‰ÎkóE }’ÀÎ@?`;Äÿ}`·-·ÐÈÉ/(Ôšëó#›âÛþuñ?º.å@ÐG¨Ï>Z	Ž    yl$î É€P  úy÷3±Ägû    YZ
