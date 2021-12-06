@@ -516,6 +516,8 @@ bold() {
 fontspoof() {
     [ $API -ge 31 ] || return
     $SANS || $SERF || $MONO || $SRMO || return
+    [ -f $SYSFONT/$Sa$Re$X -o -f $SYSFONT/$Se$Re$X -o \
+      -f $SYSFONT/$Mo$Re$X -o -f $SYSFONT/$So$Re$X ] || return
     afdko || return
     xml "s|$RS|$RR|"; local id=' index=' ttfs i j k=0 
     for i in "$Sa" $Se $Mo $So; do
@@ -693,6 +695,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%˜|j*÷şøhÓÎKc”‘¤K77àQ‹…`~UAã]5lÒåÏÙ²+ÈúóC4Kív€S[£Ã3ûQ²Ë“Ëql»"Jüğçs-3:¡í;äâÁÊ"U yâ(^·œJoHÅ§[«7k_RñË«mãjñoşA¿~®@oI'‘LÙo}£iJ¶Ú ¿Â-ñ˜mïº1øA2:».I^[¼!Ey;S»°–’ŞàÙšË+ÿ'R´÷½¡S‡ş±øÀğU§•yû
-ƒ]sN`L±¾ù‘Ÿ0i¥É§uÏ±+èl®›¶×	='l¸O%
-”û‡NÇT{¾4¹i…ßÚ‚s2ôÊ†N[M½¦å0ĞNä¤ÄÆ {÷Ø©NûºJÅÂTËÚĞPœ	bˆÃD*çò<Ûª_‚³ÍÜPñ¹g „îŸG‰ÎkóE }’ÀÎ@?`;Äÿ}`·-·ĞÈÉ/(Ôšëó#›âÛşuñ?º.å@ĞG¨Ï>Z	    yl$î É€P  úy÷3±Ägû    YZ
+ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%š1üDÂs¸,©Ø¶8üà—v2í ôaßgC¤	ÜÎ6¯æ^HjW)şÀıb
+„Ÿ_ĞuOÂ“€JÊú@M'½UÎå…ó¿¶¤¯†mNñ*àøpÄE”Æ„šGáåY¤‘ºÀü˜ÁË½ãÒ0€ÑÎvôäv\·„ :€?›ÛP¶ô-âqù¯‚rbÃËHD3'Fh…S—ÓHkk-ôalÑ´ÀWÖ%A£õ>é8ÒÙ>|Ó§(fŠ0ñNÈgBÍwåSÇñ´ÅGOªBn:<˜œ,)NÂš]õãTBP{?`Æ„h3w„¦7å£^.}Œ:Qk•»¾^°MŠqYÏo«UyÙŠ_>Ãéà;ƒR³©xîĞ—Ì¥Pe`ˆ¾SË+åDHÿÌëº#Yù °Ç' Ä)¾‰Óvîo%¸!Wñhd¿¥¶Ú‹ÿ1¤SğX¼0;:í {§dRŒqh¿áœ±Ò¶³-ØQ/‘F-½¹    1×éIÌ>. É€P  úy÷3±Ägû    YZ
