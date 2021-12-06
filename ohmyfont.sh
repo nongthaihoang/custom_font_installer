@@ -167,9 +167,9 @@ rom() {
         }
         eval "[ $"$Re" ] && font sec-roboto-light $"$Re$X" r"
         eval "[ $"$Me" ] && font sec-roboto-light $"$Me$X" b"
-        eval "[ $"Cn$Re" ] && font sec-roboto-condensed $"Cn$Re$X" r"
-        eval "[ $"Cn$Bo" ] && font sec-roboto-condensed $"Cn$Bo$X" b"
-        eval "[ $"Cn$Li" ] && font sec-roboto-condensed-light $"Cn$Li$X" r"
+        eval "[ $"${Cn%?}$Re" ] && font sec-roboto-condensed $"${Cn%?}$Re$X" r"
+        eval "[ $"${Cn%?}$Bo" ] && font sec-roboto-condensed $"${Cn%?}$Bo$X" b"
+        eval "[ $"${Cn%?}$Li" ] && font sec-roboto-condensed-light $"${Cn%?}$Li$X" r"
         return
     }
 
@@ -393,8 +393,8 @@ lnf(){
                 done
             eval "[ $"$i" ] || $i=$"$Re""
             eval "[ $"$i$It" ] || $i$It=$"$i""
-            eval "[ $"Cn$i" ] || Cn$i=$"$i""
-            eval "[ $"Cn$i$It" ] || Cn$i$It=$"$i$It""
+            eval "[ $"${Cn%?}$i" ] || ${Cn%?}$i=$"$i""
+            eval "[ $"${Cn%?}$i$It" ] || ${Cn%?}$i$It=$"$i$It""
         done
         shift 2
     done
@@ -506,11 +506,9 @@ falias() {
 }
 
 bold() {
-    [ $SS ] && return
-    $BOLD && {
-        eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
-        eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
-    }
+    [ ! $SS ] && $BOLD || return
+    eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
+    eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
 }
 
 fontspoof() {
@@ -528,12 +526,12 @@ fontspoof() {
             [ -f $SYSFONT/$i$j$X ] && {
                 ttfs="$ttfs $SYSFONT/$i$j$X"
                 xml "s|>$i$j$X|$id\"$k\">$RS|"
-                eval "$i$j"ID=$k; k=$((k+1))
+                eval "${i%?}$j"ID=$k; k=$((k+1))
             }
             [ -f $SYSFONT/${i%?}$Cn$j$X ] && {
                 ttfs="$ttfs $SYSFONT/${i%?}$Cn$j$X"
                 xml "s|>${i%?}$Cn$j$X|$id\"$k\">$RS|"
-                eval "${i%?}Cn$j"ID=$k; k=$((k+1))
+                eval "${i%?}${Cn%?}$j"ID=$k; k=$((k+1))
             }
         done
     done
@@ -542,20 +540,21 @@ fontspoof() {
     otf2otc -o $SYSFONT/$RS $ttfs >/dev/null
 
     if [ $PXL ]; then
-        [ $SS ] && return
-        for i in $Re $It $Me $Me$It $SBo $SBo$It $Bo $Bo$It; do
-            eval mv $SYSFONT/$"$i$X" $PRDFONT
-        done
-        local XML=$PRDXML la=Lato- zs=ZillaSlab-
-        falias zilla-slab-medium $Gs
-        for i in $Re $It $Me $Me$It $Bo $Bo$It; do
-            eval ln -s $"$i$X" $PRDFONT/$la$i$X
-            eval $(echo "xml \"s|>\$$i$X|>$la$i$X|\"")
-        done
-        eval ln -s $"$SBo$X" $PRDFONT/$zs$SBo$X
-        eval ln -s $"$SBo$It$X" $PRDFONT/$zs$SBo$It$X
-        eval $(echo "xml \"s|>\$$SBo$X|>$zs$SBo$X|\"")
-        eval $(echo "xml \"s|>\$$SBo$It$X|>$zs$SBo$It$X|\"")
+        [ $SS ] || {
+            for i in $Re $It $Me $Me$It $SBo $SBo$It $Bo $Bo$It; do
+                eval mv $SYSFONT/$"$i$X" $PRDFONT
+            done
+            local XML=$PRDXML la=Lato- zs=ZillaSlab-
+            falias zilla-slab-medium $Gs
+            for i in $Re $It $Me $Me$It $Bo $Bo$It; do
+                eval ln -s $"$i$X" $PRDFONT/$la$i$X
+                eval $(echo "xml \"s|>\$$i$X|>$la$i$X|\"")
+            done
+            eval ln -s $"$SBo$X" $PRDFONT/$zs$SBo$X
+            eval ln -s $"$SBo$It$X" $PRDFONT/$zs$SBo$It$X
+            eval $(echo "xml \"s|>\$$SBo$X|>$zs$SBo$X|\"")
+            eval $(echo "xml \"s|>\$$SBo$It$X|>$zs$SBo$It$X|\"")
+        }
     elif [ $OOS ]; then cp $SYSXML $SYSETC/fonts_slate.xml
     elif [ $OOS11 ]; then cp $SYSXML $SYSETC/fonts_base.xml
     elif [ $COS ]; then cp $SYSXML $SYSEXTETC/fonts_base.xml
@@ -635,12 +634,12 @@ install_font() {
             $Li$It $Li $ELi$It $ELi $Th$It $Th
         for i do
             [ -f $SYSFONT/$f$i$X ] && eval $i=$f$i
-            [ -f $SYSFONT/${f%?}$Cn$i$X ] && eval Cn$i=${f%?}$Cn$i
+            [ -f $SYSFONT/${f%?}$Cn$i$X ] && eval ${Cn%?}$i=${f%?}$Cn$i
         done
         $FULL && [ ! $SS ] && [ -f $SYSFONT/$f$Re$X ] && {
             eval "[ $"$It" ] || $It=$"$Re""
-            eval "[ $"Cn$Re" ] || Cn$Re=$"$Re""
-            eval "[ $"Cn$It" ] || Cn$It=$"$It""
+            eval "[ $"${Cn%?}$Re" ] || ${Cn%?}$Re=$"$Re""
+            eval "[ $"${Cn%?}$It" ] || ${Cn%?}$It=$"$It""
             lnf "$Me $SBo" "$Me $SBo $Bo" "$Bo" "$EBo $Bl $SBo $Me"
             lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
@@ -689,5 +688,7 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J(@‰±W:ùLêıßÑğtÅ•ø›ÌİŠÙ
-Á¬Ãh§^‚ê[y0,ÍWOâ2¸/»€ñ°·»=™a…æ$ÅrĞqNkaNO™d¹9çiebâ"¨úPiFìİÈ¯Æ¾µµùòV:â£ ËÆ†m	µKî„nio™tâT¹ÜTĞØc.…ëQFT³+f¢GZ4jöl—Ü­6â+Şcj­@ø+-âœr‰Ã]Éd¦=lòl*Ifã‚ŠÉÎ0ã!ñ¾—¶ÔRâ<yû²İ½µÄÛ&hFQxÆbÉZîoîÔgĞ´båá“¹ÒTÊ]«å+fEK~`wlù=ÿ?ÃşVÚÆqvQ7ŞÜ¢ÚİAİ¼øYåŸ†E%Ğ½}"^VÆ@Gââê¸¾ê–£,¯LCq*¼¦`GÒpŠPMåM¼ågpÄ8«²c°/ºß¥‚ºt§$IĞ‹õÈÃÛfˆ'ƒ>~2u¼¦~g›úçáÖn‹GÈOh»L,    YFF¦F.Ö É€P  úy÷3±Ägû    YZ
+ı7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J'D^Ü¸Tóà/øy6UÓï*µš+§Â™8|$­š$åJs/ñú£Z*ùÒ‚K7ëìhM¢àHö±ÏGmK8Äg˜­3†ÀÚUÒ#”eŠBõâü8aˆß“†f·ú›óÓ¯º¾"—Q­Øâ'õYõRm¢Ö²'­İ€säÏüFW>zßûZ,A.Ï…ïlJÉ04X€Á.Ğí­.ë</w¶¼exv‰øÏ[z”‹•æÁÑÊ>ØÁ+Ì·wYâŸd«kÈ-Àò=ä79ĞD!x½Qú¨%³yÈ}Uä¦.ìh$9ÿ£v¥éãûÖ§	×XƒÔx¼jMöëFÅ›’>\Ò>‡q’‰T~5öñA±òç‡ıºYòCõ&Ëƒğ•sï†£YYQ_|
+İ> !é”–%Ou—àÊûĞø#Fc!ÙÊ¨NŠ(QG‰wcÉÃ8Ü›À0¦ñ™
+íÿ³¸Ú¾iØ‚7Bcàø+O¶ú {(}Ü9ôÅ
+xÎÕ©    ÑW\Tñ¼?ü É€P  úy÷3±Ägû    YZ
