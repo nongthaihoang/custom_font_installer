@@ -560,13 +560,7 @@ fontspoof() {
     elif [ $OOS11 ]; then cp $SYSXML $SYSETC/fonts_base.xml
     elif [ $COS ]; then cp $SYSXML $SYSEXTETC/fonts_base.xml
     elif [ $LGE ]; then cp $SYSXML $SYSETC/fonts_lge.xml; fi
-
-    for i in "$Sa" $Se $Mo $So; do
-        for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
-            $Re $It $Me $Me$It $SBo $SBo$It \
-            $Bo $Bo$It $EBo $EBo$It $Bl $Bl$It
-        do rm $SYSFONT/$i$j$X $SYSFONT/${i%?}$Cn$j$X; done
-    done
+    rm $ttfs
 }
 
 valof() {
@@ -695,5 +689,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%š1üDÂs¸,©Ø¶8üà—v2í ôaßgC¤	ÜÎ6¯æ^HjW)þÀýb
-„Ÿ_ÐuOÂ“€JÊú@M'½UÎå…ó¿¶¤¯†mNñ*àøpÄE”Æ„šGáåY¤‘ºžÀü˜ÁË½ãÒ0€ÑÎvôäv\·„ :€?›ÛP¶ô-âqù¯‚rbÃËHD3'Fh…S—ÓHkk-ôalÑ´ÀWÖ%A£õ>é8ÒÙ>|Ó§(fŠ0ñNÈgBÍwåSÇñ´ÅGOªBn:<˜œ,)NÂš]õãTBP{?`Æ„žh3w„¦7å£^.}Œ:Qk•»¾^°MŠqYÏo«ŽUyÙŠ_>Ãéà;ƒR³©xîÐ—žÌ¥Pe`ˆ¾SË+åDHÿÌëº#Yù °Ç' Ä)¾‰Óvîo%¸!Wñhd¿¥¶Ú‹ÿ1¤SðX¼0;Ž:í {§dRŒqh¿Žáœ±Ò¶³-ØQ/‘F-½¹    1×éIÌ>. É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J(@‰±W:ùLêýßÑðtÅ•ø›ÌÝŠÙ
+Á¬Ãh§^‚ê[y0,ÍWOâ2¸/»€ñ°·»=™a…æ$ÅrÐqNkaNO™d¹9çiebâ"¨úPiFìÝÈ¯Æ¾µµùòV:â£ ËÆ†m	µKî„nio™tâT¹ÜTÐØc.ž…ëQFT³+f¢GZ4jöl—Ü­6â+Þcj­@ø+-âœr‰Ã]Éd¦=lòl*Ifã‚ŠÉÎ0ã!ñ¾—¶ÔRâ<yû²Ý½µÄÛ&hFQžxÆbÉZîoîÔgÐ´båá“¹ÒTÊ]«å+fEK~`wlù=ÿ?ÃþVÚÆqvQ7ÞÜ¢ÚÝAÝ¼øYåŸ†E%Ð½}"^VÆ@Gââê¸¾ê–£,¯LCq*¼¦`GÒpŠPMåM¼ågpÄ8«²c°/ºß¥‚ºt§$IÐ‹õÈÃÛfˆ'ƒ>~2u¼¦~g›úçáÖn‹GÈOh»L,    YFF¦F.Ö É€P  úy÷3±Ägû    YZ
