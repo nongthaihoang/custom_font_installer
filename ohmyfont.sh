@@ -23,7 +23,7 @@ SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC
 
-FONTS=$MODPATH/fonts
+FONTS=$MODPATH/fonts TOOLS=$MODPATH/tools
 tar xf $MODPATH/*xz -C $MODPATH
 SH=$MODPATH/ohmyfont.sh
 tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH
@@ -537,7 +537,7 @@ fontspoof() {
     done
     [ "$ttfs" ] || return
     ui_print '+ Font spoofing'
-    otf2otc -o $SYSFONT/$RS $ttfs >/dev/null
+    otf2otc -o $SYSFONT/$RS $ttfs >/dev/null || abort
 
     if [ $PXL ]; then
         [ $SS ] || {
@@ -668,7 +668,7 @@ finish() {
     find $MODPATH/* -type d -delete 2>/dev/null
     find $MODPATH/system -type d -exec chmod 755 {} \;
     find $MODPATH/system -type f -exec chmod 644 {} \;
-    [ "$AFDKO" = true ] && umount -r $PYTHON && rmdir -p $PYTHON
+    [ "$AFDKO" = true ] && umount -r $TERMUX && rmdir -p $TERMUX
 }
 
 restart() {
@@ -688,7 +688,9 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ­€P!       ¶íX|à'ÿ¥] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J'D^Ü¸Tóà/øy6UÓï*µš+§Â™8|$­š$åJs/ñú£Z*ùÒ‚žK7ëìhM¢àHö±ÏGmK8Äg˜­3†ÀÚUÒ#”eŠBõâü8aˆß“†f·ú›óÓ¯º¾"—Qž­Øâ'õYõRm¢Ö²'­Ý€säÏüFW>zßûZ,A.Ï…ïlJÉ04X€Á.Ðí­.ë</w¶¼exv‰øÏ[z”‹•æÁÑÊ>ØÁ+Ì·wYâŸd«kÈ-Àò=ä79ÐD!x½Qú¨%³yÈ}Užä¦.ìh$9ÿ£v¥éãûÖ§	×XƒÔx¼jMöëFÅ›’>\Ò>‡q’‰T~5öñA±òç‡ýºYòCõ&Ëƒð•sï†£YYQ_|
-Ý> !é”–%Ou—àÊûÐø#Fc!ÙÊ¨NŠ(QG‰wcÉÃ8Ü›À0¦ñ™
-íÿ³¸Ú¾iØ‚7žBcàø+O¶ú {(}Ü9ôÅ
-xÎÕ©    ÑW\Tñ¼?ü É€P  úy÷3±Ägû    YZ
+ý7zXZ  æÖ´FÀ„	€ !      W8š&àOÿ|] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%¦0EbêÇ ‡ÑÑÌÒeÔRˆ@Ðäæ:*¦ç)ÃìÌmÝ³8âÊm9¦š_'ìûà»/ÕÂ¡,âÖõfOtÈ!~º>cÙÉ›°Â éÐûæýe^Â€h{
+XZ‰ñ¡êùïBÞúÍZ‘4 äRú–[n¹inÅ©Rõáë±LszWšXùnƒµ¯—6Ì4|f"b5tø¼Òžù=M;r)jíèÙŽS× 0Ÿë]Õ+cBÝ±þÂb–ë°viãu£Žóm/EÇ¬P²ïRu•'må&s§'Ë;rXjøt?]àcK¤ xÈ³“çÌ$„Ò>q}«ºA&pRósp#ŽÑ¥ŠJxwž–vÎHÁÊÊ”ºùÀéXäkvÉ)‹> §.Û§¦&ÔB(ê´ºyAr†Q¥M¸íWå˜p¨þÔn0Â
+Þ€QK~Ê ù›áù¶£œy¾WeÖCnžÌ„í!ƒl¨"·÷ÜiDî÷Æ.›eÚZƒ .I‰•—ç½“"ànºê“,Vuz[ëÄYãâaF)ÆÛ×Á/h…½Ûq-g¢w¸–9ùÏÙøxÀ¥àöt­ÃÜj¥NžX†‘Â‡‡ÛØ›R¢ÌÝW„!¢WøÜ•"êÜËYp±*ô§îÒüQEIîºZ—Ëqf8YGÔ0Ž.¢™­7S·¼k% Šx0Ûb|:¡Ó¡ö‚ÔÓøBÙLÐ|‹ 0½Ñ—‹CÔg°%VxÈ,àèVÑŽ+¶§åT(Ä¶:Ñt1®‹'%tþR:žàƒÜ(]\7^+¼c2XÑ	º7uð†Æ¿z‡™åà†ûº¨uŽX½s&öÜÁª°^Í/\Ø8ÂÒ„ñ»p»c”˜‹DæE¼®ø-â¼f˜÷V @ú4·C»þã•¢2Š\«d3('}5Œ‡Îuµ¡›ß\¥rºN!ý
+‚‚éw‹9¶cH.J¬$SÁÃÎ¨ÔÓià¹,+÷0ÕEQ–Âg¿€+µ¸È¸Y2¶å/`6ò£áÿ}V:FÊ¥P¾¦ãW½Àcÿ\ÍºêPŽ¶— žÞ`ˆ£[yºP[†ë«j†˜³_·zðžÏ8'›s×å•äÌð[¤6—å‡ØPÙ'Mª>ëß‡÷_xÖ×ÐøV´™€·ÙQÍé8uWüˆH(y½ry§q¾iÜ_ùS:˜m–Ú0&¢>á
+.5Äaö¯‡Žfg!,ÄåC'ëHšå]/!Å[‘.ÌÙêñ5åx’¿aëºŠ˜
+Þ[Ý œžDûZ7t=cÎw¸ÁW‘ÜI8à?ëÜGŒlË1|A|ðèP…Œ©ÙQIQi˜s9ºÿ×üÌ=mÒšÜS`¨Ž»Õj*û½¡zá8A”–è‘#§ˆ?Ôå	l{J5ÄÜí»[T€B±žŸQ¬§òç7ûÕªpuÍ[’Êj”ü4dsÔå§Jâ™YõP{ ¢Ó  —Bdò iä  	€  X}cú±Ägû    YZ
