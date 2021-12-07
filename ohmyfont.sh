@@ -23,10 +23,9 @@ SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC
 
-FONTS=$MODPATH/fonts TOOLS=$MODPATH/tools
-tar xf $MODPATH/*xz -C $MODPATH
-SH=$MODPATH/ohmyfont.sh
+FONTS=$MODPATH/fonts TOOLS=$MODPATH/tools SH=$MODPATH/ohmyfont.sh
 tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH
+tar xf $MODPATH/*xz -C $MODPATH
 mkdir ${OMFDIR:=/sdcard/OhMyFont}
 
 ver() { sed -i "/^version=/s|$|-$1|" $MODPROP; }
@@ -688,9 +687,11 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ„	€ !      W8š&àOÿ|] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%¦0EbêÇ ‡ÑÑÌÒeÔRˆ@Ðäæ:*¦ç)ÃìÌmÝ³8âÊm9¦š_'ìûà»/ÕÂ¡,âÖõfOtÈ!~º>cÙÉ›°Â éÐûæýe^Â€h{
-XZ‰ñ¡êùïBÞúÍZ‘4 äRú–[n¹inÅ©Rõáë±LszWšXùnƒµ¯—6Ì4|f"b5tø¼Òžù=M;r)jíèÙŽS× 0Ÿë]Õ+cBÝ±þÂb–ë°viãu£Žóm/EÇ¬P²ïRu•'må&s§'Ë;rXjøt?]àcK¤ xÈ³“çÌ$„Ò>q}«ºA&pRósp#ŽÑ¥ŠJxwž–vÎHÁÊÊ”ºùÀéXäkvÉ)‹> §.Û§¦&ÔB(ê´ºyAr†Q¥M¸íWå˜p¨þÔn0Â
-Þ€QK~Ê ù›áù¶£œy¾WeÖCnžÌ„í!ƒl¨"·÷ÜiDî÷Æ.›eÚZƒ .I‰•—ç½“"ànºê“,Vuz[ëÄYãâaF)ÆÛ×Á/h…½Ûq-g¢w¸–9ùÏÙøxÀ¥àöt­ÃÜj¥NžX†‘Â‡‡ÛØ›R¢ÌÝW„!¢WøÜ•"êÜËYp±*ô§îÒüQEIîºZ—Ëqf8YGÔ0Ž.¢™­7S·¼k% Šx0Ûb|:¡Ó¡ö‚ÔÓøBÙLÐ|‹ 0½Ñ—‹CÔg°%VxÈ,àèVÑŽ+¶§åT(Ä¶:Ñt1®‹'%tþR:žàƒÜ(]\7^+¼c2XÑ	º7uð†Æ¿z‡™åà†ûº¨uŽX½s&öÜÁª°^Í/\Ø8ÂÒ„ñ»p»c”˜‹DæE¼®ø-â¼f˜÷V @ú4·C»þã•¢2Š\«d3('}5Œ‡Îuµ¡›ß\¥rºN!ý
-‚‚éw‹9¶cH.J¬$SÁÃÎ¨ÔÓià¹,+÷0ÕEQ–Âg¿€+µ¸È¸Y2¶å/`6ò£áÿ}V:FÊ¥P¾¦ãW½Àcÿ\ÍºêPŽ¶— žÞ`ˆ£[yºP[†ë«j†˜³_·zðžÏ8'›s×å•äÌð[¤6—å‡ØPÙ'Mª>ëß‡÷_xÖ×ÐøV´™€·ÙQÍé8uWüˆH(y½ry§q¾iÜ_ùS:˜m–Ú0&¢>á
-.5Äaö¯‡Žfg!,ÄåC'ëHšå]/!Å[‘.ÌÙêñ5åx’¿aëºŠ˜
-Þ[Ý œžDûZ7t=cÎw¸ÁW‘ÜI8à?ëÜGŒlË1|A|ðèP…Œ©ÙQIQi˜s9ºÿ×üÌ=mÒšÜS`¨Ž»Õj*û½¡zá8A”–è‘#§ˆ?Ôå	l{J5ÄÜí»[T€B±žŸQ¬§òç7ûÕªpuÍ[’Êj”ü4dsÔå§Jâ™YõP{ ¢Ó  —Bdò iä  	€  X}cú±Ägû    YZ
+ý7zXZ  æÖ´FÀ‡	€ !      ŒûZàOÿ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%¦<>hGµ¸›ëÃÀ›rÈíâ—øÁ/2Ø%Òû…
+æ1f³Õ(È}yb€H}*Ü_ßJŒö[(`Ë–"©Ñ’a„ZC
+\e%Ì˜qØäK+}…|»2òqJ‰¸Žj=¥	yÏÌo V$Àïm¸»êÁ3ñ–;-âbÖ9jÔç%cµþªˆ¸†ôˆ‚:ì?„§B¢ËšoEò&¢Ô‡U—žúT½Òî•Ý®ªft» É{VÁÌ€7õ|R‘bb4éÇ‡…“Ø;6„SâÙâR	…V,æ´O€Ip*Dxà‘P"p›RßeïtLa»A9¤ü©Š<ä
+uŒ–“|œy°\AÀ!ŠŒûwï*3n1—
+Ñšôë!€×>W¼Í£™ìÞ¬3"’àƒ¼M7dß¬2Fç#Ï„Cèˆ*_F³‡êÄÙl‡Úç4RB_Oâ³¬ì¢QúúD
+Yd$1°µÆ|­QÃ1oÞP	0^.S[,ˆrÏ*¸9A> Åúáºyû³OÇ´Q¸ËX/_¢z¬Ë«*n¨SF¦¦î2Á=‘]¥Ów>“j#pïGþ@J§üÅejAÑ„ÞŒ`M?I7Ú´	³g!eÔ¦¸­'&'²ôŸ[ÔIwµéÈåD•œ‰xäIÃQ[½—«IÇï¿[ŠbÐÿ¯ŽÍ’è‡ª¤B]–?³žHaÛ¾$°Üv_Òkº·CtñÎü3fÚõI©k|‡´±[Ô=²¦lWÁ¡¤mž[%ïZÜ%®vÛë˜ ïõÒîD>ô–VŠPàï˜ã„ó§R¨·ßÙR¿³ìÕŒO£s™	<QòŒ)]­q3Á°Ïý'ÇXN¯h¥Ë‹ìvM½5kZæ¨îá:FV8®†>;¥¼ŠúþÕ>ìÃ ¡ë MÑ\K‚TbÚ˜fŒ D\OEûæîÈtÖ†­åË[&a)ºw¼Y-î½rmQÇË‰ßTÀ¯íÙ²·'Ç¶* ;‰Š,‹
+ô£–EÈ­Igð®ph#¹½‰Rò>×Á«J0Ðl®ÿ/â'Ø’M:_€Î{7ÎÐeEdµ.g·D>òÀìMÇ×;¹e\åú7ºtÛóØ™ãO©á«’Úõ:ìÿ)s¯_òMU
+æ}™ÜÙ­9œ§ xê“- ¶vZ[‘ƒ™6aWÎ\}gXFboËÃ¹rý¤.}³~PQw8n¶½Ù­a?v¹¿×žC´ðcNHÓ+²£òè±#¡Qší<,ªÓ<GfˆPÚw4ÜRóûî>{N®¾»JÈhOÓjÁ½i¼š«)7LºwGt€ jµw4Þ0¼Ó´—2È½ûB•c‚  µYÅ wSà+4Imªºzh`=´™ÿíœƒnKûË°6IDÕ@(‚Ìy5à¹>HH²@±=®7´ùžr±šþytl./`Š5±¢¥í*°ŒŒÚ$    ÀäO1`þÛ £	€  ö÷|±Ägû    YZ
