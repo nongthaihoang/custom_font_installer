@@ -157,8 +157,8 @@ gfi() {
 fontfix() {
     FONTFIX=`valof FONTFIX`; ${FONTFIX:=true} || return
     local i a=$@
-    [ $a ] || a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
-    [ $a ] && afdko || return
+    [ "$a" ] || a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
+    [ "$a" ] && afdko || return
     ui_print '+ Font tweaks'
     [ $# -eq 0 ] && {
         for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done
