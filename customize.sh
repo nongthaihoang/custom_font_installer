@@ -158,7 +158,7 @@ fontfix() {
     FONTFIX=`valof FONTFIX`; ${FONTFIX:=true} || return
     afdko || return; local i a=$@
     [ $# -eq 0 ] && {
-        ui_print '+ Fontfix'
+        ui_print '+ Font tweaks'
         a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
         for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done; return
     }
