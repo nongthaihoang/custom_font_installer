@@ -203,8 +203,8 @@ vars() {
 
     Bl=Black Bo=Bold EBo=Extra$Bo SBo=Semi$Bo Me=Medium
     Th=Thin Li=Light ELi=Extra$Li Re=Regular It=Italic
-    Cn=Condensed- X=.ttf
-    readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X
+    Cn=Condensed- X=.ttf Y=.otf Z=.ttc XY=.[ot]tf XYZ=.[ot]t[tc]
+    readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X Y Z XY XYZ
 
     Mo=Mono- Se=Serif- So=SerifMono-
     readonly Mo Se So
@@ -400,31 +400,30 @@ lnf(){
 }
 
 rename() {
-    local x=.[ot]tf i
     set bl $Bl eb $EBo b $Bo sb $SBo m $Me r $Re l $Li el $ELi t $Th
     [ $SANS = true ] && Sa= || Sa=Sans-; readonly Sa
     while [ $2 ]; do
-        mv $FONTS/u$1$x $FONTS/$Sa$2$X
-        [ $Sa ] || mv $FONTS/c$1$x $FONTS/$Cn$2$X
-        mv $FONTS/m$1$x $FONTS/$Mo$2$X
-        mv $FONTS/s$1$x $FONTS/$Se$2$X
-        mv $FONTS/o$1$x $FONTS/$So$2$X
+        mv $FONTS/u$1$XY $FONTS/$Sa$2$X
+        [ $Sa ] || mv $FONTS/c$1$XY $FONTS/$Cn$2$X
+        mv $FONTS/m$1$XY $FONTS/$Mo$2$X
+        mv $FONTS/s$1$XY $FONTS/$Se$2$X
+        mv $FONTS/o$1$XY $FONTS/$So$2$X
         shift 2
     done
     set bl $Bl$It eb $EBo$It b $Bo$It \
         sb $SBo$It m $Me$It r $It \
         l $Li$It el $ELi$It t $Th$It
     while [ $2 ]; do
-        mv $FONTS/i$1$x $FONTS/$Sa$2$X
-        [ $Sa ] || mv $FONTS/d$1$x $FONTS/$Cn$2$X
-        mv $FONTS/n$1$x $FONTS/$Mo$2$X
-        mv $FONTS/t$1$x $FONTS/$Se$2$X
-        mv $FONTS/p$1$x $FONTS/$So$2$X
+        mv $FONTS/i$1$XY $FONTS/$Sa$2$X
+        [ $Sa ] || mv $FONTS/d$1$XY $FONTS/$Cn$2$X
+        mv $FONTS/n$1$XY $FONTS/$Mo$2$X
+        mv $FONTS/t$1$XY $FONTS/$Se$2$X
+        mv $FONTS/p$1$XY $FONTS/$So$2$X
         shift 2
     done
     set e Emoji
     while [ $2 ]; do
-        mv $FONTS/$1$x $FONTS/$2$X
+        mv $FONTS/$1$XY $FONTS/$2$X
         shift 2
     done
     set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
@@ -432,9 +431,9 @@ rename() {
         $Li$It $Li $ELi$It $ELi $Th$It $Th
     for i do
         [ $Sa ] && {
-            mv $FONTS/$i$x $FONTS/$Sa$i$X
-            rm $FONTS/$Cn*$x
-        } || mv $FONTS/$i$x $FONTS/$i$X
+            mv $FONTS/$i$XY $FONTS/$Sa$i$X
+            rm $FONTS/$Cn*$XY
+        } || mv $FONTS/$i$XY $FONTS/$i$X
     done
 }
 
@@ -512,7 +511,7 @@ bold() {
 
 static() {
         $STATIC && [ $SS ] && afdko || { STATIC=false; return; }
-        SSS=${SS%.[ot]tf}Static$X
+        SSS=${SS%$XY}Static$X
         local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
         ui_print "+ Generating static instance (â‰¤60s)..."
         timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
@@ -702,10 +701,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ¿€P!       w„ûà'ÿ·] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J)ëóÜkŸtõ“	Û•ÝnàËöxÇ2­¢>Ò@m³áÉbÃ+
-Ö…&øÀÆYM^¶îÔìÑºS(¥íöÁç}Ï÷ŽÕ>Ä}›¬óÁÄšÄj#O%„Òù6uõŽ©@¥8ŠJýË™÷Žm
-	ºDÿ.}Œ¾Q•ýèyƒÿÏUÎBAÅÅÏ©ÝúeûÿXì	YgŒÁš7S¡‚Á9Kq@+"×
-ÜˆUÉ=ImÖþ)Pí®fPr#‚¦Âö;Aá!ˆw®ÈƒÚ¤7ÑÒu·D8­ÅØê\§PRêÛšŒëêÝYƒ¹áN"¡ÇŸÒ+
-CÈ1”™\T?
-äô…(¹#Þ)+YW€­6-.Ea”º†î8su>ÀÂKY½îu:-Y= ’Ü‚tóø]ê¼ë?‡
-"ÝñX„sRcIÃ—ê@´Â¤Ý,("Hyz1\î“Fõy«ÁJ	7S!ŸØeû’ÞŽ® »ã…G^”§zT[•–Ô/–z-¦z%ôªÑìêýf»—±C~]àj¶†×   ïÕE—„?ßÛ Û€P  jÚé}±Ägû    YZ
+ý7zXZ  æÖ´FÀ¿€P!       w„ûà'ÿ·] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J)ë°:¢ÉrT¦ÎKEï#÷júfNìëë”A RmÏ\äèŸµŠ¾œŒù8±^Ù9  ça0àÇ¼<dÿòˆ¥f|ùüZ#6íÂ˜(Öþ¶ Íž^(/ò–zcg®^zÆœuÈØY'4ü]ç[.ViËJè{KÅÄGP°_i+grGÊc%ˆç€6ï›–z]Ð@‹“y­§1ˆÿg1Ó(·cÇ¡ÊŽ3ãç.Hlt¾D¿òT#Uœƒu‘‰qÜ$Çwªïç=ñmóQ:àe‡—ºï§SQû±¸Ð/W„ãØ”Áeq–þãªJ¸M2Ïå±Dú—…Éá]@cèý0þpêúå+T(‡EÀyÅmï{±;€¼åDdq){±( ãbø-ÃÃ¿w£º2
+ÖØ&þAþ:êLHöî}-Çaâwâ‰i‹ïººö£8egô]ã´€í¨cÀiÀàþÄ›ùNÇÊèØ‚*ÕÐMÔ’òÜJÇÆÝ=×µ÷_äÆFØ•éÔ¸¦¯É¿Ø® “iÉ¥ˆK   š®_²!† Û€P  jÚé}±Ägû    YZ
