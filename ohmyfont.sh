@@ -510,13 +510,28 @@ bold() {
     eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
 }
 
+static() {
+        $STATIC && [ $SS ] && afdko || { STATIC=false; return; }
+        SSS=${SS%.[ot]tf}Static$X
+        local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
+        ui_print "+ Generating static instance (â‰¤60s)..."
+        timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
+        font $SA $SSS r
+}
+
 fontspoof() {
+    local id=' index='
+    $STATIC && {
+        otf2otc -o $SYSFONT/$RR $ORISYSFONT/$RR $SYSFONT/$SSS >/dev/null || abort
+        xml "s|>$SSS|$id\"1\">$RR|"
+        rm $SYSFONT/$SSS
+    }
     [ $API -ge 31 ] || return
     $SANS || $SERF || $MONO || $SRMO || return
     [ -f $SYSFONT/$Sa$Re$X -o -f $SYSFONT/$Se$Re$X -o \
       -f $SYSFONT/$Mo$Re$X -o -f $SYSFONT/$So$Re$X ] || return
     afdko || return
-    xml "s|$RS|$RR|"; local id=' index=' ttfs i j k=0 
+    xml "s|$RS|$RR|"; local ttfs i j k=0 
     for i in "$Sa" $Se $Mo $So; do
         for j in $Th $Th$It $ELi $ELi$It $Li $Li$It \
             $Re $It $Me $Me$It $SBo $SBo$It \
@@ -586,10 +601,10 @@ config() {
     }
 
     SANS=`valof SANS` MONO=`valof MONO` SERF=`valof SERF` SRMO=`valof SRMO`
-    FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD`
+    FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD` STATIC=`valof STATIC`
 
-    ${SANS:=true}; ${SERF:=true}; ${MONO:=true}; ${SRMO:=true}
-    ${LAST:=true}; ${GS:=false};  ${BOLD:=false}
+    [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true} ];  [ ${SRMO:=true} ]
+    [ ${LAST:=true} ]; [ ${GS:=false} ];  [ ${BOLD:=false} ]; [ ${STATIC:=false} ]
 
     SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
     SER=`valof SER` SERI=`valof SERI` SRM=`valof SRM` SRMI=`valof SRMI`
@@ -643,7 +658,7 @@ install_font() {
             lnf "$EBo $Bl" "$Bl $EBo $Bo $SBo $Me"
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
         }
-        bold
+        bold; static
     }
     $SERF && {
         if [ $SERF = true ]; then serf
@@ -687,5 +702,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀº€P!       {'à'ÿ²] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J%ªîûß Ð¥“¾nf·ô`®ºÈ”béþfbîói'2n[ñ¾!MƒmC´ñäMUe7ˆ„éð=ðû9Àycñþ¯ý;7ZPÓ+OD~\Ø½=kðe•Éè·”PªÕe¹ê±ãSS¥­áajo?ÖêŒÐL“Ú¤€p)½¾¡Ï~nléäŒS–zÛ¶j–á$$_IÕÃ€Ù·WÎZÅBZ÷fLLp5Rr>”Ü­jOœÞv™T“W0lLC2^TzŒÿ¹Ô%sžõ‚Wxí)ñ$¿¢¾ÜåEþ]Ü%ÞÍ=s9*(‚´ùñ¸~™ÂøœÃFá"á€ˆ»ÝvjhÙ·‚åÃî8PüHt¿ç|È^òÑ‰º‡èr`®{®6,?)ëÔa%…×eŠÄ²L¯.œ2+§ 	©ü&¯€,ÍRuî…«y$Ïh30¸¨œYa¨ÛáN©éÎ‘øŸÎ„}&%£ÆÍT·–ÖòçTêÜPmä,íJBmHæôí\¾k	Xïò…œòÀ«Àî‡»3
-èQ“ÓùŒ    nÒE¢5å; Ö€P  ´ÉwÁ±Ägû    YZ
+ý7zXZ  æÖ´FÀ¿€P!       w„ûà'ÿ·] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J)ëóÜkŸtõ“	Û•ÝnàËöxÇ2­¢>Ò@m³áÉbÃ+
+Ö…&øÀÆYM^¶îÔìÑºS(¥íöÁç}Ï÷ŽÕ>Ä}›¬óÁÄšÄj#O%„Òù6uõŽ©@¥8ŠJýË™÷Žm
+	ºDÿ.}Œ¾Q•ýèyƒÿÏUÎBAÅÅÏ©ÝúeûÿXì	YgŒÁš7S¡‚Á9Kq@+"×
+ÜˆUÉ=ImÖþ)Pí®fPr#‚¦Âö;Aá!ˆw®ÈƒÚ¤7ÑÒu·D8­ÅØê\§PRêÛšŒëêÝYƒ¹áN"¡ÇŸÒ+
+CÈ1”™\T?
+äô…(¹#Þ)+YW€­6-.Ea”º†î8su>ÀÂKY½îu:-Y= ’Ü‚tóø]ê¼ë?‡
+"ÝñX„sRcIÃ—ê@´Â¤Ý,("Hyz1\î“Fõy«ÁJ	7S!ŸØeû’ÞŽ® »ã…G^”§zT[•–Ô/–z-¦z%ôªÑìêýf»—±C~]àj¶†×   ïÕE—„?ßÛ Û€P  jÚé}±Ägû    YZ
