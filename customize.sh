@@ -156,11 +156,13 @@ gfi() {
 
 fontfix() {
     FONTFIX=`valof FONTFIX`; ${FONTFIX:=true} || return
-    afdko || return; local i a=$@
+    local i a=$@
+    [ $a ] || a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
+    [ $a ] && afdko || return
+    ui_print '+ Font tweaks'
     [ $# -eq 0 ] && {
-        ui_print '+ Font tweaks'
-        a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
-        for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done; return
+        for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done
+        return
     }
     for i in $a; do $TOOLS/fontfix $i; done
 }
@@ -203,7 +205,7 @@ DS=DroidSans SSP=SourceSanPro
     [ $SRMI = $SRM ] || { mv $FONTS/$SRMI $FONTS/$SSP-$Bo$It$X && SRMI=$SSP-$Bo$It$X; }
 }
 ORISS=$SS ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
-ORIMS=$MS ORIMS=$MSI ORISRM=$SRM  ORISRMI=$SRMI
+ORIMS=$MS ORIMSI=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 
 install_font; fontfix
 [ $Sa ] && rm $FONTS/[cd]*$XY
