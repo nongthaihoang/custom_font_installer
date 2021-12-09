@@ -68,7 +68,7 @@ gfi() {
     $SANS && {
         [ "$GF" ] && {
             ui_print "> Sans Serif"
-            [ -f $CFI/ur.[to]tf -o  -f $CFI/$Re.[to]tf -o -f $CFI/ss$X ] && {
+            [ -f $CFI/ur$XY -o  -f $CFI/$Re$XY -o -f $CFI/ss$X ] && {
                 ui_print "  Fonts exist in $CFI. Do nothing!"
             } || {
                 gfi_dl $GF
@@ -84,7 +84,7 @@ gfi() {
         }
         [ "$GF_condensed" ] && {
             ui_print "> Sans Serif Condensed"
-            [ -f $CFI/cr.[to]tf -o  -f $CFI/$Cn$Re.[to]tf ] && {
+            [ -f $CFI/cr$XY -o  -f $CFI/$Cn$Re$XY ] && {
                 ui_print "  Fonts exist in $CFI. Do nothing!"
             } || {
                 gfi_dl $GF_condensed
@@ -102,7 +102,7 @@ gfi() {
 
     $MONO && [ "$GF_mono" ] && {
         ui_print "> Monospace"
-        [ -f $CFI/mr.[to]tf -o  -f $CFI/$Mo$Re.[to]tf -o -f $CFI/ms$X ] && {
+        [ -f $CFI/mr$XY -o  -f $CFI/$Mo$Re$XY -o -f $CFI/ms$X ] && {
             ui_print "  Fonts exist in $CFI. Do nothing!"
         } || {
             gfi_dl $GF_mono
@@ -119,7 +119,7 @@ gfi() {
 
     $SERF && [ "$GF_serif" ] && {
         ui_print "> Serif"
-        [ -f $CFI/sr.[to]tf -o  -f $CFI/$Se$Re.[to]tf -o -f $CFI/ser$X ] && {
+        [ -f $CFI/sr$XY -o  -f $CFI/$Se$Re$XY -o -f $CFI/ser$X ] && {
             ui_print "  Fonts exist in $CFI. Do nothing!"
         } || {
             gfi_dl $GF_serif
@@ -136,7 +136,7 @@ gfi() {
 
     $SRMO && [ "$GF_serif_mono" ] && {
         ui_print "> Serif Monospace"
-        [ -f $CFI/or.[to]tf -o  -f $CFI/$So$Re.[to]tf -o -f $CFI/srm$X ] && {
+        [ -f $CFI/or$XY -o  -f $CFI/$So$Re$XY -o -f $CFI/srm$X ] && {
             ui_print "  Fonts exist in $CFI. Do nothing!"
         } || {
             gfi_dl $GF_serif_mono
@@ -154,6 +154,17 @@ gfi() {
     ver gfi
 }
 
+fontfix() {
+    FONTFIX=`valof FONTFIX`; ${FONTFIX:=true} || return
+    afdko || return; local i a=$@
+    [ $# -eq 0 ] && {
+        ui_print '+ Fontfix'
+        a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
+        for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done; return
+    }
+    for i in $a; do $TOOLS/fontfix $i; done
+}
+
 ### INSTALLATION ###
 
 ui_print '- Installing'
@@ -167,11 +178,11 @@ config
 mkdir $FONTS ${CFI:=$OMFDIR/CFI}
 gfi
 ui_print '+ Font'
-cp $CFI/*.[to]tf $FONTS || ui_print "! $CFI: no font found"
+cp $CFI/*$XY $FONTS || ui_print "! $CFI: no font found"
 [ -f $FONTS/$SS ] || SS=
 [ -f $FONTS/`valof SSI` ] || { [ "`valof IR`" ] && SSI=$SS; } || SSI=
-[ -f $FONTS/$MS ] || MS=; [ -f $FONTS/$MSI ] || MSI=
 [ -f $FONTS/$SER ] || SER=; [ -f $FONTS/$SERI ] || SERI=
+[ -f $FONTS/$MS ] || MS=; [ -f $FONTS/$MSI ] || MSI=
 [ -f $FONTS/$SRM ] || SRM=; [ -f $FONTS/$SRMI ] || SRMI=
 
 DS=DroidSans SSP=SourceSanPro
@@ -179,24 +190,24 @@ DS=DroidSans SSP=SourceSanPro
     mv $FONTS/$SS $FONTS/$DS$X && SS=$DS$X
     [ $SSI = $SS ] || { mv $FONTS/$SSI $FONTS/$DS-$Bo$X && SSI=$DS-$Bo$X; }
 }
-[ $MS ] && {
-    mv $FONTS/$MS $FONTS/$SSP-$SBo$X && MS=$SSP-$SBo$X
-    [ $MSI = $MS ] || { mv $FONTS/$MSI $FONTS/$SSP-$SBo$It$X && MSI=$SSP-$SBo$It$X; }
-}
 [ $SER ] && {
     mv $FONTS/$SER $FONTS/$SSP-$Re$X && SER=$SSP-$Re$X
     [ $SERI = $SER ] || { mv $FONTS/$SERI $FONTS/$SSP-$It$X && SERI=$SSP-$It$X; }
+}
+[ $MS ] && {
+    mv $FONTS/$MS $FONTS/$SSP-$SBo$X && MS=$SSP-$SBo$X
+    [ $MSI = $MS ] || { mv $FONTS/$MSI $FONTS/$SSP-$SBo$It$X && MSI=$SSP-$SBo$It$X; }
 }
 [ $SRM ] && {
     mv $FONTS/$SRM $FONTS/$SSP-$Bo$X && SRM=$SSP-$Bo$X
     [ $SRMI = $SRM ] || { mv $FONTS/$SRMI $FONTS/$SSP-$Bo$It$X && SRMI=$SSP-$Bo$It$X; }
 }
-
 ORISS=$SS ORISSI=$SSI ORISER=$SER  ORISERI=$SERI
 ORIMS=$MS ORIMS=$MSI ORISRM=$SRM  ORISRMI=$SRMI
-install_font
-[ $Sa ] && rm $FONTS/[cd]*.[to]tf
-false | cp -i $FONTS/*.[to]tf $SYSFONT
+
+install_font; fontfix
+[ $Sa ] && rm $FONTS/[cd]*$XY
+false | cp -i $FONTS/*$XY $SYSFONT
 $SANS || $SERF || $MONO || $SRMO || $EMOJ || rm $SYSXML $PRDXML
 
 src
