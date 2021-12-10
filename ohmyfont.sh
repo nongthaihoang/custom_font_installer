@@ -67,7 +67,7 @@ cpf() {
 
 romprep() {
     src 0
-    [ -f $ORIPRDFONT/GoogleSans-$Re$X ] && grep -q $Gs $ORIPRDXML && \
+    [ -f $ORIPRDFONT/$GSR ] && grep -q $Gs $ORIPRDXML && \
         PXL=true && return
 }
 
@@ -109,9 +109,9 @@ rom() {
             ln -s /system/fonts/$up $PRDFONT
             [ $it ] && ln -s /system/fonts/$it $PRDFONT
             fontinst r m sb b
-            local gs=GoogleSans-
-            mv $PRDFONT/$up $PRDFONT/$gs$Re$X && xml "s|$up|$gs$Re$X|"
-            [ $it ] && mv $PRDFONT/$it $PRDFONT/$gs$It$X && xml "s|$it|$gs$It$X|"
+            local la=Lato-; ln -s $up $PRDFONT/$la$Re$X && xml "s|$up|$la$Re$X|"
+            [ $it ] && ln -s $it $PRDFONT/$la$It$X && xml "s|$it|$la$It$X"
+            $STATIC && cp $SYSFONT/$SSS $PRDFONT/$GSR || ln -s $up $PRDFONT/$GSR
             return
         }
         $GS_italic && set $Bo b $SBo sb $Me m $Re r || \
@@ -123,6 +123,7 @@ rom() {
             }
             shift 2
         done
+        eval ln -s $"$Re$X" $PRDFONT/$GSR
         return
     }
 
@@ -203,16 +204,20 @@ vars() {
 
     Bl=Black Bo=Bold EBo=Extra$Bo SBo=Semi$Bo Me=Medium
     Th=Thin Li=Light ELi=Extra$Li Re=Regular It=Italic
-    Cn=Condensed- X=.ttf Y=.otf Z=.ttc XY=.[ot]tf XYZ=.[ot]t[tc]
-    readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn X Y Z XY XYZ
+    Cn=Condensed- St=Static
+    readonly Bl Bo EBo SBo Me Th Li ELi Re It Cn St
+
+    X=.ttf Y=.otf Z=.ttc XY=.[ot]tf XYZ=.[ot]t[tc]
+    readonly X Y Z XY XYZ
 
     Mo=Mono- Se=Serif- So=SerifMono-
     readonly Mo Se So
 
     FB=fallback
 
-    Gs=google-sans RR=Roboto-$Re$X RS=RobotoStatic-$Re$X
-    readonly Gs RR RS
+    RR=Roboto-$Re$X RS=RobotoStatic-$Re$X
+    GSR=GoogleSans-$Re$X GSI=GoogleSans-$It$X Gs=google-sans
+    readonly RR RS GSR GSI Gs
 }
 
 prep() {
@@ -513,7 +518,7 @@ static() {
         $STATIC && [ $SS ] && afdko || { STATIC=false; return; }
         SSS=${SS%$XY}Static$X
         local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
-        ui_print "+ Generating static instance (â‰¤60s)..."
+        ui_print "+ Generating static instance (~60s)..."
         timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
         font $SA $SSS r
 }
@@ -680,7 +685,7 @@ finish() {
     find $MODPATH/* -type d -delete 2>/dev/null
     find $MODPATH/system -type d -exec chmod 755 {} \;
     find $MODPATH/system -type f -exec chmod 644 {} \;
-    [ "$AFDKO" = true ] && umount -r $TERMUX && rmdir -p $TERMUX
+    [ "$AFDKO" = true ] && { umount $TERMUX; rmdir -p $TERMUX; }
 }
 
 restart() {
@@ -700,14 +705,5 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀê
-€ !      0ŽÜàOÿb] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J)ðH$lÿZÑet¢Ù[«p#˜ ÉÙÙd1{“2¿Q`öFŒ@ '±èýÒ$kÜF±™´
-¹ÝäNH­Ojým„#+Ÿ}ar*rW½Ý«¡Õd,ß)ü|Tªå Ü½½û£ÙçôNm„%vçä£Â,Dë‰j€3s‰	vhÂ^JÏ‚–ùZ9}”ŠBÕ^£ bdR"ÚQÞßÕ|ŽØP2paZÓaYÜ
-Za«.B~yn¨÷%{!6¡Éãÿs@‹²ü]!õðÅ{Å<Ù[ÝDrwy+jÅH\¯íè%
-£?„³þ5sô±)ªµ—q´Š1C\,Ä”³#Ù· ,2^Ú°¬¤q8ÎÑ—ûøG!ªò âÄÒÄ§Û{ ²6¥
-4C!Z0½™ª&:”Ž]| 3®ÓeâaD:þî5Ã¸õhOÏÅ‡ˆtºÙ0)f	’Ñìf¬.	üVtÈò3çÙØV“N\QÒñirÖZÊ.¶>«ˆ²“nW|¸SþªÕM†Ðpà¦ÿ´(yKô·•f	”WÔ³Æ¾é<n­
-VíBÿ©¯ ñ¯èWøËÒV®‚âìª@!©Í§6ZÕùâÃñÕ%ñ$Ä÷
-ûÖ•ïŠUFôäþyp­8ê>ëÞAF¾¾Ãßƒú	¹çìoãEŸ^•á6#+û§*z´Ì¢%i—‰jÎ5'Ïn¿Öœ:¥´ä«–^TÞÇ5˜ñ‰hoÇáÕE\¢4RíhOì"Ï½UGÜÀÇäÛçæ+­2Ñ`Î	>Q,»c•+ƒŠyâaHÑ0ûO–g—s)I·«Uößzæøï¶\AŠ.dô@÷äŒV: ÈH·àUâÚ¦%-(X|?›9OÏÒöSŽAÌÀåæã,<Ñ¾˜•2£ì¥\u@}š¡"„i8qîoÚ‰øç®›o4ö ?É˜Ø{‘Eyj÷ïáóv2ì€J}YÌŠGâº¼ÝÿÏmžíÒýwE
-Šù¡ccáAÍ<&k …ü9y„61È$™ý,¬¯07(r’V`4€f
-U4/Wm2‡£Ä9#ßÀDkrØ™A§{s_!ö»ñ=
-8‰Û2š$Ò¡œ?ñµ_gÔà‘ÆtŸàØ!OÆ=\~‘`õm ŸÌ:Ž9e‘Ì¯úùnQ.„·§©ºÇ;T“	ESÀ‡gÓ—é³”Pðš2Q¨¶”.™ ¤­^þ“Õ­Vö:0ÀebÃ:C'@Ø›Yðga	ÐÔöwßV6iéjž{þ·±pé\úû»¤Ï©«:û¢eŒsŸ$štÚZ¨…4îÌåQÞjº·‹mê&w#h$²pœo«ôöNR7u‡â0P#…€G¯D˜DÛuW³´$”)­ù!©/ºO7ï"qå´0Èý”y‰½´1þ!ãU{÷ß;ïRqýÞ’ÈC/»ZµC1é+Àw¼¶©TÂÎÄ~e€Ó­ÄÀÅ0óÏÃŽ©ƒ÷Ô{•‡uÂRœ'´<>•qQ:gð€XjIX.‰‘H”kôþ¿ù—;W(²$t‰ÏÆ+‘]¸6ÐÞGNš•Ô­Y÷Vw5Ûx‘‹Ñ§u(xO»YCMFGhµ¬Î	Ó$ ·¿ñ» œ°Ö©“'ÆAù;U+ã Ô aÌTîôÓ0þ¹ö\Zf9Øgÿqƒ¾SÐ5}|Üè-d;uþzz¥D”Ùr‚¦¾„¥Íh#†_Ö‰L<à;Z>u.Á„³kàwÄvþâ‹ÊðF     SÜáL˜ß †€  ÈVQ±Ägû    YZ
+ý7zXZ  æÖ´FÀç
+€ !      kþìkàOÿ_] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J*ŽÃ~Á’r).¦jÙ¯sm³Ùð ÓFÛžå +}½~ÊH³¹Õ,ÜOü:RyÿŠ„ßÉùe8Û‰N7/1êóÅD.¼M7w«Ö¼Ä¶Ú}kñöâcDŒ´–p,:ß{s©p`±æÞÎ„À ×À§;(M¸8ŠþA’,y1Í[­°iák]>"[/<a¸÷C§´˜3s€—xW<eCp{•jÓ§:ƒ‹ó¤º(4“µYÒAk‰Ž!¼Åã¯›á›[ä}”gtéŒ¼¥ku/¼‚ë‚°gâé¤ÀQ»¨}42ÀôþK>6Ô'x¹Ï~V·æ ùõÑ¨´š™Ãµ	8J)NÌætG§3¶A©‘Ø>àª?¶&!Î9[”£+Õ%yÅ ¦âD+{>¯°ÿ4¬ûTž”gDrH%ö®óë·à|³ôúL¡«'K­÷©pÇïâ±hB.võfñŒýoz]pNÊÖ¨ÁIâ[¢­WÛqÕú1nÉÊHcaŠ¸i±fëû{¾*æfàIfÑÍ¡$ ÓÑE–žá„³n›Q’€f³rÿåïŸû©¬°´,ô‰yN{í]|òÌÊ€Ò¨¥½Òs%5¿"ãtm¢wW«%àÂ+è¯kÞˆÛ<Sl2üëØîüS—¬~aE¶Ú¾>ü• üžçHàïÜ‡YtÜtØ]U§€€õL3ÏüMAùWõ\'×tÌY÷†™ F£ìDù€ó„F¬æ]·¨ÍÞËì:ÃÜ§ËòjÇ\…f¾}ðem•Znï›‚äË! žî³Øë{šhUBOºóÚÐx–®Š@7\ÿÖÔðÛšõäígf=,lýúÌÏëGßþ¬¢mfÐ^­¦WJaþ²ˆ häê’;õ®çn½Ûâ=t¤©KêðÅZ—2`™¸zÞ„Â0`‚` ˜L7[Bù3,mvW9g°ûß½'Qçÿ¯¥²ÇV(A±¿KSþÜ}OÃ=TR@¯½Gýñ»J(ããŸ¶ƒ5=|&B’¦P>àåÐÎ£”råð÷€œNƒ–å°*?ZS¿&×z¸0ë… }¡é©â1¬‘â•hôÝ¢¿¿Pû†ó‘ÿ7·(z÷Ü  I>ç—GP‰Ö>Þ¾FÃQ(rk¹óyÃó¤0ÖGŒ/ºç7§ýù5(Ž/4Zå¹vÉn=âÌ…:Í0ì÷”°fZ:%|ÿ•Û«†â „óé*³Úùì¦V`“Õ.—/ÔpÏ³>~ššÅJÎÎžüSŸ3„ô’çöB`k.]NxSš¥€y7IÆãLƒ	\Ôˆ¤‡éJ‚ŠËÐAéÚÏûFyvÿ<eÛpS”Ýñõ°’ Eš«Uµ®|T_Q’%È†k‚‹TH}j‹`';%PJˆQNëN…ÆEå¿±-þÜ·)»ö|Õ³])bÌ¯<–ÍóÌÜ£¾pLR1Ix±[LŠTadÇ‚´-¥K !‚*¬t,®Fâ8ƒošB5¬ìûç+zŒ’¤GyKð¿¸šVW*g€$$%K<ÉT>–ð—ÐËc¾ë—×“™ŸŒ(ûvLó³Ìu?ÿ5Yß¿½Í»J[Dõ¯™µ©E©.¡]Î•ÏædŸHøcúœÖ—¼ùAPêW2@38CBoFN–iŒ ‡ñÁ­†ßYyÃÝPNpP¤nÒÁ†41.§*æ|ùÂS"fÝ[5š^?Ózêˆ)ÄÄ2r½¨ý”%;qciœÅO>   ñ‡Ûö? ƒ€   Y›±Ägû    YZ

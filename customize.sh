@@ -6,9 +6,9 @@ gfi_dl() {
     local link="https://fonts.google.com/download?family=$family"
     local zipfile=`echo $@ | sed 's| |_|g'`.zip
     local zip=$OMFDIR/$zipfile
-    local time=`valof GF_timeout`; [ ${time:=30} ]
+    local time=`valof GF_timeout`
     [ -f $zip ] && unzip -l $zip >/dev/null || {
-        ui_print "  Downloading $font (${time}s timeout)"
+        ui_print "  Downloading $font (~${time:=60}s)"
         ui_print "  $link"
         wget --spider --no-check-certificate $link || {
             ui_print "! $@: no font match, make sure font name is correct"
