@@ -600,8 +600,7 @@ config() {
     dconf=$MODPATH/config.cfg dver=`sed -n '/###/,$p' $dconf`
     UCONF=$OMFDIR/config.cfg uver=`sed -n '/###/,$p' $UCONF`
     [ "$uver" != "$dver" ] && {
-        cp $UCONF $UCONF~; cp $dconf $UCONF; ui_print '  Reset'
-    }
+        cp $UCONF $UCONF~; cp $dconf $UCONF; ui_print '  Reset'; }
 
     SANS=`valof SANS` MONO=`valof MONO` SERF=`valof SERF` SRMO=`valof SRMO`
     FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD` STATIC=`valof STATIC`
@@ -705,9 +704,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀé
-€ !      ë«w àOÿa] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J*·~: •‚›Å#4§†OdË¸@Çjâo,ÇNùE™#ãë	’»ÄZû`y4ZCÖº*l>\jÕ¶™™jûŸºà“+Ð¡döâA¹þ½>á’€–».Ð!+9Õª‡² HÀ5ó³Cé+×ý@˜07Ÿ§5èß=H¬?àúÓˆú»ùxÕk™g;ÁeòÊæ¦Ï³†gš Ãzy;›UŸyŒ4„×ÈðÉËA!Ö=H %2‹µƒ~…,ðpˆR)^æ…qú¶…ÿ-ÏD¤ÐnÂ–®éþ”^OMìâ«ñCâ€d(À›(kâETðX/fÕCÒ7î(î2CkŒÚ °àDßM[©ØuF‚†f{—Ük=›m®È;}%B'&ÑaKW ‚8hä§_%do]¡DÙ`¤v:)!º[á‡P=CœÚ'”# 2&'ìðÏ 
-q™€[vˆCg†±ªs½¸<“ó°]=™{š>›óäÚœ'þ·€B¤1®3œÇ4»ºS¡$mßvº×>B.ÍÙ4Æ%2y""EfÄŽv»nE<ñ›ãû°PM3NYvZ­â/o0½¦Í{‹jX¡™"¸.ª½9Lâ¯Ò€æLþ9pÖÒÃ™õ3¿¢§1äpô·wQ™ß˜ßdO°²ÖžIúQð6 ¼”çXÒ;çê>}ª¶ROñû;×‚úWH–«Òîãß-I1^ªiøGð"÷Ù¾OIàÞ xÞÃ¾“€ÑQÐhŽ,ý«{EÎÙ™öã\Ð†ÿ½ GÛ]Šâýmÿi<°Û-QM9O‘ž¦‡¤üÁÀÊÖ`PÁ8‡R,ÍO¯›z»©±Õ¿M÷Æo¤†ù2‚« 7bª‚6£Z9¤þ{~±.Úè	ÑšµH#CaÏÝ¹K›uªm÷õˆŒž¿š]å¦‘(Q‹ÖçdnR‰KÐ³’U#Š­šû‡$¸,WVNÎQƒŒ1ëÏ^9ÛŠ]L—ê‘W–Tî,ú‰ò´=ôKü=3ZìU7{|é¡–ßPÎLë‹ÄEÕ™[àÛ4oRH7åîf`¹(]IFÝ™Þ† R	/GkáäN‡ƒ×­f»b€| uƒDCÍÊñ¨kÐéO0íæÕ)x%8H%¶›V…‰Uoß´È|XóïÃõØwÕp>çèn¡,Ùº:Ìd€´«‚È©GŒ	”âDæ=÷‚êh’—3Fš‚™ö_#ÀI.-ÆD©Õ7"+-âm®Ìpš°’"$Q«?õcríFÈt7ýˆ“ß5Ùn)ôPž½X3bøãã¢'††hÕøà–)·>âL|tô }jÜA…B˜¦¤+œ^€(Y"§:¥žû÷
-Ò•cËA°øL	µMÍ¾èõÚ  ÖNº+WÀdü×Æv&¾ùý8°ö¶ZV¸Iéë}~¸Y{ûjYmRûœ@Ú‰–[¶©ÜøçE^ªAâ<Û£ÿÆi/›Arï¼¡žÿV3"0¯Ù–­5ä]	PŠþ¿gÅ¹Å
-|bû¼>×36&Bô*Ù8ìŸú@ 8Ä\ãŒæääÔ›ê«ËÜ~‡¿·p”ôvÖCéØ…‰PÆÁt%<uWDh ð‡'ƒ‰Ð1-,?ógÇœläcœÊ~Ÿ±<ñ±º¿Ô8ý!ñ
-£dJ[òé6nÀ„ìT­å€$Ú îtª5¬Þ°Á	+øï}ç–ò,ŠÍQ%üžl'Šš.ƒÍSt      3¾z²º …€  ½ºÂ×±Ägû    YZ
+ý7zXZ  æÖ´FÀæ
+€ !      ãöàOÿ^] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J*·‡½‡Äu!1GÊZÛ]õB„ßtQGá<F~¤Ž‘w EË¦‰NÙŒ’°Hñ!™Y6f&³ÙÜÖ\HT?›ro&p²ƒé{¿ÈãÅÃ‚×$xûÄ:€¡+°¸uø¡ïq“„+tçüæ-:ðí)½(Í`4,§©¦\Æú‹)cMÚ¨YçzšœK½;4Lˆ‚Ü¡Õ0çÐªoÝr^´_êýÍ{?á¾‡{…ÿÙY¬)lW—†\°­àþ;‚yÇü¼Ø(¶ªÎïÿX)w})LXc“ÅÏ@Ø©KõŽ4›	:^ª×2P:4÷éáñs'¥•šöW§þaïþCí‹@*3nêk„Œr,fGü¥¼vW¥ùŠLoÒÉÅwÕ\¶ãåŒîŽD4[Ö ŸbG¤E-QY_Ü,Ç(Uã¡€±LRwF ù&ëîÝîÙCcœhzÎ¯BØÅ¨á·Þu²%a˜îã4e5ÊÄ7z$Šéò¥p¶þXöûÂ¬lH—ÖÔ|¦‹BÓRUB€ZEU¼óß¿„Ê!‹¸|P¾þþg¤m0ü¦ÕfJ-àß\ž¸v’©­:ë~.3"jg¶ç¦CÄ/l1&êiò&ñÜÏÒR0ím­@ÞÅc&²$¥îâ7ÉŽðüÞ²‡ôÂ…('ÿ¾‰Ôœx·F&ÀõJÝörc¹®»b í–!ûT^÷ptú<‡! `y<|q4sîFa·dní$‹è»©ŽßôœNê<U÷gÎw£_PTh˜:n£,<\/Ä0€U¬‡><@Vªwd*>·,úû½'T–*K`=FEúBEÇÔ9áfæ©¨.¨MÎNŒ³Oê€ÂæÚ[šãýñ'¦JTk&H¾Fž+:’Í’)løD|1Qf-Bq|ZZEGQ±^K,³MI4óDÃ"ÿyÌŒ¤»}´­’ÂgC„­Ž@‚À;ëŠa½ÕXúF*[Ý½Ë Ò×’¤ÂEÒ›~Sî%ïD[ŽunQ|DgL“Kí!|è/Ö@Ó
+°4t£µ_Ð‘U«†X÷áíby3b½ÌOÚóŸ³R¦÷ìw´Óƒ´¿fÞùŸü‹ \¦.ˆ×ÎÌ(î„	­ÀDlY`‘ñÊÈÙrÅ°àòv%h*´9Ñú{¹ÐÉÂ›¯½Xû›Ì¾<+w¿_»7N
+ùÝñ›Œ¾²«“ hÖ@Û­_^úq>W ËßWªE@#<%¤?Z†zŠÿT!8q?'äâ|=Ë3;ßU¾è?2æ1ä9ÈiIç_# ó]maG½)i2¾oÕ
+!Á§8êëtJò¢ÅekÇ{Xå(ÖÄ®‰‚¯=ƒoa8¿¬”D7W	‡rOÊãÏÆº4h»ßJ$é$‚£ô=t.PWŽõÄè¯9åŽfŒCWMƒ= ›ñM ©‘÷¼þö}ðßYÕrc),µè{àâAGÐÖÀ“§‚–
+—ž.ó^Y~ôä‰ñ¬ã>N$AÒ/õÙ){¢qjÎ2´§¥ªÓ¥bœéåMÈ,ªÚüµåb/U-a¸\Ò·ªxMøŸþ)!´”âÄµã˜IÙ[—7ä¦æµ­ñ?Œn¤h¾ïìz®ºzBÓä÷=_†b)«~ßÃìÌx€H$Óá„7
+ú3Ý„ôÌTð{vSO”žðäèÿ¯ºÚ`Lêy6ni[+i'€Ž—ÌJ+	ßZŒÞØÐ„ä’‡åGw–µ&rý$àŠï–Cêq±    zN[³¥çt ‚€  ŠÇÊ±Ägû    YZ
