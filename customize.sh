@@ -8,7 +8,7 @@ gfi_dl() {
     local zip=$OMFDIR/$zipfile
     local time=`valof GF_timeout`
     [ -f $zip ] && unzip -l $zip >/dev/null || {
-        ui_print "  Downloading $font (~${time:=60}s)"
+        ui_print "  Downloading $font (≤${time:=60}s)"
         ui_print "  $link"
         wget --spider --no-check-certificate $link || {
             ui_print "! $@: no font match, make sure font name is correct"

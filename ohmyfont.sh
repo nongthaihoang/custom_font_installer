@@ -123,7 +123,7 @@ rom() {
             }
             shift 2
         done
-        eval ln -s $"$Re$X" $PRDFONT/$GSR
+        eval "[ $"$Re" ] && ln -s $"$Re$X" $PRDFONT/$GSR"
         return
     }
 
@@ -518,7 +518,7 @@ static() {
         $STATIC && [ $SS ] && afdko || { STATIC=false; return; }
         SSS=${SS%$XY}Static$X
         local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
-        ui_print "+ Generating static instance (~60s)..."
+        ui_print "+ Generating static instance (â‰¤60s)..."
         timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
         font $SA $SSS r
 }
@@ -705,5 +705,9 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀç
-€ !      kþìkàOÿ_] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J*ŽÃ~Á’r).¦jÙ¯sm³Ùð ÓFÛžå +}½~ÊH³¹Õ,ÜOü:RyÿŠ„ßÉùe8Û‰N7/1êóÅD.¼M7w«Ö¼Ä¶Ú}kñöâcDŒ´–p,:ß{s©p`±æÞÎ„À ×À§;(M¸8ŠþA’,y1Í[­°iák]>"[/<a¸÷C§´˜3s€—xW<eCp{•jÓ§:ƒ‹ó¤º(4“µYÒAk‰Ž!¼Åã¯›á›[ä}”gtéŒ¼¥ku/¼‚ë‚°gâé¤ÀQ»¨}42ÀôþK>6Ô'x¹Ï~V·æ ùõÑ¨´š™Ãµ	8J)NÌætG§3¶A©‘Ø>àª?¶&!Î9[”£+Õ%yÅ ¦âD+{>¯°ÿ4¬ûTž”gDrH%ö®óë·à|³ôúL¡«'K­÷©pÇïâ±hB.võfñŒýoz]pNÊÖ¨ÁIâ[¢­WÛqÕú1nÉÊHcaŠ¸i±fëû{¾*æfàIfÑÍ¡$ ÓÑE–žá„³n›Q’€f³rÿåïŸû©¬°´,ô‰yN{í]|òÌÊ€Ò¨¥½Òs%5¿"ãtm¢wW«%àÂ+è¯kÞˆÛ<Sl2üëØîüS—¬~aE¶Ú¾>ü• üžçHàïÜ‡YtÜtØ]U§€€õL3ÏüMAùWõ\'×tÌY÷†™ F£ìDù€ó„F¬æ]·¨ÍÞËì:ÃÜ§ËòjÇ\…f¾}ðem•Znï›‚äË! žî³Øë{šhUBOºóÚÐx–®Š@7\ÿÖÔðÛšõäígf=,lýúÌÏëGßþ¬¢mfÐ^­¦WJaþ²ˆ häê’;õ®çn½Ûâ=t¤©KêðÅZ—2`™¸zÞ„Â0`‚` ˜L7[Bù3,mvW9g°ûß½'Qçÿ¯¥²ÇV(A±¿KSþÜ}OÃ=TR@¯½Gýñ»J(ããŸ¶ƒ5=|&B’¦P>àåÐÎ£”råð÷€œNƒ–å°*?ZS¿&×z¸0ë… }¡é©â1¬‘â•hôÝ¢¿¿Pû†ó‘ÿ7·(z÷Ü  I>ç—GP‰Ö>Þ¾FÃQ(rk¹óyÃó¤0ÖGŒ/ºç7§ýù5(Ž/4Zå¹vÉn=âÌ…:Í0ì÷”°fZ:%|ÿ•Û«†â „óé*³Úùì¦V`“Õ.—/ÔpÏ³>~ššÅJÎÎžüSŸ3„ô’çöB`k.]NxSš¥€y7IÆãLƒ	\Ôˆ¤‡éJ‚ŠËÐAéÚÏûFyvÿ<eÛpS”Ýñõ°’ Eš«Uµ®|T_Q’%È†k‚‹TH}j‹`';%PJˆQNëN…ÆEå¿±-þÜ·)»ö|Õ³])bÌ¯<–ÍóÌÜ£¾pLR1Ix±[LŠTadÇ‚´-¥K !‚*¬t,®Fâ8ƒošB5¬ìûç+zŒ’¤GyKð¿¸šVW*g€$$%K<ÉT>–ð—ÐËc¾ë—×“™ŸŒ(ûvLó³Ìu?ÿ5Yß¿½Í»J[Dõ¯™µ©E©.¡]Î•ÏædŸHøcúœÖ—¼ùAPêW2@38CBoFN–iŒ ‡ñÁ­†ßYyÃÝPNpP¤nÒÁ†41.§*æ|ùÂS"fÝ[5š^?Ózêˆ)ÄÄ2r½¨ý”%;qciœÅO>   ñ‡Ûö? ƒ€   Y›±Ägû    YZ
+ý7zXZ  æÖ´FÀé
+€ !      ë«w àOÿa] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J*·~: •‚›Å#4§†OdË¸@Çjâo,ÇNùE™#ãë	’»ÄZû`y4ZCÖº*l>\jÕ¶™™jûŸºà“+Ð¡döâA¹þ½>á’€–».Ð!+9Õª‡² HÀ5ó³Cé+×ý@˜07Ÿ§5èß=H¬?àúÓˆú»ùxÕk™g;ÁeòÊæ¦Ï³†gš Ãzy;›UŸyŒ4„×ÈðÉËA!Ö=H %2‹µƒ~…,ðpˆR)^æ…qú¶…ÿ-ÏD¤ÐnÂ–®éþ”^OMìâ«ñCâ€d(À›(kâETðX/fÕCÒ7î(î2CkŒÚ °àDßM[©ØuF‚†f{—Ük=›m®È;}%B'&ÑaKW ‚8hä§_%do]¡DÙ`¤v:)!º[á‡P=CœÚ'”# 2&'ìðÏ 
+q™€[vˆCg†±ªs½¸<“ó°]=™{š>›óäÚœ'þ·€B¤1®3œÇ4»ºS¡$mßvº×>B.ÍÙ4Æ%2y""EfÄŽv»nE<ñ›ãû°PM3NYvZ­â/o0½¦Í{‹jX¡™"¸.ª½9Lâ¯Ò€æLþ9pÖÒÃ™õ3¿¢§1äpô·wQ™ß˜ßdO°²ÖžIúQð6 ¼”çXÒ;çê>}ª¶ROñû;×‚úWH–«Òîãß-I1^ªiøGð"÷Ù¾OIàÞ xÞÃ¾“€ÑQÐhŽ,ý«{EÎÙ™öã\Ð†ÿ½ GÛ]Šâýmÿi<°Û-QM9O‘ž¦‡¤üÁÀÊÖ`PÁ8‡R,ÍO¯›z»©±Õ¿M÷Æo¤†ù2‚« 7bª‚6£Z9¤þ{~±.Úè	ÑšµH#CaÏÝ¹K›uªm÷õˆŒž¿š]å¦‘(Q‹ÖçdnR‰KÐ³’U#Š­šû‡$¸,WVNÎQƒŒ1ëÏ^9ÛŠ]L—ê‘W–Tî,ú‰ò´=ôKü=3ZìU7{|é¡–ßPÎLë‹ÄEÕ™[àÛ4oRH7åîf`¹(]IFÝ™Þ† R	/GkáäN‡ƒ×­f»b€| uƒDCÍÊñ¨kÐéO0íæÕ)x%8H%¶›V…‰Uoß´È|XóïÃõØwÕp>çèn¡,Ùº:Ìd€´«‚È©GŒ	”âDæ=÷‚êh’—3Fš‚™ö_#ÀI.-ÆD©Õ7"+-âm®Ìpš°’"$Q«?õcríFÈt7ýˆ“ß5Ùn)ôPž½X3bøãã¢'††hÕøà–)·>âL|tô }jÜA…B˜¦¤+œ^€(Y"§:¥žû÷
+Ò•cËA°øL	µMÍ¾èõÚ  ÖNº+WÀdü×Æv&¾ùý8°ö¶ZV¸Iéë}~¸Y{ûjYmRûœ@Ú‰–[¶©ÜøçE^ªAâ<Û£ÿÆi/›Arï¼¡žÿV3"0¯Ù–­5ä]	PŠþ¿gÅ¹Å
+|bû¼>×36&Bô*Ù8ìŸú@ 8Ä\ãŒæääÔ›ê«ËÜ~‡¿·p”ôvÖCéØ…‰PÆÁt%<uWDh ð‡'ƒ‰Ð1-,?ógÇœläcœÊ~Ÿ±<ñ±º¿Ô8ý!ñ
+£dJ[òé6nÀ„ìT­å€$Ú îtª5¬Þ°Á	+øï}ç–ò,ŠÍQ%üžl'Šš.ƒÍSt      3¾z²º …€  ½ºÂ×±Ägû    YZ
