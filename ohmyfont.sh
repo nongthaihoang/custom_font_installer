@@ -21,6 +21,7 @@ SYSETC=$MODPATH/system/etc
 SYSEXTETC=$MODPATH/system/system_ext/etc
 SYSXML=$SYSETC/fonts.xml
 MODPROP=$MODPATH/module.prop
+SysXml=/system/etc/fonts.xml
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC
 
 FONTS=$MODPATH/fonts TOOLS=$MODPATH/tools SH=$MODPATH/ohmyfont.sh
@@ -215,20 +216,19 @@ vars() {
 
     FB=fallback
 
-    RR=Roboto-$Re$X RS=RobotoStatic-$Re$X
+    Ro=Roboto Ns=NotoSerif
+    Ds=DroidSans$X Dm=DroidSansMono Cm=CutiveMono
+    RR=$Ro-$Re$X RS=$Ro$St-$Re$X
     GSR=GoogleSans-$Re$X GSI=GoogleSans-$It$X Gs=google-sans
-    readonly RR RS GSR GSI Gs
+    readonly Ro Ns Ds Dm Cm RR RS GSR GSI Gs
 }
 
 prep() {
-    [ -f $ORISYSXML ] || abort "! $ORISYSXML not found"
-    vars; romprep
-    ! grep -q "$FA >" /system/etc/fonts.xml && {
-        find /data/adb/modules/ -type f -name fonts*xml -delete
-        false | cp -i /system/etc/fonts.xml $SYSXML && ver '<!>'
+    [ -f $ORISYSXML ] || abort; vars; romprep
+    ! grep -q "$FA >" $SysXml && {
+        find /data/adb/modules -type f -name fonts*xml -delete
+        false | cp -i $SysXml $SYSXML && ver '<!>'
     } || false | cp -i $ORISYSXML $SYSXML
-    sed -n "/<$FA *>/,$FAE{/400.*$N/p}" $SYSXML | \
-    grep -q Roboto && readonly FB=
 }
 
 font() {
@@ -381,10 +381,19 @@ fallback() {
     faq="\"$fa\"" fae="/$FA.*$faq/,$FAE"
     [ $fa = $SA ] || fb="/<$F/s|>| $FF=$faq>|;"
     [ $name ] && name=name=\"$name\" fb=
+
     xml "$fae{${fb}H;2,$FAE{${FAE}G}}"
     xml ":a;N;\$!ba;s|name=$faq|$name|2"
     [ "$fb" ] && xml "$fae{s| $FF=$faq||
         s| postScriptName=\"[^ ]*\"||}"
+}
+
+fba() {
+    [ "${FBL:=`sed -n "/<$FA *>/,$FAE{/400.*$N/p}" $SYSXML`}" ]
+    if   [ $fa = $SA ]; then echo $FBL | grep -q $Ro || fallback
+    elif [ $fa = $SE ]; then echo $FBL | grep -q $Ns || fallback
+    elif [ $fa = $MO ]; then echo $FBL | grep -q $Dm || fallback
+    elif [ $fa = $SO ]; then echo $FBL | grep -q $Cm || fallback; fi
 }
 
 lnf(){
@@ -444,10 +453,7 @@ rename() {
 
 sans() {
     local fa=${1:-$SA}
-    [ $SS ] ||  [ -f $FONTS/$Sa$Re$X ] && {
-        [ $fa = $SA ] && $FB || {
-        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
-    }
+    [ $SS ] ||  [ -f $FONTS/$Sa$Re$X ] && fba
     [ $SS ] && {
         local up=$SS it=$SSI
         mkstya; fontinst; return
@@ -459,10 +465,7 @@ sans() {
 
 serf() {
     local fa=${1:-$SE}
-    [ $SER ] ||  [ -f $FONTS/$Se$Re$X ] && {
-        [ $fa = $SA ] && $FB || {
-        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
-    }
+    [ $SER ] ||  [ -f $FONTS/$Se$Re$X ] && fba
     [ $SER ] && {
         local up=$SER it=$SERI
         mkstya; fontinst; return
@@ -473,10 +476,7 @@ serf() {
 
 mono() {
     local fa=${1:-$MO}
-    [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && {
-        [ $fa = $SA ] && $FB || {
-        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
-    }
+    [ $MS ] ||  [ -f $FONTS/$Mo$Re$X ] && fba
     [ $MS ] && {
         local up=$MS it=$MSI
         mkstya; fontinst; return
@@ -487,10 +487,7 @@ mono() {
 
 srmo() {
     local fa=${1:-$SO}
-    [ $SRM ] ||  [ -f $FONTS/$So$Re$X ] && {
-        [ $fa = $SA ] && $FB || {
-        [ $fa = $SE -o $fa = $MO -o $fa = $SO ] && fallback; }
-    }
+    [ $SRM ] ||  [ -f $FONTS/$So$Re$X ] && fba
     [ $SRM ] && {
         local up=$SRM it=$SRMI
         mkstya; fontinst; return
@@ -705,14 +702,11 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀÈ
-€ !      E2ðàOÿ@] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%J9!Ä«íñÐŒ³ïCˆÈÇ»žD©ë“ŒÅÁ®²¯w¬†
-†•24õNËeü¸ æÁK†§R~‘ÞSïS9"¼p_©ºÂ€ß¿$MA—"‰¤&uaØ$Æqy——ÃfvXc†°*¿pó}‹!]HÐ• ÆuB'öêÿj4‡d]ÆBó¶óàã‡P~*b–qÛÙmãMT&ò.·?÷\%S Ç vð×kL÷~²ÞÎt¥×ßÀ{åÖ1\#:OÏ;u§ce²^Ž¾è—»ñ“’öÞÍŒÙåÊŒþ"aÔÍ…ËunÝcvødûú)ok >‘ÈÌÉ8/£eÞ¨Nv˜§…øB-s˜Š5—±-v“KÊé›Þæ“pxp˜Ü`ê^¾—Ì§:³çYÛýaaßOÞ¢"’YaÅKÒ•­­Ž<¨?ðøÔ Âµ»âÀl]™Î6 2¿]9R¯A†úÁÎeój±ÔÖ¬«¬+L¨Û0uupw¦K”Á
-å€ÌÍùuOvÅ]M,õ]J±N®LDáþ6-Ö¦ü¯[õƒ¢Œ‘Åcî—>‘ÐÌ_””…•à<ä³4²µ+|´^vÓ\>‰ºE£`¤¦&†xÊ´)œ^brRUs$½‹¯¬˜Ý»<t†wIÖÝ3É‹¼Éy­~ƒl|ß˜{¤ÝKífðÑ—«þ:[ÅtÎrC+f²\<#†¶e¼!ewp¬ 
-;ƒ°ÑHa),sÖžÜsºû¼]Ç¦´ÜoY/xMwM“?pWEƒV~6©•nã®x²Šo:>hXŽEb!ºmÛ'(]‚uD¥&Çœ“(¥ Ï&Ê´Ê5©$IÄåVòí3ÕOTó«Ü| $£VL‹?.ÓE®ªÀ¯¶UÒô*¨•ÿmW¸Rõ8ÂÆ'9C_7pã6{ÜÒ©Dr-îêúùÓ³Õ?8ûoZÑµëî<s´õ}–ƒÿ‰X ~ÓÃs–?þEt/o‡KlÆ7q} è›bŒæÃ^}I©¢Ænø¹Ð×Ó4ËyX´;váy”ž`@?ðýNTR;ˆ¶Ø÷ˆ£‹Ü_ÓÑžM¸i4žt F¢Ë¹yi0}ŠŠÓàïúŒ‘2 Øw(*"Î›ÿZ‚tcÖ ø2ç2¤N2±2„§nê–Û§¬Zó·RtŠ¢M
-¬Ç»]ÚÞµ\º,_š‡›åƒEl7±¿ÝÆzDÊéI½#BÐÛùfåª»ôóV¦E©|¸W&;a‚B÷åQãÍƒµÚÊw	zgþˆ©YÁ‡UB9ÝñYˆñÝÅ»[Åº'âê)}Š
-?±íØ5ÖNêSÌ§j³Øy6~icN©Éwëð{™Ä|Aùr'v«%i‹ÕO6^Ñ‰ „Ðfê†em4E‹xÌ{Çu¢§­Â)ˆ;¯É—Qþ±vÃõž^"~fwªv7 ïÂBÙÖ) ’›¤ÓiªÍßn#(—\l8~H® Ó[7æÞ¶ªpz·1˜w¦ÅûY®2EíB-Wk„Ã3þÏ –Àù¼ú+ëœŽÂ†?wÒÇ‡û¸CšÁ ÌýŒŒ¯óÂ#g¤…~„ÕYª›ß5d„¯Þ\“%:"ö•Ì÷æ{>Qp
-¯.ô˜èÍkþ,|ë,´ù¦ñ%"/zU’D&î
-;Ö~9lÙçúÑ {Æ³1(Â0À6×fC”¬[/‚ÂÙ( ]ÚrÌµþ®/œÔ-  ›YùI2' ä
-€  òO
-)±Ägû    YZ
+ý7zXZ  æÖ´FÀË
+€ !      ž}ŒàOÿC] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²%OH‹Iu—#QÝ"áôSa*¥i‰ä8%7g#bØ9©=~¡8jÇ²8Ø·šàÇºëÉS`¸Fú“ÕeÑšÛˆÃJËWí-%‘˜ßô©]2”¢–mÄY´èZÙŽ$ks¹nö€ãù°_Ó»]a¾úá[ÂLø']÷K R€A[wª”f7¥—	„:?©—4€6Û-nìùÕNc@¹[‡ƒ@ªñ©QÊ|ÍÝYJBØ†°á`ò7¦ªæ–T¬ôè°ºÓž$]/ÐËb¼RR¬x’BXäØÌ¹÷«42ÝÓˆškõ¾9z¶
+Îšû$ø¸ÿ3jÿ$þåJ]KÐ­ÝðØ
+O6çº_@AC;£'jÉ]·`¦»B}è`ý€•é!BØx*­‚‘\ÿBXcæ¾‹¶p·_1Ÿi‚ÛÎÊ’3ÔU°w´9²€¿Ûe/f—xC‡:}Ss¤Hÿ÷Q&éXw:¯ž9þbyzÏ9÷©vpxŒ†c/†þþ¦†µ¢ñh›gûŸ­ Sþ~z†7N´ÒªP¢ÅpÆ³qIŒî¶_),F¿†-F´…Ï?þÀ€æ*wE¢DôâYÔ±Gä@¤mŠý‹
+é©Íí'úá/†@½²•è©.p2ÃWúéÆSc&WÎd<y D±©ëX‹\&‘fûeFiÒ¢äow„9ê\~•`’žPP€ªaŽXÆÇï5• UZûmJŒü¹ß›N•j¿mˆÁÞ†Mx¨SššÉ‰Rýt¹›ˆðÏ^˜ÀÉàtf¬ FØ?¯ú|×g‰bšÙÏ ÂD².´+9]¹`éïzÃ†kþ	LÚE…©àFýn:‘ý4&32vîFº1û¨â».ï±{½s#âaDtSÔãÓ‚KA!°W6Æàýuwñ#ç”×\8ÁÎœ43	—
+#[•JÓyìJ÷˜tü½5îàK›V @e¹Ô^÷ Ô¾eòpö,%ïÇ$Qt6ß"ÃU=›‹ tò „ô"ÃÌ²û¯¦µªŠô‹zÛDBw(æÈ÷ó¶°2W³E4ÑkÒî[<¬ígKÕ?TŠe~Œ$ Â>fÚõ·ÿÆ
+¶g´ô_¬ìg>¤+®Ä‘pÏ?üç7÷òÕcpÖ¼+Q*Ùz,LšDcr;-cp¥½©µÄÑ4û’­¶t 'E5Ù®“–fý¤6Ì–ç*I#9G3Éf[Sm	L§IPïE0}åïÒ÷?÷FãÞóàü`Û‹»7Év¹V”ÞaÈß”F¡b+TáÖôÀŠ‹3Z„n5z¸îLÉêá'áTè&0Ùæ2’2ªi7ÛT99Æ®ˆ¾¢ê-1ôâ\ Ó†¡¼~5ñ˜¥GCù§'™# Ï±EÃjNø®ž÷ÞZŠvSÑ;@`J/éwH±¼'/k+‘à#svjúx	.ÛãæùãÃö©(ë¯“=«z§ZÎ¿K^åÔ,¢Îa»LãKç‹LXØ¯àX"Ñ¹¬ÅXbÏ´?¸uïÇq0H°¦€ÂEZÊxE{ß.îŸ¬ãÒ;Š¥š¯p$šY]Ây×öÃ0•ÚŠÝú<êtËþtà Ü¬b‰ì³=	è_†.ô¦Q +ÑC¦àtÚâëoŸ#K@HÍ:Èª6®b¢ÑÖñhd5…ÑŸ×€(ÃÚðÌÉë®œÆ1xIôË¸õÇÈO[i64õÐ—VW   ª™ê+Dµ65 ç
+€  \=ž¯±Ägû    YZ
