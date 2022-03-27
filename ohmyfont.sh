@@ -57,7 +57,7 @@ xml() {
     case $XML_LIST in
         *$XML*) ;;
             # remove comments
-        *)  sed -i '/<!--.*-->/d;/<!--/,/-->/d' $XML
+        *)  sed -i '/^[[:blank:]]*<!--.*-->/d;/<!--/,/-->/d' $XML
             # change single quote to double quotes
             sed -i "s|'|\"|g" $XML
             # cut one line <font> tag to new lines
@@ -184,19 +184,19 @@ rom() {
         return
     }
 
-    # Oxygen OS 11 (basexml)
+    # OOS11 (basexml)
     [ -f $ORISYSETC/fonts_base.xml ] && {
         cp $SYSXML $SYSETC/fonts_base.xml
         OOS11=true; ver basexml; return
     }
 
-    # Color OS 11 (basexml)
+    # COS11/OOS12 (basexml)
     [ -f $ORISYSEXTETC/fonts_base.xml ] && {
         cp $SYSXML $SYSEXTETC/fonts_base.xml
         COS=true; ver xbasexml; return
     }
 
-    # Oxygen OS 10 (slatexml)
+    # OOS10 (slatexml)
     [ -f $ORISYSETC/fonts_slate.xml ] && {
         cp $SYSXML $SYSETC/fonts_slate.xml
         OOS=true; ver slatexml; return
@@ -502,13 +502,13 @@ fba() {
     # List of fallback fonts. Used to avoid to make a family fallback twice
     [ "${FBL:=`sed -n "/<$FA *>/,$FAE{/400.*$N/p}" $SYSXML`}" ]
     # Roboto
-    if   [ $fa = $SA ]; then echo $FBL | grep -q $Ro || fallback
+    if   [ "$fa" = $SA ]; then echo $FBL | grep -q $Ro || fallback
     # NotoSerif
-    elif [ $fa = $SE ]; then echo $FBL | grep -q $Ns || fallback
+    elif [ "$fa" = $SE ]; then echo $FBL | grep -q $Ns || fallback
     # DroidSansMono
-    elif [ $fa = $MO ]; then echo $FBL | grep -q $Dm || fallback
+    elif [ "$fa" = $MO ]; then echo $FBL | grep -q $Dm || fallback
     # Cutive Mono
-    elif [ $fa = $SO ]; then echo $FBL | grep -q $Cm || fallback; fi
+    elif [ "$fa" = $SO ]; then echo $FBL | grep -q $Cm || fallback; fi
 }
 
 # assign closest styles to missing ones
@@ -976,7 +976,15 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ“€ !      mÄ\åàOÿ‹] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²-ayy}‡>Óçäãh\?¡òªæÙ–æo±Êöº.¶Nì"ÁJ„=@Bµ kXàœôæã‘ÙaUaìÀ©’5-ì¯ÚhO‹‰§ó>¢	°ÙùŸØš9Õ vddUè? İùÚB/æœbÌwUG¨>¿ùÁ¬‹y|ÖÍ…3çã£ zGek|ÙgKİ9=Şƒ,ùl@èjè´Æ® \tMåĞQÔ¾ShŠì®Ğpe•vúQò{1šm¤"ÇÎƒÎAËP­ë·bÏÒÆã:-;‚U"Z¯m2Ìç¦›î¨P529ƒ¤2)Ézñæ)"CKÇ›Fd åÌ÷B!K¯×œMës0	~€Á;ZF®íú¸–°«,È¿÷.T9Å&)htÒ…äÑ¢ÓÉojÜtÉ€8„æRÉ³
-uÉG}+GNZQ“’ï¾ËµÔVRâÂ°R9#š[B8Ì¯û×Ÿ›™‘½æĞ4´DRîúØœ¶)\T‰uÎÆ@Ífˆ=¬ G3ü%D*j3'»­4MÌÖK†‰7ş,.Ø´öm¬N¢{£T]ÿ*3}ê¹|ƒÓGÿ)]Êh2f™Jœbj— ˆÿ˜ƒp‚ıjÆ–İ¯½¨1Ş",«£5—~öAÅm‰¸ÑÇ‹6’´ã¶
-Ã Ğü¬èXzÊ‰1nÓ;Õ:R!Æ¤PË—Hz`D‚&ÖÚêfèÕMëü ®'!Ôfx'h±¦æ^ƒqV<2q²Ì“‚ìÍ™J3Šâé®z¶J³Xh|r£>B³£–$lØUÀ¹@’üïòª’ä—(hMmYïo¢,\EQRt×uêUüüfÁĞ9cI*'kŞO>İÀ"áLûŸ¿¶`­K?ê­ßíc2)ÎïÂm¨Àd;”€˜éÂ¼§,RÀöD(gşÙ,ë—Ã‘1'²ùäÎCÿ!äå!²FË™& ¤ÄêNo,$][Æ7êÒ¨ÏoêUîNÀ0'ËR¸*¦ÜµóïõÒQúˆş€;Ñ?Í.EÛ²DM5¤ÿÜïS
-%[g	(RÓqvs”œwqBˆ1•O8ÂÏº÷b|g­ òø{X¶w™“´ıô÷—ÕZûzSúÿ!¬Œ²ÿ/±°*hçB<°F|úİ–ªºÁR˜é¡Ï=é˜ê*~ıô™r\/Ï2sÅ)á9[]ş=àÄQÊ> i’À³‡a*ågBÇáO×]»ÍğjA?ëFL_vŸoeòcÓÕ)€—÷$óÀ…pÄE(s²¬×ÏrÀfí€âŠìÓæ °†ò¤·‰	*&z­ 0„n—Í:Æ<O>FøîŠvz7«l,H;hËjÄM°5Bà’ş7Å‚¤…l‹¬]|ùpPOgŒ=Râ\ÍİÓßşš0sMïz4+Şbæ›©cÂ\|Äó±!ZYU¦µµ¿ƒa_b8ÏmÂKyé¨jv{¡)Ô¿NzjiŒ:cËpˆ„Bm«”ùÂ“p×@™Ú½uÙŠéÀ—"ê’è‹É›µó’û£œ#‘ö©Y({5f	ü,¸ÍvC=$n‚Ê‡IJiMğÖìíºÙ±İ™*ÑÉy(±Û†çîeà<¿õî‰=_ÿÌG(IÓF"9kj„lØõõ—>È+fç"ô÷Æéâ²ı‰µöˆE£GI.Eœ”ƒaœ5{6"È_(¿“2ZUŒàâZF„àq“õs«8Ši„Àä·Š?÷\vˆ¥»¤¡7oÙÚQn\(~®_ªØÿ€ukEåd«JB72¢ÄxÍ=CêĞ%dò'.D!«ı²6‚^x}~'VPØLµ:q·óâRÃÓ4€}¢k_Ìv:ø>ğ–ª8Éİ´b<PXwİƒÚ%1Û»`cö”À¹z‚–e^N…6`æûg7Ydµ„ùtD.…÷ŒoPVURåAuqÇõøBÁÔ!ê·ÑIáN+÷‹¯a‚GÛ#ÓT2‰”É~VKJ9¢p]u›i=ÔËÏœ|ŒíkÖÀìòKX§jÂ"¬l0©Ğ¹ÀÃÑ¾”µs;%Âğ‡¸Êiw`@ÍOêXhÍuë1Ø«Ô@!Æf¤Om¦UaäŒÄB‰{Lpß-.6œVPÓ\YgRÙ|™\äè‹¬@yƒ	.5Z  ›ïëf“öŞ ¯€  Miµş±Ägû    YZ
+ı7zXZ  æÖ´FÀ“€ !      mÄ\åàOÿ‹] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²/, _®ä¼»}¨‡JTÿq81œiøàzn2_ Š¯W¨*³
+/U\Ğú%o…%Ã¬¿ßô-SGPØÿ>Û´:^ ŸÀ	–Ô|Wö4+25sM?pÊö¡Ub"‚Ş`c€+Aì(;{Óöç—jğï{väLñ9=Î
+`ª=|ïšeB!«úGÆ·®¥‡}{ÚŠÏD¸%ÿ¬V$ Y-ıÒz¶*ºø0¸¿I4qÅ÷ô>ı“"ˆ¦nSNøş	*ú•Í¶K”n¿’ËcÈécî"WîŞ"¡“ÈĞç¼¢¯4\/Jsr\	•vÏZ3®¨^/ÅfÒUÖ±”JŸÈÀ8VÁ	3äœ€ıİ6õû4v-s8aSe&9çN³wÌ".•ˆ/`ëI¿)Dø¶®¹ÿ1BÆnüNÀ¾0Õı…v¥ğ¶ËKë¨·ÈÖÃÍÙt&ÿ¤®ĞBd¼è1^xûy¢´öi´~A¥”öVfÜ%™ë{9³İİíO4•H^%‚w’°›ß ìvÀ™´|™Eı•£Ê.µ¥/€½¾¹†|GşµÙJÈf Ö‹F€|çdq–FSdj{O’¿¿°ç<[#×Mh±pö–¯Ê~w0º$®Ÿ£#ºì²¢zP0|‘fÃşn!ânSÔ²Cj„6´9ºÂ<Ş³I²Ó?(um¿i»¡’„
+xß¬%S[t§E²mq6^µ3ÜLoefÅÕ¶%Ä6ÜÖªtÈ÷Áğ¥>eóÃh?7—cË
+à¯åBkV/+‹Ä Èªq6;#¤(|nÌaEC±GKÉ0ˆ­öè=NğUÈĞufà‡¤µAÀdœøÆ3è´l€ÛHË•µ”RØüMi«}Œ¡
+M­´cÄõ»Ìnü+¸C&êÀ|1Wg~¿#Æ«¢ª=ƒ±†ÜÉlŸƒc’‘¸Fğˆà –Ø@fÎaÒ ¿¿f‚1´|E})ÑÖRr§Ô— Ş{ô¤¿Vúù ÒÒ€§ıKòus˜½­?tá¶(†V´5»¤³f	ôÜÈ²¶>9p¤~#áœÓöšñ2´ã†k¯7öVıPßÅ)î÷EèlØÖ#’¶†89P±ù9EC²çBÖÌ[@3+#»ßÛâãıƒV÷Û+4]úÁÑü¬¸
+ı„HÄ‹Z[_Kì§†páµH§X|Õ¿‡³Ëó’`L‘j
+eg+î†6@ÚşYTO.SµøBS£¬†©•İ-‹&İ>E¡]¥[0¶äcŒÉ}Ò,ß¦«ıLì1, ¯å¾Î‹œ{WzÌGÏ©`µ«¸øg©Ã	;ƒ8@fË²œÃ8±¿u>£}îGÄ!Q1€ŠÅ¿lŸd<éo‘ïÀ¡ì´D7 ©ŒÓÑ¦İdcàÕòC€»qİù§¤­õ8ˆêõ4p÷mánm8`Ï9ayàÄÓ€Ôí+^Qf¿¾1ª¡U9Ÿ/Ï:SÎ{d\éŞÎk®Ëªq†}ô6jç£`”¬wÔ½f]hj^?Ì´IŸt!XmI¡3Ê¶’Xº —PÜBã‹l«+=Œ´‚A (úY1#<KLü5°ƒœÂ¹O[ë3ÒF"‹»£h³‚«œ¾Ññf-€ur@ï"”š1ßï„F÷³ :æÑŒ_ôAMöM}ºšFOÕ"lŞ÷±”è\ÈBK" WÔ1ÆÓÚ¦)ãÇ¼„&Ï÷nc(·O^[¹öP}d¯´ÅoM×
+¹Lèå-™`ää¨É«kåœœ
+1göCóĞ=qj[ÙDh[JrĞ",-:œ}8Z†uy3ss/Ú/ù*c–ÿŸœÿOò¬Ò:]©ü«Ïñ[ÆºrºF9ŠæzØ| ò
+ à”¾i§hTìjõ
+ïAL£]’»Ô2t»ùT<5e¨1óJ¢â0Š—d	Ç\œ]óìglEW(Y$÷è¿æE@±õÙD…÷Å¯'7øTÙ´;Ká^‘´:²bÕ±nÃDÒ’ò,®ú–)L•ıpŠx¬4)5 “*q¥Ù$şôöáÄ¾¥FQÅş`óyCuç…NMóà|V—²°ƒë¡dÚğ§ı§²å×Õë‘—K,¶é{n‰ĞG7u,-mvÏ`=cU2¥N¯Œ  º}U2¨ ¯€  Miµş±Ägû    YZ
