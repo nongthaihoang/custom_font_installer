@@ -111,9 +111,6 @@ romprep() {
 }
 
 rom() {
-    # source extensions 1-8 (2nd stage)
-    src
-
     # check if PXL var is set to force use fonts.xml instead of fonts_customizations.xml
     # for GS font spoofing
     local pxl=`valof PXL`
@@ -976,15 +973,11 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ“€ !      mÄ\åàOÿ‹] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²/, _®ä¼»}ž¨‡JTÿq81œiøàzn2_ Š¯W¨*³
-/U\Ðú%o…%Ã¬¿ßô-SGPØÿ>Û´:^ ŸÀ	–Ô|Wö4+25sM?pÊö¡Ub"‚Þ`c€+Aì(;{Óöç—jðï{väLñ9=Î
-`ª=|ïšeB!«úGÆ·®¥‡}{ÚŠÏD¸%ÿ¬V$ Y-ýÒz¶*ºø0¸¿I4qÅ÷ô>ý“"ˆ¦nSNøþ	*ú•Í¶K”n¿’ËcÈécî"WîÞ"¡“ÈÐç¼¢¯4\/Jsr\	•vÏZ3®¨^/ÅfÒUÖ±”JŸÈÀ8VÁ	3äœ€ýÝ6õû4v-s8aSe&9çN³wÌ".Ž•ˆ/`ëI¿)Dø¶®¹ÿ1BÆnüNÀ¾0Õý…v¥ð¶ËKë¨·ÈÖÃÍÙt&ÿ¤®ÐBd¼è1^xûy¢´öi´~A¥”öVfÜ%™ë{9³ÝÝíO4•H^%‚w’°›ß ìvÀ™´|™Eý•£Ê.µ¥/€½¾¹†Ž|GþµÙJÈf Ö‹F€|çdq–FSdj{O’¿¿°ç<[#×Mh±pö–¯Ê~w0º$®Ÿ£#ºì²¢zP0|‘fÃþn!ânSÔ²Cj„6´9ºÂ<Þ³I²Ó?(um¿i»¡’„
-xß¬%S[t§E²mq6^µ3ÜLoefÅÕ¶%Ä6ÜÖªtÈ÷Áð¥>eóÃh?7—cË
-à¯åBkV/+‹Ä Èªq6;#¤(|nÌaEC±GKÉ0ˆ­öè=NðUÈÐufà‡¤µAÀdœøÆ3è´l€ÛHË•µ”RØüMi«}Œ¡
-M­´cÄõ»Ìnü+¸C&êÀ|1Wg~¿#Æ«¢ª=ƒ±†ÜÉlŸƒc’‘¸Fðˆà –žØ@fÎaÒ ¿¿f‚1´|E})ÑÖRr§Ô— Þ{ô¤¿Vúù ÒÒ€§ŽýKòus˜½­?tá¶(†V´5»¤³f	ôÜÈ²¶>9p¤~#áœÓöšñ2´ã†k¯7öVýPßÅ)î÷EèlØÖ#’¶†89P±ù9EC²çBÖÌ[@3+#»žßÛâãýƒV÷Û+4]úÁÑü¬¸
-ý„HÄ‹Z[_Kì§†páµH§X|Õ¿‡³Ëó’`L‘j
-eg+î†6@ÚþYTO.SµøBS£¬†©•Ý-‹&Ý>E¡]¥[0¶äcŒÉ}Ò,ß¦«ýLì1, ¯å¾Î‹œ{WzÌGÏ©`µ«¸øg©Ã	;ƒ8@fË²œÃ8±¿u>£}îGÄ!Q1€ŠÅ¿lŸd<éo‘ïžÀŽ¡ì´D7 ©ŒžÓÑ¦ÝdcàÕòC€»qÝù§¤­õ8ˆêõ4p÷mánm8`Ï9ayàÄÓ€Ôí+^Qf¿¾1ª¡U9Ÿ/Ï:SÎ{d\éÞÎk®Ëªq†}ô6jç£`”¬wÔ½f]hj^?Ì´IŸt!XmI¡3Ê¶’Xº —PÜBã‹l«+=ŒŽ´‚A (úY1#<KLü5°ƒœÂ¹O[ë3ÒF"‹»£h³‚«œ¾Ññf-€ur@ï"”š1ßï„F÷³ :æÑŒ_ôAMöM}ºšFOÕ"lÞ÷±”è\ÈBK" WÔ1ÆÓÚ¦)ãÇ¼„&Ï÷nc(·O^[¹öP}d¯´ÅoM×
-¹Lèå-™`ää¨É«kåœœ
-1göCóÐ=qj[ÙDh[JrÐ",-:œ}8Z†uy3ss/Ú/žù*c–ÿŸœÿOò¬Ò:]©ü«Ïñ[ÆºrºžF9ŠæzØ| ò
- à”¾i§hTìjõ
-ïAL£]’»Ô2t»ùT<5e¨1óJ¢â0Š—d	Ç\œ]óìglEW(Y$÷è¿æE@±õÙD…÷Å¯'7øTÙ´;Ká^‘´:²bÕ±nÃDÒ’ò,®ú–)L•ŽýpŠx¬4)5 “*q¥Ù$þôžöáÄ¾¥FQÅþ`óyCuç…NMóà|V—²°ƒë¡dÚð§ý§²å×Õë‘—K,¶é{n‰ÐG7u,-mvÏ`=cU2¥N¯Œ  º}U2¨ ¯€  Miµþ±Ägû    YZ
+ý7zXZ  æÖ´FÀ“€ !      mÄ\åàOÿ‹] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6².÷pš\]±›pWN9ˆÓrN…'¤ícEÈQSfØ÷©'ðäõfäû‰=Qãºâ.Ñc²µkJUXG*ƒi8-ÞsY÷ýŒ<£×y´P¤³¦™%¶{-ú,º
+ŠÓÒ‘=¸ûKÖ[îÈ›(=æ­ƒ±±|þ‘i€dÈ75érw¶ÚQ£¥l\o¤6Qx³Oß2¾(Þ5@
+¤j”Ñlp9k˜/®^x2$pU|•Ñã+JìÉ)‚E"B$ÊYÛÓ™)Yí¡z`CS=`ñ]Õ 7x
+Y‰ð@¡´!Çÿ2
+Žã-þÛE8"ÓÐð.™¿ü×6˜R~zvž•…µÉüm¬Ê”¥j…Mu,Zn6Ä,Ì7kplX´ìp×T½Ò¡q”Ó£óâšØÎçÝ~L´øUÜ3•WêÅ|FÝµ8‘Ð'£ÒUø„	?ÅàŒóú¯Aþ‚®ø%@’52œ@Sº3AA¸õ^ 6ã1î…Ð\J¾|k¶…nŽOo‚[Uu:î†lÒ2â°þBÖ¸¯ºJEt-ÞrbBÙ/ªÑ¤_)¨óøZ3FÖl[Ž©´PNw‰å“è/qcéü˜XÅ}Á?é>õ4:qþ39@O#ü¹¸U VžWVÛ½ô AˆH!§5Ñ5éÚñ‘r(£B–¤ß¦v00Ç µÔ< E¤ßôØ‚šèCò¦Æí è¬@þô¥öt'æðŠˆ®Û pˆ“)5ÚäÅ¦ÝS8ô˜ajg©dz,a‰Ä%Ðiz@MÂs´ØIswE§XÙ1|/÷o¯Óä
+HN•wCüb-í‡qšïš¦2Ãdò»ñóây\Êµ&ðJ9›ƒÃìï¼ÏYH¯Id/§D’Wš÷‘ÚùIˆ-mâ?®CßTöJÏWô°Âs‘ê„ìd$¨V 3:IY0“]Ð`}‰~ø~2©ë¾y'MVˆ~ØŽV¶UcîÊÎDãÅ©)Š.³€ù±_ú.r°?[cAþf÷$Ç ý™³ëßDº¯9¥K»@…§0Dä­þÈJ)fÅ¬óÉ1&rKuíS¡“
+ãL!päôhÚwKË§ƒc^)#†Uª8+ö§õÒ­U¶±ÔâíO\âY+›rôŒØ•œý–0Rcºr'a=°îtQ9bAsøÊôÛ*bòÕ]¬ÿÉ¢˜i"fl-Ïìž˜#­^gþ8Á‰Dâ‹>³—zó•9Õñ±ï(Ulx{à¨þ¢ˆ]ª;jxÃ¹^†‰Å<}€u•ì‡’´Œ†Äì)ŒYì»6ã°Á_I>žH×¿@Zˆ—†­Ós{°xŸï(8Á1¤ÍgË4Í6ò³H±!˜ž%/œ½È=Æ²E#cpaI‹ÉÀÜçRÜÛlMJ*ÁCe<P¢±©´iU¶5Ox¯GOÈq#€•›5xÀC‚ÁGnú…ò ;áRg#ò&¾õHÑ„`–@F…ÿ¼<ó’Y¸Ò¤K(TR{S1'Èà“˜0„JaYÊRËÎÙµªMw©ÜYÊR×D–À€ÜƒJDšFV‚1M­ÜÅ[pDBåmÄ¡k»¼©âgn8÷©j+—*ˆ»"ðjëøz6D‰VÖ^¦ò„õ/¬äå‚Õ‹Á¸ÎrHÒÁ]õuEªF Äˆ¢J½øÈš'ÞM 9ÜnNýNP»ðdäjž¸djvÇÁ£„3úù È£å¼¡¥wÍÈÉÚ€ŒQÒè+¶c&Ÿ*ìÝ%#,éEèÞÃÍZÀðzx³á‹¼¸q'¹J/`vÕÅ'&;ypñÞgõu£¤sèm|Ó\óÃküÉ¬ª†ƒîfÙEÛ‹6ÉŽ„ãyVºÂX¢`áíz0>Ü#Q²PÜÀF(h\ÝA¥¶(¦'7ñ+We,^š¨Ná¨¨wÇTË’ÿ2yuóðyP—ëp?i3îÚº!S³Ýi»¼å¦ÂYC‰n‡`Ô»^ìH·¤·sD(\…Ú·±ÓR– ìZ´2b¿C©€	¹Å¬ÜD‚¸‡u"Fp*@þ™°œ= À¦ö‘`w%üçáG›…Ñ”‚³ØŽ©Y}o_gx‚H•‹J¾‘ k’¼O;»"EFâv]t €Ãì[µðÇ|]<ï2Õdzû¼…ÎÍ«û[@Ä¬0  9k
+glÌ§ ¯€  Miµþ±Ägû    YZ
