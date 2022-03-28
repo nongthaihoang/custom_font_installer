@@ -99,7 +99,7 @@ cpf() {
     [ $# -eq 0 ] && return 1
     local i
     for i in $@; do
-        false | cp -i $FONTS/$i ${CPF:=$SYSFONT} 2>$Null
+        false | cp -i $FONTS/$i ${CPF:=$SYSFONT} &>$Null
     done
 }
 
@@ -680,29 +680,61 @@ line() {
     done
 }
 
+# insert lookup indexes to a feature tag, e.g. calt, liga
+otltag() {
+    afdko || return
+    
+    # extract GSUB table
+    local f=${1:?}; shift
+    ttx -s -t GSUB -f $f
+    
+    # insert lookup index values
+    local i t=${f%$X}.G_S_U_B_.ttx \
+        f=Feature v=value= id=$ID l=LookupListIndex
+    for i in $@; do
+        sed -i "/<${f}Tag $v\"$OTLTAG\"\/>/,/<\/$f>/{
+        /<\/$f>/s|^|<$l $id\"9\" $v\"$i\"/>\n|}" $t
+    done
+}
+
 # font features
 otl() {
     [ "$OTL" ] && afdko || return
 
     ui_print '+ OpenType Layout feature...'
-    local i
+    local font ttx otl
     [ $SS ] && {
-        for i in `echo $SS $SSI | tr ' ' '\n' | sort -u`; do
-            i=$SYSFONT/$i
-            pyftfeatfreeze -f $OTL $i $i > $Null || abort
+        for font in `echo $SS $SSI | tr ' ' '\n' | sort -u`; do
+            font=$SYSFONT/$font ttx=${font%$X}.G_S_U_B_.ttx otl=
+
+            [ ${OTLTAG:=`valof OTLTAG`} ] && {
+                pyftfeatfreeze -v -f $OTL $font $Null &> $TMPDIR/otl || abort
+                otl=`cat $TMPDIR/otl | grep Lookups: | grep -o [0-9]*`
+                [ "$otl" ] && otltag $font $otl && \
+                    $TOOLS/pyftimport $font $ttx || break
+            } || \
+                pyftfeatfreeze -f $OTL $font $font &>$Null || abort
         done
     } || {
         set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
             $SBo$It $SBo $Me$It $Me $It $Re \
             $Li$It $Li $ELi$It $ELi $Th$It $Th
-        for i do
-            i=$SYSFONT/$i$X
-            [ -f $i ] && {
-                pyftfeatfreeze -f $OTL $i $i > $Null || abort
+        for font do
+            font=$SYSFONT/$font$X ttx=${font%$X}.G_S_U_B_.ttx otl=
+
+            [ -f $font ] && {
+                [ ${OTLTAG:=`valof OTLTAG`} ] && {
+                    pyftfeatfreeze -v -f $OTL $font $Null &> $TMPDIR/otl || abort
+                    otl=`cat $TMPDIR/otl | grep Lookups: | grep -o [0-9]*`
+                    [ "$otl" ] && otltag $font $otl && \
+                        $TOOLS/pyftimport $font $ttx || break
+                } || \
+                    pyftfeatfreeze -f $OTL $font $font &>$Null || abort
             }
         done
     }
 
+    rm $SYSFONT/*.ttx &>$Null
     OTL=
 }
 
@@ -949,7 +981,7 @@ install_font() {
 # remove unused files and folders, set permissions, unmount afdko
 finish() {
     find $MODPATH/* -maxdepth 0 ! \( -name 'system' -o -name 'module.prop' \) -exec rm -rf {} \;
-    find $MODPATH/* -type d -delete 2>$Null
+    find $MODPATH/* -type d -delete &>$Null
     find $MODPATH/system -type d -exec chmod 755 {} \;
     find $MODPATH/system -type f -exec chmod 644 {} \;
     [ "$AFDKO" = true ] && { umount $TERMUX; rmdir -p $TERMUX; }
@@ -973,11 +1005,11 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ“€ !      mÄ\åàOÿ‹] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6².÷pš\]±›pWN9ˆÓrN…'¤ícEÈQSfØ÷©'ğäõfäû‰=Qãºâ.Ñc²µkJUXG*ƒi8-ŞsY÷ıŒ<£×y´P¤³¦™%¶{-ú,º
-ŠÓÒ‘=¸ûKÖ[îÈ›(=æ­ƒ±±|ş‘i€dÈ75érw¶ÚQ£¥l\o¤6Qx³Oß2¾(Ş5@
-¤j”Ñlp9k˜/®^x2$pU|•Ñã+JìÉ)‚E"B$ÊYÛÓ™)Yí¡z`CS=`ñ]Õ 7x
-Y‰ğ@¡´!Çÿ2
-ã-şÛE8"ÓĞğ.™¿ü×6˜R~zv•…µÉüm¬Ê”¥j…Mu,Zn6Ä,Ì7kplX´ìp×T½Ò¡q”Ó£óâšØÎçİ~L´øUÜ3•WêÅ|Fİµ8‘Ğ'£ÒUø„	?ÅàŒóú¯Aş‚®ø%@’52œ@Sº3AA¸õ^ 6ã1î…Ğ\J¾|k¶…nOo‚[Uu:î†lÒ2â°şBÖ¸¯ºJEt-ŞrbBÙ/ªÑ¤_)¨óøZ3FÖl[©´PNw‰å“è/qcéü˜XÅ}Á?é>õ4:qş39@O#ü¹¸U VWVÛ½ô AˆH!§5Ñ5éÚñ‘r(£B–¤ß¦v00Ç µÔ< E¤ßôØ‚šèCò¦Æí è¬@şô¥öt'æğŠˆ®Û pˆ“)5ÚäÅ¦İS8ô˜ajg©dz,a‰Ä%Ğiz@MÂs´ØIswE§XÙ1|/÷o¯Óä
-HN•wCüb-í‡qšïš¦2Ãdò»ñóây\Êµ&ğJ9›ƒÃìï¼ÏYH¯Id/§D’Wš÷‘ÚùIˆ-mâ?®CßTöJÏWô°Âs‘ê„ìd$¨V 3:IY0“]Ğ`}‰~ø~2©ë¾y'MVˆ~ØV¶UcîÊÎDãÅ©)Š.³€ù±_ú.r°?[cAşf÷$Ç ı™³ëßDº¯9¥K»@…§0Dä­şÈJ)fÅ¬óÉ1&rKuíS¡“
-ãL!päôhÚwKË§ƒc^)#†Uª8+ö§õÒ­U¶±ÔâíO\âY+›rôŒØ•œı–0Rcºr'a=°îtQ9bAsøÊôÛ*bòÕ]¬ÿÉ¢˜i"fl-Ïì˜#­^gş8Á‰Dâ‹>³—zó•9Õñ±ï(Ulx{à¨ş¢ˆ]ª;jxÃ¹^†‰Å<}€u•ì‡’´Œ†Äì)ŒYì»6ã°Á_I>H×¿@Zˆ—†­Ós{°xŸï(8Á1¤ÍgË4Í6ò³H±!˜%/œ½È=Æ²E#cpaI‹ÉÀÜçRÜÛlMJ*ÁCe<P¢±©´iU¶5Ox¯GOÈq#€•›5xÀC‚ÁGnú…ò ;áRg#ò&¾õHÑ„`–@F…ÿ¼<ó’Y¸Ò¤K(TR{S1'Èà“˜0„JaYÊRËÎÙµªMw©ÜYÊR×D–À€ÜƒJDšFV‚1M­ÜÅ[pDBåmÄ¡k»¼©âgn8÷©j+—*ˆ»"ğjëøz6D‰VÖ^¦ò„õ/¬äå‚Õ‹Á¸ÎrHÒÁ]õuEªF Äˆ¢J½øÈš'ŞM 9ÜnNıNP»ğdäj¸djvÇÁ£„3úù È£å¼¡¥wÍÈÉÚ€ŒQÒè+¶c&Ÿ*ìİ%#,éEèŞÃÍZÀğzx³á‹¼¸q'¹J/`vÕÅ'&;ypñŞgõu£¤sèm|Ó\óÃküÉ¬ª†ƒîfÙEÛ‹6É„ãyVºÂX¢`áíz0>Ü#Q²PÜÀF(h\İA¥¶(¦'7ñ+We,^š¨Ná¨¨wÇTË’ÿ2yuóğyP—ëp?i3îÚº!S³İi»¼å¦ÂYC‰n‡`Ô»^ìH·¤·sD(\…Ú·±ÓR– ìZ´2b¿C©€	¹Å¬ÜD‚¸‡u"Fp*@ş™°œ= À¦ö‘`w%üçáG›…Ñ”‚³Ø©Y}o_gx‚H•‹J¾‘ k’¼O;»"EFâv]t €Ãì[µğÇ|]<ï2Õdzû¼…ÎÍ«û[@Ä¬0  9k
-glÌ§ ¯€  Miµş±Ägû    YZ
+ı7zXZ  æÖ´FÀ—€ !      vKğüàOÿ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6².Ï¬õ0ÆÔPêvñ½›áĞÁN}C'¬§[ÁH`ù¨ê¿a‰úM•±Û|€2Çƒ™ÚO¶ŸZO©ÖE5ÓÛCá6àÙxîİr]ÆÂ“ø¥ê|RJı÷F¥Ö¨Åœ¡Ÿ†şÇ¾ÉŞ7½\›$	 Ë;oí]XâòÔÍ\,şùÅÁkSî÷<WÍY-÷;ÿÎ\Pr¾‰n}jgÊR…_˜Œ;«U&ÙÎÄM`†­l’ø6ÚÂ™2Â
+]¾Ú³:TÕd<÷ù€ßîô²ÑcÚ¥l88(AËÏI1f/·Ø&n²ìv]ıhŠ¯g™ãó{Xöû$(ÿßÃÂÅÓ…[²XÙ¥k>$ã‘ÛV‰eèto†Hë¨Uy¾&˜³Y½É—¹pS‰r™=bØÕÀboÕQç’ë—NIå…´lÂÁ$ŸÄ˜	¨Íp}V‡>òvÚ06êØéÛmƒ4Èc2ªî(üâ¸ø¦óÅbÔT­¥’f³!vÎvÆ)`Ë€=û}³£zú¾uÃ"¸
+"¹…‘eH+ Km †îwwDYˆ.›ò¦zEnğ‚ãÁ}¬¶·v?½J¯YèŞ{½jél©„Á ‹ïÍY¸•RĞ4ß‰ªKú5Så¥Ú‰ìRÖkNãÉÀ°y0wü¼¡‰ÏŞƒ‚zf-ÕM¤9= ,wü‚³ ß/	KDp¨Ó=Š†Ä‰Z·’höf;š,Úîi1ÆÉ¡Œ;Ñ¼˜]ğ©‚…¥hîüÆÚTµØÿ Q’ÍEî+ş~qÙ¯Ë¹u§2LDeœçÛ+™<ß™o¹A»ŞIuç ?€nÕá½ty1©‡Y;©ó¥¤
+·²g]u;µ¥‰KZ=´hÈ"w{*
+NoÓa"L-Ç_çÆŒ{kôÏŠÃÔ*cüîçø ·¢¼i¬y|F@ZàTĞCMÁÜYÜh’±<\»‰ŞÖSy›ºœŸµf² wøh. òø²ˆÑ-qe"rÕtšÜè	¢etÎÚWŸOBÕ,Gé´ÊÀ5MK™ê³š.ùÔ7Ğhş6
+ÍîÏ”pØ ÀD±œÔéõ ¿³ƒ@Â$^a#·û.[éV¡ËÓø¡†j—‡íÍpEª‘¶a6QÅ2ì‰ïÀŞ®hŸkœr#›â¡>sÈ.y'·¦Œ§)¼ß=fZÏÜ3£¾E-ƒæd0&Ó<aÎ<}dÍ²”†ïN›w¶›­T”öX)–;8ñÔu]Jæ]ÿõåX?í	çk@zXÖ–QFÚ›¯?l©¨=)E›r‚WşXšòf‡´G”šÓª‰XËáó³’éÁ3ìBsİâúCòùß%yZkÁaMì4ÏŠ2Ú}´¢}Ò]®%C2t
+!šlg‚M“E_#
+C™ïÄÚçå¬ Êeè¨Ûz„AZ+(&‚Æ¶4Ğîå§‹Tà ¦|¦ÅøCù7­‚gÀ¤í¸º!_ˆÀ?g­¬OKÁÀyaÌ ´T€§_¾@3‘/~%]ã”åbˆA\-?/ñx˜õà¸BmOù{·+v £/­ï¤Wür‰¿¡ä«¬ìàèWfh‰a]ÁåÏ|-:!Ä–İ“|=R"İôJ»z; è²}û«ÿõ…Ê§~§™-Pi™ ©Â¸­ÆÓOØütA¢¿çlìÜ63WH¦ v¥\`ª<l&u%Ê<úÕ‰Á¯sÎ¶W; Ä2=££ÔFAz‰‰£ØÛõë5ùzé¬ŞÁùÒÇ{$zõõæ ßOê¸uA¥ØÈtXYÏHdğÂ<—NáM¦§kñÔ<Âz<_¡£±+ «—F4¾ Ï1ØM7ğƒ£4ü‹çgIO·yeaOSJ#,#Ç¿ejà¡9ú³#wáj"ñ•ŸîyóÚ8?4[ê ½gü¸Ïb¢ˆúË!âZ +xK{`àAí}7¸sÚl½ˆAÆ#¢Êµ»ú`Nd­S…Ty”'ãJÆ‡vŒ–›[’‰skøÒ³<K%…UÃÿÑh§1A ¬ÕŒQeƒŸ&u!‹Øóï,U°`?Zt¾	ÂBÁ#8Üy_×–¹8”Zô@R¬äøRı,~ßÎ¦gF9¥™ñ7SŒè9a<²ÅS3+ÑW   6(äm“ ³€  ­«¡Š±Ägû    YZ
