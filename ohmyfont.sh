@@ -116,7 +116,7 @@ rom() {
     local pxl=`valof PXL`
     [ $PXL ] && [ "$pxl" = false ] && PXL=
 
-    # GS font spoofing - try to replace Gapps font
+    # GS family spoofing - try to replace Gapps font
     $SANS && [ $GS = false -o $GS = $SE ] && {
         local fa=$Gs.* xml=$FONTS/gsvf.xml m=verdana
         # Pixel A11-
@@ -143,8 +143,13 @@ rom() {
         }
     }
 
-   falias source-sans-pro
-    
+    falias source-sans-pro
+    roms
+    # source extension - 9 (3rd stage)
+    src 9
+}
+
+roms() {
     # Pixel
     [ $PXL ] && {
         ver pxl
@@ -203,6 +208,7 @@ rom() {
     grep -q MIUI $ORISYSXML && {
         ver miui; [ $API -eq 29 ] && return; $SANS || return
         MIUI=`sed -n "/$FA.*\"miui\"/,$FAE{/400.*$N/{s|.*>||;p}}" $SYSXML`
+
         [ -f $ORISYSFONT/$MIUI ] && ln -s $X $SYSFONT/$MIUI
         [ -f $ORISYSFONT/RobotoVF$X ] && ln -s $X $SYSFONT/RobotoVF$X
         return
@@ -241,9 +247,6 @@ rom() {
         cp $SYSXML $SYSETC/fonts_lge.xml
         LGE=true; ver lgexml; return
     }
-
-    # source extension - 9 (3rd stage)
-    src 9
 }
 
 vars() {
@@ -701,7 +704,7 @@ otltag() {
 otl() {
     [ "$OTL" ] && afdko || return
 
-    ui_print '+ OpenType Layout feature...'
+    ui_print '+ OpenType Layout features...'
     local font ttx otl
     [ $SS ] && {
         for font in `echo $SS $SSI | tr ' ' '\n' | sort -u`; do
@@ -871,8 +874,8 @@ config() {
     OTL=`valof OTL`
 
     # default values
-    [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true} ];  [ ${SRMO:=true} ]
-    [ ${LAST:=true} ]; [ ${GS:=false} ];  [ ${BOLD:=false} ]; [ ${STATIC:=false} ]
+    [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true}  ]; [ ${SRMO:=true}    ]
+    [ ${LAST:=true} ]; [ ${GS:=false}  ]; [ ${BOLD:=false} ]; [ ${STATIC:=false} ]
 
     # Get VF names
     SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
@@ -1005,11 +1008,16 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ—€ !      vKğüàOÿ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6².Ï¬õ0ÆÔPêvñ½›áĞÁN}C'¬§[ÁH`ù¨ê¿a‰úM•±Û|€2Çƒ™ÚO¶ŸZO©ÖE5ÓÛCá6àÙxîİr]ÆÂ“ø¥ê|RJı÷F¥Ö¨Åœ¡Ÿ†şÇ¾ÉŞ7½\›$	 Ë;oí]XâòÔÍ\,şùÅÁkSî÷<WÍY-÷;ÿÎ\Pr¾‰n}jgÊR…_˜Œ;«U&ÙÎÄM`†­l’ø6ÚÂ™2Â
-]¾Ú³:TÕd<÷ù€ßîô²ÑcÚ¥l88(AËÏI1f/·Ø&n²ìv]ıhŠ¯g™ãó{Xöû$(ÿßÃÂÅÓ…[²XÙ¥k>$ã‘ÛV‰eèto†Hë¨Uy¾&˜³Y½É—¹pS‰r™=bØÕÀboÕQç’ë—NIå…´lÂÁ$ŸÄ˜	¨Íp}V‡>òvÚ06êØéÛmƒ4Èc2ªî(üâ¸ø¦óÅbÔT­¥’f³!vÎvÆ)`Ë€=û}³£zú¾uÃ"¸
-"¹…‘eH+ Km †îwwDYˆ.›ò¦zEnğ‚ãÁ}¬¶·v?½J¯YèŞ{½jél©„Á ‹ïÍY¸•RĞ4ß‰ªKú5Så¥Ú‰ìRÖkNãÉÀ°y0wü¼¡‰ÏŞƒ‚zf-ÕM¤9= ,wü‚³ ß/	KDp¨Ó=Š†Ä‰Z·’höf;š,Úîi1ÆÉ¡Œ;Ñ¼˜]ğ©‚…¥hîüÆÚTµØÿ Q’ÍEî+ş~qÙ¯Ë¹u§2LDeœçÛ+™<ß™o¹A»ŞIuç ?€nÕá½ty1©‡Y;©ó¥¤
-·²g]u;µ¥‰KZ=´hÈ"w{*
-NoÓa"L-Ç_çÆŒ{kôÏŠÃÔ*cüîçø ·¢¼i¬y|F@ZàTĞCMÁÜYÜh’±<\»‰ŞÖSy›ºœŸµf² wøh. òø²ˆÑ-qe"rÕtšÜè	¢etÎÚWŸOBÕ,Gé´ÊÀ5MK™ê³š.ùÔ7Ğhş6
-ÍîÏ”pØ ÀD±œÔéõ ¿³ƒ@Â$^a#·û.[éV¡ËÓø¡†j—‡íÍpEª‘¶a6QÅ2ì‰ïÀŞ®hŸkœr#›â¡>sÈ.y'·¦Œ§)¼ß=fZÏÜ3£¾E-ƒæd0&Ó<aÎ<}dÍ²”†ïN›w¶›­T”öX)–;8ñÔu]Jæ]ÿõåX?í	çk@zXÖ–QFÚ›¯?l©¨=)E›r‚WşXšòf‡´G”šÓª‰XËáó³’éÁ3ìBsİâúCòùß%yZkÁaMì4ÏŠ2Ú}´¢}Ò]®%C2t
-!šlg‚M“E_#
-C™ïÄÚçå¬ Êeè¨Ûz„AZ+(&‚Æ¶4Ğîå§‹Tà ¦|¦ÅøCù7­‚gÀ¤í¸º!_ˆÀ?g­¬OKÁÀyaÌ ´T€§_¾@3‘/~%]ã”åbˆA\-?/ñx˜õà¸BmOù{·+v £/­ï¤Wür‰¿¡ä«¬ìàèWfh‰a]ÁåÏ|-:!Ä–İ“|=R"İôJ»z; è²}û«ÿõ…Ê§~§™-Pi™ ©Â¸­ÆÓOØütA¢¿çlìÜ63WH¦ v¥\`ª<l&u%Ê<úÕ‰Á¯sÎ¶W; Ä2=££ÔFAz‰‰£ØÛõë5ùzé¬ŞÁùÒÇ{$zõõæ ßOê¸uA¥ØÈtXYÏHdğÂ<—NáM¦§kñÔ<Âz<_¡£±+ «—F4¾ Ï1ØM7ğƒ£4ü‹çgIO·yeaOSJ#,#Ç¿ejà¡9ú³#wáj"ñ•ŸîyóÚ8?4[ê ½gü¸Ïb¢ˆúË!âZ +xK{`àAí}7¸sÚl½ˆAÆ#¢Êµ»ú`Nd­S…Ty”'ãJÆ‡vŒ–›[’‰skøÒ³<K%…UÃÿÑh§1A ¬ÕŒQeƒŸ&u!‹Øóï,U°`?Zt¾	ÂBÁ#8Üy_×–¹8”Zô@R¬äøRı,~ßÎ¦gF9¥™ñ7SŒè9a<²ÅS3+ÑW   6(äm“ ³€  ­«¡Š±Ägû    YZ
+ı7zXZ  æÖ´FÀ•€ !      ÛàOÿ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²/$Zä{å
+W¥½0Ğ-ˆçc±Ÿ±&EÄA©TF.î°şGÏpŞŠ
+Â¿úøŠX’«"÷ä£»~Ux­ÒÄ£AL£âaié9f,µA,)ãÛ ~¥ñU6§@-Ïù&Šã$ ÎÙMí`LçêşìFíJo×ïJ\Çj#»v`q+¦m>ŞÓì;'ÊSä«iµP‚@¿@#«<>,"`ÇË#èY8û¨ 2ûÊrF(À.é—À/	a4Û¼ìj×ÔHcN¡ÎQªqò“ŠEYã-t—p'ŒÏA&],v”.6ø³UA„¼û[iÌ›°?@ù?7&$ÚÀÎ¡K¼‹…I\¡Fè3ßƒNrGÈÒ¸DÉ˜ OH%KxÍ°èJóç î8rš˜8ó¹üiòŸeøhSŠ  J©'w+We¤9ÏJÀ[‘`E1_¯ø¦ÒœØ‡9¼Rò›*û”ÿ…ğ1tJ—À`˜d°ºïÜÊN³ÔXò÷âW˜MÌr«ŒÊÇ6„õo¿ éÉŒ"„M8[—Z2®0=ø¨û;íüØvhI0‚œbf/¡ŒšebjÔöjÌĞØc37G­4y|rBø-gJsµ †	¦ÕÄòe0­á¦»"ÚUgì0[âÆó-9‚€:GŸİ=JS ²ö™tT¬ÅbU¸eòBRÀ”¶TzM©Ï‘MaKlŠüagÍ"²ãÄoÊL¯yGvÑúĞî1¦óÉ@øÙé—ñó˜rp‰”œN½Ñ[}w[Wğqx¿£†"üoŠ+<W—ÏÆ=™×)A3ì‡^Å‚‡£É”^ô\Ìƒ88Ÿæòælå›†¨_+ÅgÁÑc9l·lĞ|ä‘»¸‹i5\å¿Ôƒê:Şr±ş³ƒ
+aô
+ò¨akˆfàÀ?%Àõ~?Ò
+W•;FˆZÕI¼ãGz#
+·ÄÆ¶‰qˆ-:é!¡œ\E'z£“®µw×óõ¾)ìÁ×²[ï¹>üÿ+öİ4NÔ½ıÍ¡Wâ^Tsu)bÜL#æ» ¦ÊUšû/z+s¶/Z.­àhïoZ9b”ïû­L ln‚:³Ó°N‰É€àqTæ{0ª’n©‚	¾D˜Ck‰ÿ½áF«x¬N&<±ĞX"X×İe_îÕş/°ğX£8!c»L—¨97ëÄãø´IzÏğóø á“Â‘ãsºû9%
+ Häÿ²-Uö»áu¬B³N(pÌ! Ş~BİZ/Vo®Š¥J¼i©@ò&œS.Ù=LI]ä({¤‘RåB¯?œ‰q8×f·ÃFW™P÷‘ËŒb†œän[¸Ù™œkîø­ßô\äDù¬#¦WØ ä Î6û«Lõ¿½¨aYDğDCç{boxU¤Úı3¤§#.Ë’ˆa7ìú1DÕ(šD½"é#ğ†Ì#(Ù…ı:“æ£Ä\ı¿Õ”C4;ñK×éùT»ß¶B¦Ô½‰¤)7}Fé‰êÄ>#ôhLQ™Ào¤GÑDë§O:ş†èÊ×ô4NF˜G é¦ì°äòÍv'í'œ¢)pU³²ÊUUeg‚MÜ7Ï‡gª9ÃÙÅL[ÀŠÆkP1L:¦!ÇGméÄOÔMFjì‘µGñª¸¿¢€ñĞ†|:
+lş‹ñ¯õéÌ
+UŞÎº÷¼Dy=ƒ§àğ¾4ÓŒQl
+òº.[AÖuÂS~FÎÖí¡[+–9}1Gtö¾¾„Lé/Qÿ.½Cì\¸	å\ÆYGYVN³1d\šìN:Uk]ø‡xîaº3îRÆü«VŸ3ªx±ÙúĞ;ËÓH)Oš|Ãf‘·CC‹™(Á1½ª»ëÁoUjMï¢S2Ë eïØ ’ƒ¯Â±â±ßêFÕÎ¯]‰uu	¼Bx`èI±5ÃYoÕqrÕîv dµóÜ-À@Œ°=N	5¢ jöôcÿl\~§1´‡¢AP¸M®7È³F“²Û:"ŸëÒá¼öØ«ğy{Í4a¯Ct	š1İ§P¤ƒÁB×ÅK´àr&< (ı>ŞÖ»\ŞSY~Ê›Ó„´ôíÎnÃ*“K/øâ¸÷‘w–d=“šZßÃŸsD¡2½Vù¸ìÀÁgLhÒLSÁF    ›ş5åí
+Í® ±€  ¦
+iÇ±Ägû    YZ
