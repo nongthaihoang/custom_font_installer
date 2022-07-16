@@ -154,19 +154,6 @@ gfi() {
     ver gfi
 }
 
-fontfix() {
-    FONTFIX=`valof FONTFIX`; ${FONTFIX:=true} || return
-    local i a=$@
-    [ "$a" ] || a=`echo $SS $SSI $SER $SERI $MS $MSI $SRM $SRMI | xargs -n1 | sort -u`
-    [ "$a" ] && afdko || return
-    ui_print '+ Font tweaks'
-    [ $# -eq 0 ] && {
-        for i in $a; do $TOOLS/fontfix $SYSFONT/$i; done
-        return
-    }
-    for i in $a; do $TOOLS/fontfix $i; done
-}
-
 ### INSTALLATION ###
 
 ui_print '- Installing'
@@ -209,9 +196,9 @@ cp $CFI/*$XY $FONTS || ui_print "! $CFI: no font found"
     ORIMS=$MS ORIMSI=$MSI ORISRM=$SRM  ORISRMI=$SRMI
 }
 
-install_font; fontfix
+install_font
 [ $Sa ] && rm $FONTS/[cd]*$XY
-false | cp -i $FONTS/*$XY $SYSFONT
+cpf *$XY
 $SANS || $SERF || $MONO || $SRMO || $EMOJ || rm $SYSXML $PRDXML
 
 src
@@ -219,6 +206,7 @@ src
 ui_print '+ Rom'
 rom
 fontspoof
+svc
 finish
 
 [ -d $SYSFONT ] || abort "! No font installed"

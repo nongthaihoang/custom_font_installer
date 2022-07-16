@@ -5,30 +5,45 @@
 set -xv
 
 # Magisk and TWRP support
-[ -d ${MAGISKTMP:=`magisk --path`/.magisk} ] && ORIDIR=$MAGISKTMP/mirror
-[ -d ${ORIPRD:=$ORIDIR/product}            ] || ORIPRD=$ORIDIR/system/product
+[ -d ${MAGISKTMP:=`magisk --path`/.magisk} ] && \
+      ORIDIR=$MAGISKTMP/mirror
 
 # Original paths
+[ -d ${ORIPRD:=$ORIDIR/product} ] || \
+      ORIPRD=$ORIDIR/system/product
+[ -d ${ORISYSEXT:=$ORIDIR/system_ext} ] || \
+   ORISYSEXT=$ORIDIR/system/system_ext
+
+      ORISYS=$ORIDIR/system
   ORIPRDFONT=$ORIPRD/fonts
    ORIPRDETC=$ORIPRD/etc
    ORIPRDXML=$ORIPRDETC/fonts_customization.xml
-  ORISYSFONT=$ORIDIR/system/fonts
-   ORISYSETC=$ORIDIR/system/etc
-ORISYSEXTETC=$ORIDIR/system/system_ext/etc
+  ORISYSFONT=$ORISYS/fonts
+   ORISYSETC=$ORISYS/etc
+ORISYSEXTETC=$ORISYSEXT/etc
    ORISYSXML=$ORISYSETC/fonts.xml
 
 # Modules paths
-     PRDFONT=$MODPATH/system/product/fonts
-      PRDETC=$MODPATH/system/product/etc
+         SYS=$MODPATH/system
+         PRD=$SYS/product
+     PRDFONT=$PRD/fonts
+      PRDETC=$PRD/etc
       PRDXML=$PRDETC/fonts_customization.xml
-     SYSFONT=$MODPATH/system/fonts
-      SYSETC=$MODPATH/system/etc
-   SYSEXTETC=$MODPATH/system/system_ext/etc
+     SYSFONT=$SYS/fonts
+      SYSETC=$SYS/etc
+      SYSEXT=$SYS/system_ext
+   SYSEXTETC=$SYSEXT/etc
       SYSXML=$SYSETC/fonts.xml
      MODPROP=$MODPATH/module.prop
        FONTS=$MODPATH/fonts
        TOOLS=$MODPATH/tools
+
+        SERV=$MODPATH/service.sh
+        POST=$MODPATH/post-fs-data.sh
+        UNIN=$MODPATH/uninstall.sh
+
       OMFDIR=/sdcard/OhMyFont
+      OMFVER=`grep ^omfversion= $MODPROP | sed 's|.*=||'`
       
 # abbr. vars
      SysFont=/system/fonts
@@ -40,7 +55,7 @@ mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC $FONTS $TOOLS $OMFDIR
 
 SH=$MODPATH/ohmyfont.sh
 tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH || abort
-tar xf $MODPATH/*xz -C $MODPATH
+tar xf $MODPATH/*xz -C $MODPATH &>$Null
 
 # placebo for afdko - print error if not installed
 afdko() {
@@ -70,6 +85,8 @@ xml() {
             sed -i "/<$F .*>$/{N;s|\n||}" $XML
             # join <\font> to <font> line if any
             sed -i "/<$F /{N;s|\n$FE|$FE|}" $XML
+            # water mark
+            #sed -i "1i <!-- OMF v$OMFVER -->" $XML
             # save the font xml paths to xml list
             XML_LIST="$XML $XML_LIST" ;;
     esac
@@ -94,6 +111,56 @@ src() {
     done
 }
 
+# custom services support in $OMFDIR
+svc() {
+    local omfserv=$OMFDIR/service.d/*.sh
+    local omfpost=$OMFDIR/post-fs-data.d/*.sh
+    local omfunin=$OMFDIR/uninstall.d/*.sh
+
+    # check for any custom service scripts
+    ls $omfserv &>$Null || \
+    ls $omfpost &>$Null || \
+    ls $omfunin &>$Null && {
+        ui_print '+ Services'
+
+        # service.d
+        ls $omfserv &>$Null && {
+            echo 'MODDIR=${0%/*}' >> $SERV
+            for i in $omfserv; do
+                cp $i $MODPATH
+                i=`basename $i`
+                chmod +x $MODPATH/$i
+                echo "\$MODDIR/$i &" >> $SERV
+                ui_print "  $i"
+            done
+        }
+
+        # post-fs-data.d
+        ls $omfpost &>$Null && {
+            echo 'MODDIR=${0%/*}' >> $POST
+            for i in $omfpost; do
+                cp $i $MODPATH
+                i=`basename $i`
+                chmod +x $MODPATH/$i
+                echo "\$MODDIR/$i" >> $POST
+                ui_print "  $i"
+            done
+        }
+
+        # uninstall.d
+        ls $omfunin &>$Null && {
+            echo 'MODDIR=${0%/*}' >> $UNIN
+            for i in $omfunin; do
+                cp $i $MODPATH
+                i=`basename $i`
+                chmod +x $MODPATH/$i
+                echo "\$MODDIR/$i &" >> $UNIN
+                ui_print "  $i"
+            done
+        }
+    }
+}
+
 # cp files from $FONT to $SYSFONT, do not overwrite
 cpf() {
     [ $# -eq 0 ] && return 1
@@ -111,31 +178,31 @@ romprep() {
 }
 
 rom() {
-    # check if PXL var is set to force use fonts.xml instead of fonts_customizations.xml
-    # for GS font spoofing
+    # Some ROMs are detected as Pixel but they are fake ones.
+    # The PXL=false option is to circumvent this situation
     local pxl=`valof PXL`
     [ $PXL ] && [ "$pxl" = false ] && PXL=
 
-    # GS family spoofing - try to replace Gapps font
+    # inject GSVF into fontxml
     $SANS && [ $GS = false -o $GS = $SE ] && {
         local fa=$Gs.* xml=$FONTS/gsvf.xml m=verdana
-        # Pixel A11-
-        [ $PXL ] && [ $API -lt 31 ] && {
-                m=$F.*version; XML=$PRDXML
-                xml "/$FA.*$fa/,${FAE}d"
-        }
-        [ $PXL ] && [ $API -ge 31 ] || { xml "/$m/r $xml"; XML=; }
+        xml "/$m/r $xml"
+        # Disable gms font service. Thanks to @MrCarb0n's discovery.
+        $BOOTMODE && (
+            gms=com.google.android.gms/com.google.android.gms.fonts.provider.FontsProvider
+            pm disable $gms &>$Null
+            echo "( sleep 60; pm enable $gms ) &" >> $UNIN
+        )
         [ $PXL ] || {
             # VF
             [ $SS ] && {
-                for i in r m sb b; do
-                    eval font $fa $SS $i \$U`up $i`
-                    eval font $fa $SSI ${i}i \$I`up $i`
-                done
+                local up=$SS it=$SSI
+                fontinst r m sb b
             } || {
                 # Static
                 set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
                 while [ $2 ]; do
+                    # manually use font() instead of fontinst() to replace all GS
                     eval "[ $"$1" ] && font $fa $"$1$X" $2"
                     shift 2
                 done
@@ -153,36 +220,31 @@ roms() {
     # Pixel
     [ $PXL ] && {
         ver pxl
-        $GS && return
-        $SANS || return
-        GS_italic=`valof GS_italic`; ${GS_italic:=false}
-        cp $ORIPRDXML $PRDXML; local XML=$PRDXML fa=$Gs.* i
-        falias lato $Gs-text
+        ! $GS && $SANS || return
+        cp $ORIPRDXML $PRDXML
+        local XML=$PRDXML fa=$Gs.* i
+
+        # remove GS from PRDXML
+        $SANS && [ $GS = false -o $GS = $SE ] && {
+            xml "/$FA.*$fa/,${FAE}d"
+            XML=
+        }
 
         [ $SS ] && {
-            local up=$SS it; $GS_italic && it= || it=$SSI
-            ln -s /system/fonts/$up $PRDFONT
-            [ $it ] && ln -s /system/fonts/$it $PRDFONT
+            local up=$SS it=$SSI
             fontinst r m sb b
 
-            # spoof Lato
-            local la=Lato-; ln -s $up $PRDFONT/$la$Re$X && xml "s|$up|$la$Re$X|"
-            [ $it ] && ln -s $it $PRDFONT/$la$It$X && xml "s|$it|$la$It$X"
-
-            $STATIC && cp $SYSFONT/$SSS $PRDFONT/$GSR || ln -s $up $PRDFONT/$GSR
+            $STATIC && ln -s $SysFont/$SSS $PRDFONT/$GSR || \
+                ln -s $SysFont/$SS $PRDFONT/$GSR
             return
         }
 
-        $GS_italic && set $Bo b $SBo sb $Me m $Re r || \
-            set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
+        set $Bo$It bi $Bo b $SBo$It sbi $SBo sb $Me$It mi $Me m $Re r $It ri
         while [ $2 ]; do
-            eval [ $"$1" ] && {
-                eval ln -s /system/fonts/$"$1$X" $PRDFONT
-                eval font $fa $"$1$X" $2
-            }
+            eval [ $"$1" ] && eval font $fa $"$1$X" $2
             shift 2
         done
-        eval "[ $"$Re" ] && ln -s $"$Re$X" $PRDFONT/$GSR"
+        eval "[ $"$Re" ] && ln -s $SysFont/$"$Re$X" $PRDFONT/$GSR"
         return
     }
 
@@ -651,6 +713,7 @@ bold() {
     # not VF and BOLD is true
     [ ! $SS ] && $BOLD || return
 
+    ui_print "  Bold"
     # check if Regular is already Medium, otherwise link Regular to Medium and apply changes
     eval "[ $"$Me" = $"$Re" ] || { $Re=$"$Me"; font $SA $"$Re$X" r; }"
     eval "[ $"$Me$It" = $"$It" ] || { $It=$"$Me$It"; font $SA $"$It$X" ri; }"
@@ -658,27 +721,27 @@ bold() {
 
 # line height
 line() {
-    local l=`valof LineHeight`
-    [ ${l:=1} != 1.0 ] && afdko || return
+    [ "$LINE" != 1.0 ] || return
 
     # change font ascender and descender proportionally instead of using Roboto's
-    # This is better in term of font quality
-    ui_print '+ Line spacing'
+    # This is better in term of keeping font quality
+    ui_print '  Line spacing'
+    # VF: sans-serif
     local i
-    # sans-serif
     [ $SS ] && {
+        # make sure SS is not the same as SSI
         for i in `echo $SS $SSI | tr ' ' '\n' | sort -u`; do
-            $TOOLS/pyftmetrics $SYSFONT/$i $l || break
+            $TOOLS/pyftline $SYSFONT/$i $LINE || break
         done
         return
     }
     # Static
-    set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
-        $SBo$It $SBo $Me$It $Me $It $Re \
-        $Li$It $Li $ELi$It $ELi $Th$It $Th
-    for i do
+    for i in $(eval echo \$$Bl$It \$$Bl \$$EBo$It \$$EBo \$$Bo$It \$$Bo \
+        \$$SBo$It \$$SBo \$$Me$It \$$Me \$$It \$$Re \
+        \$$Li$It \$$Li \$$ELi$It \$$ELi \$$Th$It \$$Th | tr ' ' '\n' | sort -u)
+    do
         [ -f $SYSFONT/$i$X ] && {
-            $TOOLS/pyftmetrics $SYSFONT/$i$X $l || break
+            $TOOLS/pyftline $SYSFONT/$i$X $LINE || abort
         }
     done
 }
@@ -704,7 +767,7 @@ otltag() {
 otl() {
     [ "$OTL" ] && afdko || return
 
-    ui_print '+ OpenType Layout features...'
+    ui_print '  OpenType Layout features...'
     local font ttx otl
     [ $SS ] && {
         for font in `echo $SS $SSI | tr ' ' '\n' | sort -u`; do
@@ -747,31 +810,108 @@ static() {
     SSS=${SS%$XY}Static$X
     local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
 
-    ui_print "+ Generating static instance (â‰¤60s)..."
+    ui_print "  Generating static instance (â‰¤60s)..."
     timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
-    font $SA $SSS r
+    font $SA $SSS r && \
+    $TOOLS/fontfix $SYSFONT/$SSS
+}
+
+# replace GS Clock font in the systemui apk
+lsc(){
+    $SANS && [ $GS = false -a $LSC != false -a $API -ge 31 ] && afdko 1 || return
+    ui_print '+ Lock Screen Clock'
+    
+    local privapp=${ORISYSEXT//$ORIDIR\//}/priv-app
+    local app=$privapp/SystemUIGoogle
+    [ -d $ORIDIR/${app%G*} ] && app=${app%G*}
+    local apk=$app/SystemUIGoogle.apk
+    [ -f $ORIDIR/${apk%G*}.apk ] && apk=${apk%G*}.apk
+    local modprivapp=$SYS/${privapp//system\//}
+    local modapp=$SYS/${app//system\//}
+    local modapk=$SYS/${apk//system\//}
+    local fdir=$modapp/res/font
+    local font=$fdir/google_sans_clock$X
+
+    mkdir -p $fdir
+    cp $ORIDIR/$apk $modprivapp || abort
+
+    [ $LSC = def ] && cp $FONTS/LSC$X $font || {
+        local lsc
+        [ $SS ] && lsc=$SYSFONT/$SS || \
+            eval "lsc=$SYSFONT/$"$Re$X""
+
+        [ $LSC = cust ] && {
+            [ -f $OMFDIR/lsc$XY ] && {
+                lsc=$OMFDIR/lsc$XY
+                ui_print '  Custom'
+            } || abort '! Font not found!'
+        }
+
+        # enable tabular numbers and centered colon
+        LSCOTL=`valof LSCOTL`; [ ${LSCOTL:=tnum} ]
+        pyftfeatfreeze -f $LSCOTL $lsc $TMPDIR/lsc$X &>$Null
+
+        # only keep numbers and colon
+        pyftsubset $TMPDIR/lsc$X --unicodes=u30-3a \
+            --passthrough-tables --output-file=$font
+
+        # style
+        [ "${LSCSTY:=`valof LSCSTY`}" ] && \
+            fonttools varLib.instancer -q -o $font $font \
+            `echo $LSCSTY | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g'`
+
+        # fix padding
+        [ ${LSCLINE:=`valof LSCLINE`} ] && $TOOLS/pyftline $font $LSCLINE
+        $TOOLS/pyftlsc $font
+    }
+    # patch apk
+    ( cd $modapp
+    $TMBIN/zip -qr $modapp.apk *
+    $TMBIN/zipalign -p -f 4 $modapp.apk $modapk ) || abort
+    rm -r $modapp.apk $modapp/res
+}
+
+# fix VF default weight is not Regular, status bar padding
+fontfix() {
+    $FONTFIX || return
+    local i f=$@
+    [ "$f" ] || f=`echo $ORISS $ORISSI $ORISER $ORISERI $ORIMS $ORIMSI $ORISRM $ORISRMI \
+        $Sa$Re$X $Se$Re$X $Mo$Re$X $So$Re$X | xargs -n1 | sort -u`
+    [ "$f" ] && afdko || return
+
+    [ $# -eq 0 ] && {
+        for i in $FONTS/$f; do
+            [ -f $i ] && $TOOLS/fontfix $i; done
+        return
+    }
+    for i in $f; do $TOOLS/fontfix $i; done
 }
 
 # spoof static font to Roboto
 fontspoof() {
     # only needed for A12+
     [ $API -ge 31 ] || return
-    # get rid of RobotoStatic (RS)
+    # get rid of RS
     xml "s|$RS|$RR|"
     local id=' index=' ttfs i j k=0 
 
     # rename  the generated static font to RS
     $STATIC && {
         xml "s|$SSS|$RS|"
-        mv $SYSFONT/$SSS $SYSFONT/$RS
         # preserve id 0 for the generated static font
-        ttfs=$SYSFONT/$RS k=1
+        ttfs=$SYSFONT/$SSS k=1
     }
 
     # at least one of 4 main families must be installed
     $SANS || $SERF || $MONO || $SRMO || return
-    # Regulars must exist
-    [ -f $SYSFONT/$Sa$Re$X -o -f $SYSFONT/$Se$Re$X -o \
+    # VF
+    for i in `echo $SS $SSI $MS $MSI $SER $SERI $SRM $SRMI | tr ' ' '\n' | sort -u`
+    do
+        [ -f $SYSFONT/$i ] && ttfs="$ttfs $SYSFONT/$i" k=$((k+1))
+    done
+
+    # Static: Regulars must exist
+    [ $k != 0 -o -f $SYSFONT/$Sa$Re$X -o -f $SYSFONT/$Se$Re$X -o \
       -f $SYSFONT/$Mo$Re$X -o -f $SYSFONT/$So$Re$X ] || return
     afdko || return
 
@@ -796,35 +936,14 @@ fontspoof() {
     done
 
     [ "$ttfs" ] || return
-    ui_print '+ Font spoofing'
+    ui_print '+ Spoof'
     # make ttc
     otf2otc -o $SYSFONT/$RS $ttfs &>$Null || abort
 
     # rework on these roms
-    if [ $PXL ]; then
-        # use Lato (Regular, Medium, Bold), Zilla (SemiBold) for font spoofing
-        [ $SS ] || {
-            # move static fonts to /product, cause they are not needed anymore
-            for i in $Re $It $Me $Me$It $SBo $SBo$It $Bo $Bo$It; do
-                eval mv $SYSFONT/$"$i$X" $PRDFONT
-            done
-            local XML=$PRDXML la=Lato- zs=ZillaSlab-
-
-            # alias Lato, Zilla to GS
-            falias lato $Gs-text
-            falias zilla-slab-medium $Gs
-
-            # link lato to static fonts and patch fontxml
-            for i in $Re $It $Me $Me$It $Bo $Bo$It; do
-                eval ln -s $"$i$X" $PRDFONT/$la$i$X
-                eval $(echo "xml \"s|>\$$i$X|>$la$i$X|\"")
-            done
-            # ZillaSlab
-            eval ln -s $"$SBo$X" $PRDFONT/$zs$SBo$X
-            eval ln -s $"$SBo$It$X" $PRDFONT/$zs$SBo$It$X
-            eval $(echo "xml \"s|>\$$SBo$X|>$zs$SBo$X|\"")
-            eval $(echo "xml \"s|>\$$SBo$It$X|>$zs$SBo$It$X|\"")
-        }
+    if   [ $PXL   ]; then
+        ln -sf $SysFont/$RS $PRDFONT/$GSR
+        lsc
     elif [ $OOS   ]; then cp $SYSXML $SYSETC/fonts_slate.xml
     elif [ $OOS11 ]; then cp $SYSXML $SYSETC/fonts_base.xml
     elif [ $COS   ]; then cp $SYSXML $SYSEXTETC/fonts_base.xml
@@ -857,6 +976,15 @@ styof() {
     }
 }
 
+# read font styles config for VF
+getsty() {
+    local i
+    for i in `up $FW`; do
+        eval ${ups:?}$i=\"`styof $ups$i`\"
+        [ $its ] && eval $its$i=\"`styof $its$i`\"
+    done
+}
+
 config() {
     local dconf dver uver
     # 3 hash signs is used for integrity check
@@ -868,14 +996,15 @@ config() {
         ui_print '  Reset'
     }
 
-    # main var options
+    # main option vars
     SANS=`valof SANS` MONO=`valof MONO` SERF=`valof SERF` SRMO=`valof SRMO`
     FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD` STATIC=`valof STATIC`
-    OTL=`valof OTL`
+    OTL=`valof OTL`   LINE=`valof LINE` LSC=`valof LSC`   FONTFIX=`valof FONTFIX`
 
     # default values
     [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true}  ]; [ ${SRMO:=true}    ]
     [ ${LAST:=true} ]; [ ${GS:=false}  ]; [ ${BOLD:=false} ]; [ ${STATIC:=false} ]
+    [ ${LINE:=1.0}  ]; [ ${LSC:=false} ]; [ ${FONTFIX:=true} ]
 
     # Get VF names
     SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
@@ -918,6 +1047,7 @@ monospace() { true; }
 # main font installation logic
 install_font() {
     rename
+    fontfix
 
     # sans-serif
     $SANS && {
@@ -983,9 +1113,14 @@ install_font() {
 
 # remove unused files and folders, set permissions, unmount afdko
 finish() {
-    find $MODPATH/* -maxdepth 0 ! \( -name 'system' -o -name 'module.prop' -o -name 'service.sh' \) -exec rm -rf {} \;
+    find $MODPATH/* -maxdepth 0 \
+        ! -name 'system' \
+        ! -name 'zygisk' \
+        ! -name '*.rule' \
+        ! -name '*.prop' \
+        ! -name '*.sh' -exec rm -rf {} \;
     find $MODPATH/* -type d -delete &>$Null
-    find $MODPATH -type f -exec chmod 644 {} \;
+    find $MODPATH/system -type f -exec chmod 644 {} \;
     find $MODPATH/system -type d -exec chmod 755 {} \;
     [ "$AFDKO" = true ] && { umount $TERMUX; rmdir -p $TERMUX; }
 }
@@ -1008,13 +1143,14 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ˜€ !      €ÿdªàOÿ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+7¼?M‡ƒñ•…/Ë]
-E.Â©ÛÀdKC)%?(ˆWXÿîã2O­ò"ËŠ3F9	>CâÚê?ÈÀYšRªÜw6!vßà¯ÍÏ8tP•ó7á+…Yü’8WÐ;†E\n©ßÎªû­\|Ø÷Iž¹ô÷’C¢Je`.ØkÉôlj7õN]¨=Óç¿w›L>˜){SBð·^n»/òäîwÙÔÉb¶ËŸŽ»q.|s/Û•_á¼Mo’àc	ý»PL†ðƒÈCîVŸ	&”/ùÀ²UÇ¨ã1y3
-m‘¡î2æŒEÅBÛ§ÃWòð ½0Õæ«åÙ[åküÆ<°£$ø<wéQüÝqŽ|!„©,“T„AîX¯i>ì.˜4ÉþÃ°™¦Ó·"ëwÂ Ucˆì²,ß<`È#0ýx,ª»	« 634shÕÛßåÄn–3þ*ëƒ!YLNù(ôzòîyô}÷_î®¦ÛvÆ˜ìÑ‚ŸøíÊ|›7Tóü¹+S» ‘`–¯—îRú$(ô1ÿ ¦f¸¥ÐZë\o=X G; ~x•#Íò%
-—¿=•WàÚP	-'¼Wé²å·Ã
-!ÏËÅÉëÉX»ñƒ-8Ê,$öÚ‡óŽ’¥<¼%“Ò`©ßB1÷OÇm^\iµØýö‡Ý ÆIöå¯ÛV½PÙq¬gNºóHRn%N1»)?:ÈHEm%õÔ=²'Zºb"éw†!ê½ëLVõùî¹žØ0ÃFKô¾¢px)‹#³êðý–·Wd–TÞ/¼g•„'Ì†Kö¨@2Ý6Ù@5e½l¬ˆ(18x… ”S`ŒZéÀ·}¶ÑªQµxP¬Yi@+–¯êøI>°LÈ9±/¦Ù¿ffì¬Ç×àÖ2‚ìo÷§9öÿ=Í9N¯L4ºd`WG!ÐÂ$2¥‰ÎˆJïcÍ'±UÜc;ì…ˆP¦ù	È÷™øÍöˆ‡Ìe‰w!gZi¼#ùÌ Àðj­â‰¬æÎè9	`±×ƒˆˆ€—†ÕVÚÿMïùˆhNfôIÓ{B”¿c~úK˜Pó
-_Q©¤¬ƒ¼) $ TÚ#¤~Û<FÂ_½
-®ûf5!}Üæ$2d¢ìüã¢6ý¥4•8åøð0¹ã=¼úe$&åžG=*©e¿e‰§Ž¹X÷ºÌÉGqrîqÙ5Œ«{v­µÄÌá¿=“ñw[õ…HVp}¨àéÝ‚55™+„5/jíÂ´´®ÊQ?#zƒ÷vØqäi1û–ûþ¢Â«›¦_68ÑÃ0ýá7o$Ã¡ì6~d4—K¼ÏÓüßÿ9ˆ€±Ž_‚®Ê–Ü?‰«d!õæ.L	tQÏw4þçyQAÍaÏß°®å£r“ù9ÜÜÇß7•é¸¹ ƒ|(Ý+p_À¥'¢,0{Ó~J^Ãsë„Þ0F¢…¯øþOjÓøß#^ftFcÆÞ¤yüµ‹‘Sf23Ç*ácŽŸ‡‰(ò±]¾…#úªW:Í6éìp>g9äœ8®ÉÃKb³OÕj"²]¬Ý 
-ÿ4ÂŸtêì'É³"¤AEÖ„Hªšä|[öÒœº¹nÊò¯¿é”™²ù˜Èðí"ub‹ÂMœµ²äÎÖZÿoS’ÈPÿ%< ë9ÓàòuÔ³ kzRÈ÷‡¢ë7BvÁQ6Üž½§½ŽvÄ˜»T®f”µ ‹r€qKd»ò=‘“ÉÞÍsÒÊÐñøKfLà è]¾ãÅ-?Çoÿ»€¦²vúát‘œ³ði’ú°8¿Gåp*6O#jïznˆTŸa‘Ú«|b	ÇL¢¤Ô§
-2“™Ð%5!m‰,-¨úc®+‹Üv,c}+¶l‘§„b[²èbj¶©K§>â\<[¦ËÞµ9¬UcîÎ™¶ìlU–üÛ¼AH&Â_#ÈånÀÍ›D
-¨kyúÏé•¥Ø5ŒÔä©<3QùµÃ<öX*(gÁzkÍþµk„*"1Où »&^á¬Õ†öéš¦ÒÏ‰ôå©urw“˜Ü×Ešv´B0Áw‹)qå£,s2WðAÈØc'ôÿ4—‘š1«AÚ9F<»ó­b+ˆ¥îûY-Q¡ÉI¸4œ¥N3ÈŸÕ½kÊÊ6.*œÖÌ ð¸€·M¨Á| ´€  ›¤—±Ägû    YZ
+ý7zXZ  æÖ´FÀÒ€ !      $¾ „àOÿJ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+<‹ñP‹'±ømßÁc\Â·™<ÓmØƒÈõ2³=»í!
+ëª[BA9rJTŸœbV¿§×lZ¨04eP¨wØI-þÌíµ|·Ù}GÆî©èš`2J(oCû³Æ¯öf‡ÿÑN.òÍ51:´KŸnvÌLïÄ¨•tbÚHtñˆ•.×õÂlº3lýÇ„3ªÞ`èÎõ¦Â;R÷X€Va·û…ê9¸¶Ô½Ü€22øÕäyõvñsèêÜf¥;áKîžœy¢}^¨geÎ@\ò²Nz¼Qí«®Á’¤¹ÕÃ	L+÷?ÍZÚ°GÀûÏ&|–9N×Àç¾ˆîH,D€¹¿&‚\£jƒ„™¾"e’S“B.C×C²}C0j¢Ú#Xû¤ˆTf~ó…°ˆ„Í™NânWWÁ¹"ÞY™•æc;ùÅó	ŒÐBž5|BYþy>­{¥¢–Pdu¢í^¤ÝàTBš÷ÇTñ€ôóv`ÄŒ˜áþ•E—{Iˆ“>ó®, %ç|-ÈÛîëyù²<Åk%jÀ¶ë.©æ¼(Üà!YrO>ä,¨%H½/«šæFjÑ™à»ë8ðôMa·(ÐÖž˜Þ‹k§:–¶È@ŽM4¾O~…Úðv,©æ&,$®\ðÖW½ä ¬ <|sÿ‚‹ùøEqjiÍ
+,û´[Ý¥td©»RŠá^0g³ÏÕ65¾(#ÈwZdÁ(ªØ„Ù-›L·Å6²pýƒ,ëÁ¬¼ë ¯”{-](ºRÈÕBÒ¶ñÂ\ŒòÙS(á×bV§?6©dÉ;‚Š®lßx<«®YXá{g-.Ì/Ñ2AÉ~6f˜žgY˜
+Ì½îƒ‘q>ÛAÞXˆî:'tðY=hÃ ¤{³ÜˆÞí TÉŠ6 `"
+‚_.‡Y>T©ûTi£”/Pï&©âƒû~?bÕXY#ÞºóÉ_—©•BóllÏÍìý¿„sKzà‹‚ù]­óctE£ÎÛqëG îÃ¶Lø_XyÇ?T{Yý&^Û%q!øÂ»á62°VÒ<ö*ëï¤::QBÃ_p>BäÏáVœI¶Z^äxƒq¨}¤Pè\¾Ùf¹ïr¤š-Îê€Ó®ù3¸Á{Oë­L)ÞbæŒIÉé;·•­½Vw¹gÄW¿ÿn?ûþ…³eåœä(caéŸùq6„êÝ#]vBÂFôªŒbU²O¥‘J¨âá3‹K«ÓŒêU¢›Þ«øÇ¿2ÌàJËÍ!%uxŒ:NýÉëhƒÝB°·í¤
+š…Ðèd«$×8 -½z‰[nçÌ£C·cç³%\½
+q°»%,òÁ©2ŸŒúŒ²\ÙÐ‡º„çp™ÿè"LVzGˆnÜ…5’Ù H©
+W6m”_ù¼€´¥z„ =Ò ·1{ÔñÝ%BLº<VÏ‰ÞÁIçht4«x/W\Ñ–Êÿ>rÕè·Ur£áa\,–d¡¾ösg5Ró#W~Ù3sl*ƒ—õò@Ô'7åàµˆ»3•ÄaPÐgÔÝ)â7´ßïF5«‹5ê`HåˆµÎ­¸ü®Û…pÛÏ5y¤~YÌàžL³}šB±	­á±?Ñ«T>´™äÌ“jœAëä}Òeçn‰!mpÙå@øÂ˜dò?liÁõò„y¦oÑñR]ñb{P¯ã~¹Vl­QoHâk¿¤=.O¥Äù™Š±±=²XCÈ{Þí!]bp(’}¥¨+ÄMÐY#è0ÎQ„‹t×Ì[8hßdLð$‚´ž[. ãœ×†ŒGgr’W[Br$6"ß¦q2õ(+?hõ”u—d%i+óÑã~^ÈÜz£l7Þð;‚ý2ñŽ8é³9ì‚dZþ‘L‹˜‚éÎ­å©ú´ES	˜ãƒOÜ	&˜Rõðc2‡Í^ÅÝÏ}  ´ý7azÊŠ»6Ñ:CÇ44W½íaúô~¾²,‡§m*ÿÃÈü§,ÍÅ82KÚœ8+v¡­mÙöLö8b´WëBUþßùŠ!£»yü·5
+¯n„¬’ælcs
+¤?;'*[œ†e®W-y£¬‡">!¤<–à*g6L}Ào¬ ¡Ùçh—Ì[_«ƒ/ë%Ç•«E¿îNËtùÖ âRÕªÉÄ‘PØÆ`Náa_“XD- ^á÷”ÏÁƒÚöÁøG)	ÔK¤zz)K^ðÁ7"D7Ácg+w8Uºõz,ÂvñÔZx¸ŠXŽÕ«UÞ) :ŠU¬k€ALÍMúðÑ¡Ÿn­€ÓtÐ¼kdj%„òÅÔPñgG|p£VOuôÝ|xQ!Îï…^ÿ+M`¬â~íïvû‘sË[¿¬`×“>QÖÄùâñòëÄ£Œ+ó•]¥AÒUo>ÙŒ$ã‘   ~çú
+pÞ-Ñ î€  TÊ}±Ägû    YZ

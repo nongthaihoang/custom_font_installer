@@ -1,6 +1,6 @@
 # Custom Font Installer
 
-[![updated](https://img.shields.io/badge/Updated-Jun_15,_2022-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Jul_16,_2022-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![forum](https://img.shields.io/badge/Forum-XDA-orange.svg)](https://forum.xda-developers.com/t/module-oh-my-font-improve-android-typography.4215515) 
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
@@ -75,5 +75,5 @@ All steps are the same as in static fonts. Except the followings.
 
 ## Google Font Installer
 - Download and install [Google Fonts](https://fonts.google.com) easily.
-- Just add `GF=<fontname>`, e.g. `GF=Open Sans`, to the config file `OhMyFont/config.cfg`.
+- Just add `GF = <fontname>`, e.g. `GF=Open Sans`, to the config file `OhMyFont/config.cfg`.
 - Static fonts only.
