@@ -75,5 +75,5 @@ All steps are the same as in static fonts. Except the followings.
 
 ## Google Font Installer
 - Download and install [Google Fonts](https://fonts.google.com) easily.
-- Just add `GF = <fontname>`, e.g. `GF=Open Sans`, to the config file `OhMyFont/config.cfg`.
+- Just add `GF = <fontname>`, e.g. `GF = Open Sans`, to the config file `OhMyFont/config.cfg`.
 - Static fonts only.
