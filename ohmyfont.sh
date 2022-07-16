@@ -53,9 +53,11 @@ ORISYSEXTETC=$ORISYSEXT/etc
 # create module paths
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC $FONTS $TOOLS $OMFDIR
 
+# extract data
 SH=$MODPATH/ohmyfont.sh
 tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH || abort
 tar xf $MODPATH/*xz -C $MODPATH &>$Null
+rm $SH
 
 # placebo for afdko - print error if not installed
 afdko() {
@@ -86,7 +88,7 @@ xml() {
             # join <\font> to <font> line if any
             sed -i "/<$F /{N;s|\n$FE|$FE|}" $XML
             # water mark
-            #sed -i "1i <!-- OMF v$OMFVER -->" $XML
+            sed -i "2i <!-- OMF v$OMFVER -->\n" $XML
             # save the font xml paths to xml list
             XML_LIST="$XML $XML_LIST" ;;
     esac
@@ -723,7 +725,7 @@ bold() {
 
 # line height
 line() {
-    [ "$LINE" != 1.0 ] || return
+    [ "$LINE" != 1.0 ] && afdko 1 || return
 
     # change font ascender and descender proportionally instead of using Roboto's
     # This is better in term of keeping font quality
@@ -893,7 +895,9 @@ fontfix() {
 # spoof static font to Roboto
 fontspoof() {
     # only needed for A12+
-    [ $API -ge 31 ] || return
+    [ $API -ge 31 ] && afdko || return
+    ui_print '+ Spoof'
+
     # get rid of RS
     xml "s|$RS|$RR|"
     local id=' index=' ttfs i j k=0 
@@ -907,6 +911,7 @@ fontspoof() {
 
     # at least one of 4 main families must be installed
     $SANS || $SERF || $MONO || $SRMO || return
+
     # VF
     for i in `echo $SS $SSI $MS $MSI $SER $SERI $SRM $SRMI | tr ' ' '\n' | sort -u`
     do
@@ -919,7 +924,6 @@ fontspoof() {
     # Static: Regulars must exist
     [ $k != 0 -o -f $SYSFONT/$Sa$Re$X -o -f $SYSFONT/$Se$Re$X -o \
       -f $SYSFONT/$Mo$Re$X -o -f $SYSFONT/$So$Re$X ] || return
-    afdko || return
 
     # go through all font families and styles, if a font exists, assign it an id
     for i in "$Sa" $Se $Mo $So; do
@@ -942,7 +946,6 @@ fontspoof() {
     done
 
     [ "$ttfs" ] || return
-    ui_print '+ Spoof'
     # make ttc
     otf2otc -o $SYSFONT/$RS $ttfs &>$Null || abort
 
@@ -1149,10 +1152,16 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀÙ€ !      É…ËàOÿQ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+<‹ô¬âV'oŸp+Cÿ»HÚv°&üä©×#u~Òmœ¥Êè[áZ1Èk r´ÂÖË'ï*¢9´ËûóOŸž=V9	¶Œ€HüÓXŠjÄ(ÖRvö£DZ½!«
-çx¹Ú	>M˜XQe9ñ3H=›rA×(Âx¾†VX3oþúÞqÅ©+ØÐ'ÿÙ$¢5?‡¸Æ\qèO1#µŠA ñÕ/Pi•¼É½ëd‘\WÛÚçXvˆWgÇ˜X01Éû!=‘ýe]û—ùXyxèº‘,‰U}µd©›9aŒÿ«_X $$X¶çÓ<Æ¾¹ÝÚzÞ¶¼ 0> ‡‘Ê†öÙŽœË1©^>b¦{¢8WBPb3¦ÓŽÑÖŽnàìcÖœNšwÉr¥­Ê¯Pk¶Áâ¨ìúÚ´ƒ?ÔÇ\Ÿñ0(Þ«¯8ÿên×î%WH%ˆ4NPQœÏfÅ™üISVÂ/N ‘¨­D}MO|lôF:»ã©*Ü+¡®˜ä`(F4‘AŒ]¸çù\ñá8ô¾²œV+™l¯Zäf|˜[ªeOYV¸€Û¸­[¿Óa¿¬]ØW„D¬J‘¤Õ‚ŒÊ§Nƒ>Ãˆòbâ9ÔÃ¿9?¦˜¸;”$Š<$M™NªLQ';±œ«dþ}¯¢ T÷¢$å­Ø9–Û$«lv;Ë|@˜NÈÛÕ€@ÛÙ†î²n›QúÜC!ÃGÂ`ìÒ½Ü„Aä³7-<Ý/Nï÷öB—¼Gge±bf,Q¼
-Ž<L~|ß<Èg¯C2OIC’¿ :r^µv“í"*bQO´{øXê!ÑÍU–:;„ÌA‡[¸\ã£†¥,mÚ1^ÿ|7…‹PQ–B/õæÙ¤W.‘s©˜í»« ;*Ã®³ü€ÛjìIÃmc"½„<žCžiƒc€/š’jÀãµ¸äÝQjBûŽÍ]ô¼ª2LO|éSÌ$ÄÍÏþ_c1ZõÛØ‚«X;F°æ²éI8;¨žÞl]˜Ñ]éîEÿø#êìi%—3þ¶’F´Ö3Æ®Èô¹ÆÙ<Ó]pNÈÎÕæÅ0Jõ}ÑâIQñ’W?õ2zp5Œ»@9)Ò.£™©á-=÷ƒ¿oý]O©M]ü¢=6™ç)Š  ¬¸N“ÃBi@uYà’|8oq®¢mëXT »HsS<÷öìQ¢@µHJS­;Vå°‚n]Yå±ýÂ¦!G­ÌÑ +¯õ¹F÷³DÿnyŽD§øÚD1ç®¹Å5=•žlp c\ž¦x€5l¨;C:.íAµ%î¡wRøéc÷Óò§t1ò[Ê›Ï€ÙrZCDar·CFI!úqµ¶¬9ÝY‹õì(xB;Lq02ÝÆÁÉ¥ù2i˜Ù{ïóõ=ï ag|éáÓEŠÞ
-›²Z«,5“:»9y÷Û#oŸ2õP
-Zƒ÷N5Í,2ŸsWæp.uR©ÿz†%&T}’^J|rdÏÍˆ JPt[eYMÄì9»·˜+E!«ñEµV~³.O©’ŽŸÎ+‘æKb´#¾ÅšüîóŸqlž×mõå}:ä+Ë	©jÃ’X
-3®³³²ûö%}u•jÐ8 éd‹Üù›É˜Ú­Ú—_=ÄÌ4äxÓ]ábM©T4²€”2q^:Ûê&È,ª´LË>,DC¹pU —Õeº_à{6yjåƒj$Ÿ­·}»¦YÇì,sz+ÎòalÈÿÆ¦í‘CïƒÉm²±^YÇªî½|ËÏ«'aNÊá›æÔg%DŸÅ1tšÜÁ@b31Á­”lØ)t+‚8>G”RTq’8ã'¹só„²Z–G¸QjƒzùÂF_KX4ê˜Z•ªÈ ô1ÛÅ`ï/&Æ[¤‘g–-i¦ËM=d@ç¨ nûgd9Q2ÓÒø2¼îƒa4miÀ
-<UÉ®-ÜÛàë¦ðÈ9>¤ç*Dèß cÙ\Ð©Îµ:Oùõ:]«§eVûRë·Dù{U˜-nÓ>-¨'ŸmïÄŸ8ÐKzZÂÂ»‹„ÍÄš«õùí±ü×øÒ˜Ð,Éf<ë-üC«‚ç‚à¾fÊê~‘ží M/§‚œ]¤ë±"‰ýŠu!î,.¨5ÕµÐíÇÃ	= &ÕÏíœ7ÝsõS»yÿšˆ]Q›¢54+Fðë:ðší,´²gH»ÕõxBºn uÙñÕp7!ÖÞSŸÀ?Ð	š+o•÷ú©¿O4£€g€UÓPÚ”ÊÓƒiŒ3¬W¹™ïXË™>›…Û8Ï7U[ƒ±¤’ør4ÑîÍ˜X*ó$*MfÌãäªgãË†(í×„JK	rÁÚ¸gsmVežã“ÞVHSÑ÷Ê{°Üo`ÉSaV|­549     TíA\cS Í õ€  8 ±Ägû    YZ
+ý7zXZ  æÖ´FÀÛ€ !      dAv*àOÿS] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+<‹ñ_ ÝiB¸©-87GÒ»¸E”{3-ÚãÁ—3H;çña^¼¬ÚNÉ9ÒæVÃÖî$* ]ÿfjBF+(„Ÿ€PIuÑÄ¬Mî&|¦ Ïç~JP#ø°ß»^ðã°‹&D/s0)™¦î£»A¶‹G–Íu»I&šš­ý7e‹Ê{kô—‚¨b&eñƒÎ™AƒµWB÷þÚêœnÿæûP>îÚKŠNÙ8¶nt¦=p±C®×Ö«>ÈWÉº÷÷è*º3p¾…²ïÎBæ"î@
+Óc4µ±8p©ŸqÙX9ð‡VyxÂË…(QÆð»ùÇGI“0ÞÅ}ÉÕšïXùÝ«ë~Á]ƒF™’Bƒ°ßEFÙ“C~ògkDóâxâò¾[~‹±TïÐÀK½)Ä¦e™Kˆ *ÈÙ¡1$XBÉû$xß¡#m÷Ë&Ì)—¡ç‡?€¢[#Bä ÔfŠ“Áó8ãÖðÈ®©òO¸'î8K±8ùE£Iíï@„š/‘ äT^Vb|1“ÿIâÑâJ'ì{±Üƒ¹OòYûñrÒúŒ¶¯Dw¦_;$ï dSOq®Ÿ†çäãz}lt« ì'úmÕÕMoÍ“2©ÛÌVÛ¼5a^U³C»™÷ø…OôC’mëEíxÄ	(jn!ä°ÙOñ/lÒgkØ•Ý7
+%¯x°¤hèC`˜ª§ãø¢%ZDÊ¹#n€E·ÁgM
+Ó!äfåÞÌ±ñÊ dX7=¹—vÊ›RMÂ&kV9J	ÞXüÎXÂ¸âû;ãªô3ÀGsT»£Ç(ãRÇ;þ Ûnyiá ×ÅãÒ60B{…^ðCy5
+SÛðY,³pCúÞ¹Òqó~ô…%–‹š5ŒÙ$½*E_Çbõ"ªí‚KÃïè´»„VÛa«/7W‘QŒ'ã‰UDŒù‹‘¤%ì‹Œ·-¿‹X£_Ìá;Ü«®ÖŸéBqö ¨Ðç)Éƒ]PÌLß—›Dg	ÌŽ‰›™¾ifj
+Œ®‘N)˜ež	2mñc8¯¹þØK¦A%.~“#åÚ 9Ûõˆ4^ïC·ý–n&¬ßG<xAÝáÓæÀZç@§  ‹#z^
+íR}ÈjÕ:/ò/S9,Š;2ž5°)ey9KRÜq’·xÂ,´ÓLßïvA5¹X˜“pæÈë³¦iª#>ýXÑƒW{Ûü­3:N_(-‰œæûÅƒßßAõPÌp—XÔIZQf¾y›ˆ”IÂ}¾ÅuÇUyv¨VüüxŸça¤Z§,Ý8w.©¾'Ó±h :Ô’¸{…~é/Nn|ˆ›`‹0ƒf¢3—×£+BûdüÕò|“{obS£Ì¡’añq4y{¬ ’P1¿kÑ ûÃ-"Ù†ÞÊ\	ÒåpTc>p¤ks·5›êŒ étW] ÍNŠÆ„?´qd{õ7@ÅŒ·%–ÔB'r"q†=¼8ƒÁ}nËŽ„{‡jKDÅ¿mHÃuD )Ç6¼2öOÖ½¡ZîR¨ÐÔ	wŸÐ 1 ;®ÂÒÔT¨Må0T[‡ÛŽ€tw‰4÷‰Òå:÷÷¾ïÝµîÔ˜#t<O‚þ,Ååð¸p^o#QÒ0²óP~¡MÂ®öÀL—×Ic¡…]Îþþ±‘
+»Ôe|x­t"AA!
+›Ü¥Ãõ cbÒkEÊzþD×DqZ9uxJËÖ *&F]¬mSE·wÇ¤žéM'ÙŸ=…}¬^6…B7C—Ê¥˜ÿ†ã¡yAÛ‚™«?ThÍ³Ü“ÖMüÓÏ€®¾×íI2_Õ.é ¾;hÉþ²ÙÕ
+4Z«
+Dó˜“¹ÈóéžtD4ª¥âL|ù(Ýkü€ïòvÂ?ás¤^;Ýõ–TÂ!Áä-è6}ö ái½ò™íóéÖ³_ñ^÷ Ò&¡"ðÍ½ò¼*×p7
+„)Z(a˜=_7.ç©î_²h»žkš‚å u½|mhcæ¥/ÒI|µkøM²NÑQ&‚pÛº#ú¬ê—XÑñË)Ï}uZlj™Vç~EÏ¢¬ ƒí’	+S=-#+R:{<ŠÊ(2W^1{¦æÝ5ÖÑØ îÔ	Ø1RµÍNO
+Cf**ú d¥W¤“¤ðJ©L¤àõ\â	¬§-¼f-ŽÿQg¥Ö¨	}:‰]yMÁ;™Uä¯—øø³vebØF—ËU·P|+Žçd4å®EoïÃö^ÅAÌ,®3 •ØÔ‘õªÂ?A™•—šK¥7¯âI¢bešû Ö,M·´¤^/0ÓÂç]ƒvC8ZµNºß›íxeÙ[ß]ZYlž38nŸX"Ó³z¯µönT;›ƒ»ÓðÊiq±“0„ä†Xãª    ,Œz ÷€  ™ÈY±Ägû    YZ

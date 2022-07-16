@@ -186,6 +186,8 @@ src
 
 ui_print '+ Rom'
 rom
+
+ui_print '- Finalizing'
 fontspoof
 svc
 finish
