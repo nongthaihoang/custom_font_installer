@@ -54,10 +54,8 @@ ORISYSEXTETC=$ORISYSEXT/etc
 mkdir -p $PRDFONT $PRDETC $SYSFONT $SYSETC $SYSEXTETC $FONTS $TOOLS $OMFDIR
 
 # extract data
-SH=$MODPATH/ohmyfont.sh
 tail -n +$((`grep -an ^PAYLOAD:$ $SH | cut -d : -f 1`+1)) $SH | tar xJf - -C $MODPATH || abort
 tar xf $MODPATH/*xz -C $MODPATH &>$Null
-rm $SH
 
 # placebo for afdko - print error if not installed
 afdko() {
@@ -192,8 +190,8 @@ rom() {
         # Disable gms font service. Thanks to @MrCarb0n's discovery.
         $BOOTMODE && (
             gms=com.google.android.gms/com.google.android.gms.fonts.provider.FontsProvider
-            pm disable $gms &>$Null
-            echo "( sleep 60; pm enable $gms ) &" >> $UNIN
+            echo "( until pm disable $gms; do sleep 5; done ) &" >> $SERV
+            echo "( until pm enable $gms; do sleep 5; done ) &" >> $UNIN
         )
         [ $PXL ] || {
             # VF
@@ -236,8 +234,7 @@ roms() {
             local up=$SS it=${SSI:-$SS}
             fontinst r m sb b
 
-            $STATIC && ln -s $SysFont/$SSS $PRDFONT/$GSR || \
-                ln -s $SysFont/$SS $PRDFONT/$GSR
+            ln -s $SysFont/$SS $PRDFONT/$GSR
             return
         }
 
@@ -808,18 +805,6 @@ otl() {
     OTL=
 }
 
-# create static instance to fix vlc sub
-static() {
-    $STATIC && [ $SS ] && afdko || { STATIC=false; return; }
-    SSS=${SS%$XY}Static$X
-    local s=$(echo $(eval echo $(up $`ab $SS`r)) | sed 's|\([[:alpha:]]\) \([[:digit:]]\)|\1=\2|g')
-
-    ui_print "  Generating static instance (â‰¤60s)..."
-    timeout 1m fonttools varLib.instancer -q -o $SYSFONT/$SSS $SYSFONT/$SS $s && \
-    font $SA $SSS r && \
-    $TOOLS/fontfix $SYSFONT/$SSS
-}
-
 # replace GS Clock font in the systemui apk
 lsc(){
     $SANS && [ $GS = false -a $LSC != false -a $API -ge 31 ] && afdko 1 || return
@@ -901,13 +886,6 @@ fontspoof() {
     # get rid of RS
     xml "s|$RS|$RR|"
     local id=' index=' ttfs i j k=0 
-
-    # rename  the generated static font to RS
-    $STATIC && {
-        xml "s|$SSS|$RS|"
-        # preserve id 0 for the generated static font
-        ttfs=$SYSFONT/$SSS k=1
-    }
 
     # at least one of 4 main families must be installed
     $SANS || $SERF || $MONO || $SRMO || return
@@ -1007,13 +985,13 @@ config() {
 
     # main option vars
     SANS=`valof SANS` MONO=`valof MONO` SERF=`valof SERF` SRMO=`valof SRMO`
-    FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD` STATIC=`valof STATIC`
-    OTL=`valof OTL`   LINE=`valof LINE` LSC=`valof LSC`   FONTFIX=`valof FONTFIX`
+    FULL=`valof FULL` GS=`valof GS`     BOLD=`valof BOLD` OTL=`valof OTL`
+    LINE=`valof LINE` LSC=`valof LSC`   FONTFIX=`valof FONTFIX`
 
     # default values
-    [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true}  ]; [ ${SRMO:=true}    ]
-    [ ${LAST:=true} ]; [ ${GS:=false}  ]; [ ${BOLD:=false} ]; [ ${STATIC:=false} ]
-    [ ${LINE:=1.0}  ]; [ ${LSC:=false} ]; [ ${FONTFIX:=true} ]
+    [ ${SANS:=true} ]; [ ${SERF:=true} ]; [ ${MONO:=true}  ]; [ ${SRMO:=true} ]
+    [ ${LAST:=true} ]; [ ${GS:=false}  ]; [ ${BOLD:=false} ]; [ ${LINE:=1.0}  ]
+    [ ${LSC:=false} ]; [ ${FONTFIX:=true} ]
 
     # Get VF names
     SS=`valof SS`   SSI=`valof SSI`   MS=`valof MS`   MSI=`valof MSI`
@@ -1092,7 +1070,7 @@ install_font() {
             lnf "$Li" "$ELi $Th" "$ELi $Th" "$Th $ELi $Li"
         }
 
-        line; otl; static; bold
+        line; otl; bold
     }
 
     # serif
@@ -1152,17 +1130,11 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀÚ€ !       y·àOÿR] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+<‹ö‘T|§iù79V¹
-4­ Ğ¬mv‰V®ñ9éÛ'Ÿ]”SƒUµ=h¡‚­"BÆ‹İ·Ş:Mnj(d†ä',Õb±hŠ5Òd1œàËä6 Ë´M÷^†¿,—k5qš2U ãîß³f¡¿-Ğ«Ì¿ñ°¨#ƒÀ+\ +ö1xi‰ÈfømFÚÉu£‡`/®ï—h3ÙÆƒ.oÂ2×ƒX_jTÎì–›sÑ4v¨Û˜ar"Ğ<[ı/_ÀÎAü–nD¥÷Kâcç
-ÄöÏõÊëhH0D»X¼p™^ÎÛ½›‘új4n:´ÓOsÅ3¯D ”¬º/GğmÔjXñ&Ô×êÏ0Í³ÖB³6!¬+ÿ/Á_ÄS1ó˜Î89	@Æİˆ'\µ4ÛÅ(5)‚gÓAŸm€¢Ğë»}Ş V4ëUG}(ş2cwëF²Ú“³zJ„ç¢+I=É$-®OÄôÅ’!R(ÅyëÕC>÷¡Ú™t[R\Ü@ËÄ”Úºß#MïÔÆÀªı©„%pL›ÕĞè!t­a~Ûv´ù	ï:ÏöÊt\µL3PÁf`–ï4²Ñ@LpõboV·¡ìj’«y”äŠ73òÁÇÓë½vÕúñªaª’Œnr*¾U¤æFó£A×¾Ñ4i}N	È6Ë;½#@¡ÁĞ±{êf	råqtkCÂ²©ÀRıÚèˆŒÜ§p¯ÓM½§)K}ÛŸp­¾Y·ÃÊµA«¥;Õ;Œ¡ø¸3²MÖ'ªñ„]u
-G¿0™_W”dÊ(ä–#±}#È»šm>¸&6ŸÏ°+Aß'¤x³Õ‘8²¬¸²3sdÆîtW¥·³Àé¸»§t	Êœ1„)¡ÿñ˜U@¶ŠöAÈkTÑ†=õ²1²A«
-é¤ó³éR7£¢]ö÷vGİÂA]!6ûëòé«O¿2u¬^ÚE)á@¿7påØ
-æëÀ‚¼ëIZ•¶¡~®EĞš¸è”ªÀó4’¾ÿwÎ¡ëWiùÌ¦Zßa{™ñ.xü%@öw+ßşQÈ m(0 Œ|ß	£7¹Şy_¯÷6\iy¯Şs[¶Œ"qÒŠÆşF"›GD
-…›!z*ÁÚ‰øv%O¦6¨,%†×l)M*êôç{òn¹)PŒ†§Ç}ƒ<v™Ø¬V
-2{};­ÛoXâO6Ü&‡ëniÿ X»xà»IíyE~İİSÉ;'ûrvx–¥1_=¹™9Ş¦cÀk²pó€gü[Éåjä†ÿç¿D"=4^j¦Zõı'Š5sŞÿ€ä¶æØGàbÒÆÚLI,JÆ‚…ŸE
-:³[¤ÏĞ¼uÜ¸=\#µæÿ¨@e]dõ7/üZâFÏ9y7{{³³Uô/"†s…˜v ]?ZN,UŠ®X¬¡E
-'Ldı˜d/R‰ó!†Å|œklúÇ>uWëÉ¡J³Ã-ÇêÕ®Õ/íêå	g¨Ê´²oçSÔÇ< Î¹€h æŸè`€½
-âMA¤ÉUÿgTò°†Z¾–Æø!¸Ê$¹Ã÷LœXÌl¾Ú#çÁ‡¯ƒ€mFÂ‰1ov ‘'êİÎ{×Ù’ŸIÑÁnˆüM^H]/g|ÍT
-iKå8CÂg|æs
-I£uÃ4ÙFˆúí	 ëUAè0æ5ekî#\:qäƒ:õOïüd1wÇZ;›îğ!Y]»Hİ1«œş¢›oš>\'‹½3
-âè=	gÏÈEÎ'ZWÌXŠ¿Ö0}ËCc¬[;ÖPjczF+½‡ˆÚ‚ø‚•¦FQ˜ÓM:b)F§—§cp4èäüø1 €S£s¦í:}âŒÜ-ë"9j„0Îõ®M ®¥“ßİìáÔjeÅ¬ÙµÀj’Â{‡óz¾x?Çè€,ûbÈ$öÀyJzÁK ¼ïèW¹ş¥ù|µƒƒ%R£@¬¨ñ«(pÑ¡’k„9<fx\º\jº‚ Ô«Ù°D2Õ%ù[MW“$>ºãtœ¡ËñœĞ€‘>å·r.øAÌlE€Êê^„Æ‚fZnv$œl(ö«Ñöˆzy`ÃØ¨ã!\öFRîå W£ncÑ£Æ( Kréãaı‘²›Mô‹†ëZÅEu]Â®ÌE4jUÙ²œÇC»±xœ%·èãoä5¡Oši0_›O$2{ej‡È¾äå]9ÅıÂZŸ×p»~0ï·»bÎ—û»ÊO¤°ˆæ¡Ï¨?à	${`+!œô&³˜›»!ph¼@ÿºÖ†¿¹®Ú²T@f½ >ÔŒè®I£Ó­öA´`À«{¨C­Õ}ƒ^.•ÆÁ!NlëîwÚĞı3¸¢¯½qQ“³hŠÆÀmi×lÛ`Ò€ã{´b    ä&Neçw ö€  ¢J”’±Ägû    YZ
+ı7zXZ  æÖ´FÀÚ€ !       y·àOÿR] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+<‹ûšoãÄŠwHYù®Ç<ïë:…˜ï¦"nQÿ/QÙY¨Òd*fhéU„³è=÷¨W_ê}TÑ5MÓÎğŸ9úº­ç>Ö([¡·RÒM	ä@ìgG¹Kvİl"šôİn¼Ş5¥CËÌ X~Äá©q*Ó¾nŠšV¥Xóî¡¦,¾çİà+Y!1VÑsc™½ÉH’…–iO"URŞ®c)uÏ/¢çWa1ŸÜNØÃS¯í7|ëòÜ6²µW¦¨(’ûù?!¹v}…óPæsŒ4]Ïfä¨˜w3MNGüâ¡MÛybk8¤Ê0üq !J+”y,d®’îVªñwq|¥ì”×‘…"Jk‚©G FÅ~Á=é|\`/ÁŠéôüLÎgÌBÅ\p{.u\^b~0"é¦ĞXæµæG¹{nõ†œŸc=Óé°+/ ™Ó¿H–=ÖJy±Èc´‡aòñ€¢àÊƒr ¢Ïûï0²¥û!ÒFˆÎ=Uèo—Yô­$°´ñ†Ÿƒ0§à'SR;ŞE´z$†œGÏçÀ3â0.c{-Û~ó¦c‰&†Æ³±ÃË³9k#S¦ò>Ô’D‡ê‘šíjoú³iˆu£TÙa˜)ïÿéÍ‘T9‘ßT„•ûaN¶ Äc–»şå“¾æ0b¥Ø'ôó	ŠÂ»Âw‡k†b¿¾—Å‹²ÔÃ(Ô¢RìHà§fl8oS©‘$9’¦Ñ,û(ùªäÄdş€Hø¤,?:ï#íºğ½G¥¶ı¦Á¹ÖJÜ£^ÔÈL—˜,àQ¦pyTwÇ×Ìòßİ„µôÙ‘sİñ õÚÕ‰;½L:›?[ŠQù{ü’|ò”Œ,İ5vËRéÄÕæñ&2şìeïyú˜Yè+l¿‹¡{¬½1Äœñ…° áq…ƒßqÄ¡J¹–hÖXFDù–­U9ÀÛâjtó]	|ö	ÙÈİ—V¡¨ÀÛ2üeìj¿oQiÁ#ç«ã(Ü_§R¥î"ŠÄø ß©IM¾’&”|W’{u4ÏB‡±g^Iu³ğÕ‚ƒgôŒä>(Á~™@'¶KC÷ûº
+MØÈ¦¨{ÎÖ%ÕL6ï‡†Y™¤$ŞWPnªĞGRÆ#õÒ
+pô³ß€ç=86&“lÿ¦™£©°òkô,×³ø‡ê²J=à.ŸùT×P—8=B?ë¸DmÌÄwl01™#ãöİ·È!>/Å§-.BôÛ³h¤F¾q(ò¥&CˆR®UëªjÀj¨5¿è£µ<ñN/½ËEnœ)VzÂFûÍœh~Šg½½µ	x§u#uoqmøì8ÈƒšjÆÛ¸¾0\‰@ó%+Š¢b5»ŸB^‹ÉÅ”q'Ş¶ª¨ã“`ºP¯ŠÌ:M&S2m,Åô)$!ÌµÀ2ĞİÌ3‡óÀIç»bŞ²§œ+÷ÆU‚$9ŒÇÂ ×/FNèo¥¨÷Ì/0Ç 5îUa´a_ßj ıÙnFôİŠ®ÛıÏ	a¸ŞI>õ¼Ã²œë­ó™1-–VpÙ	u’ş*r^ÏşU·ÏVFò=@ÑOõâ=ÆiÜ¾ƒdŠ= K”‚¾ósI
+½éÛÊ»M)Ë(
+•&å”qéNısõîg¾‡¯Ú£¡ƒ\k$M®Hü‚ÌŠÍFI,si’Ú¾/e6×Ğ7ÎƒÅüvøfæ1®ZônF–¦Å”a‚ãTügbWBÊ+õ¨±#oNÃ¤tb  ·á¸RlÅ×x$!zåªVğ^.‹“ı–¡h9Æ8Ø¿óš¯ÈTºb’Ñ¬Ì “âõ]HÏ}«NvnĞlªBœ°h :€Vö“¹²z¼ù!t¦¯’8cUr¤ Í"Û¸ß5HÃúÌmit>»*{}6u†
+èØ"™l'”•×(ïWól9¹r<G‚+ê}ÒäX 4çŸª„]‘°È‰NêgF.±-æö¹qC9@IÊyVç:_^L
+<×¦YÕW0İ]|$2²Ì%=ô~…ŞãöuNPÍS ıƒ/”Ø¸>º+¥K[]²‘ô Ä, Ï„Eü
+2¼|<Í<üäò%ÛÁÁ$_Ô/N/¯Ô»d4œÑÜ¤	zxõÑ6¡õmYJiY¿X\.c—ø©û^$<y×ô9©ø$L-å9Úu›úOu/}#éZ:’h³ë÷D×Sr€f†ñä¥½Höø8ÄíQÔt4ú#émUÃ«{ËAÉwgñ¨”­™ıS†· ‹^Òãò“¯‡äò@“$_4şşÁ´²Ò#gjEÊÅeçæ¬K¯ı–7*ÁÄ7'¥‰(¢âÄÚ6ıã”ño*Ïùı@{Õ×íÆ²æ§Xµ¨I§	$enAbäÿrv´¸9@Éëš¯ğfN¦Z`8ñN×æ    °H°r´–¼O ö€  ¢J”’±Ägû    YZ

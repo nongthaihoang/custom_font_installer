@@ -1,4 +1,4 @@
-. $MODPATH/ohmyfont.sh
+. ${SH:=$MODPATH/ohmyfont}
 
 gfi_dl() {
     local family=`echo $@ | sed 's| |%20|g'`
