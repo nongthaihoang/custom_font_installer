@@ -934,7 +934,7 @@ fontspoof() {
 
     # rework on these roms
     if   [ $PXL   ]; then
-        ln -sf $SysFont/$RS $PRDFONT/$GSR
+        $GS || ln -sf $SysFont/$RS $PRDFONT/$GSR
         lsc
     elif [ $OOS   ]; then cp $SYSXML $SYSETC/fonts_slate.xml
     elif [ $OOS11 ]; then cp $SYSXML $SYSETC/fonts_base.xml
@@ -1135,13 +1135,9 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ…€ !      üpàOÿ}] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+?Qƒ0ó*’åh|¨Õ‚Ï-—ÁˆŠFtôØKLwv’—ÄÁíy×Á¿P½ñyÛ4Q¾ìûù[®Xƒë•vôH]bpðs1ã2°y½ý<Êt+ëÚ-+÷Ä½#ï’Ä+6¡ýc9±?¥çÒ"kã¸Ø¶œ*äÙ­Ž öÈ¢ÎúR¦Éž,RõÖ›`­;á‡–ö&£6þÜÃß7xÈîCnÃ"èA1"î/S³¡Äfj>zw+||DÈ‹³“[o˜}náþõßÃäãF¢£öœÜ0Â0Ý3 ¸D H“¢ñe·µçù~Ôª·I!øÙÚøèØšááPB65w³yxÞ†'H6&£óæÜKGw.`°ŠÙ’òñÙYl7;TÇÐ¬giCâm¿â*ÏÑ§gK¨´0ß–_n&ÚÖîéžÛ’mó^\ázÔÚTø'Ä«æH-¥¬W.˜dåO6Ø\™x•É·~ÈÎpßº .’NÙÓP£['A‰ ¬½c¯ëZšÅ¹¢ò#$ûBk`”}þ¹©Uz4ßž*®a<Ìê`¹ eÇ)¶0‹ÙžÚ!#&nÑR}n4yÛº- )GìæÌ~t˜­-214RöÐX£¦Å5”(ÙèŸßÒ‹AvÎ3&L™!šCÎò«3 ?äoìêÕ‹‡{­íÇÈùi°(	¸âáu×Æƒ®@þ˜zmô´€Àæï2¡>s!ý‚‚ÿ©ctÌAÓL±åþ¯µ?-°=wn¦Ü£ã¬ãÌãi§´qÝ¼¢©²Õ6ùÇ·šTh®‹Ý¿bòJ6÷§kV—Ý˜,ág¶¶!ÿ©‘»õolLÇ$ ²VðLmÇ¾_ø‹êT¥†E~-ŸÞ+BSÚ]_ÊÊplžàŸOùDF0ñ*•þüm¸¼¢ád•üÞCEÛíQ)¾Æ+»ÖDÊ7²¥vÔõé‹gž)n¿ZûàeÕó¶ÏqKI:½UO¯(±¹j
-Ï»È¸r—ŸžõèÔYN\þ•ÅM’ÒÁ‚p
-@²
-%n(+¬8d-Ê¬»÷%
-U¿’¹@Ó_ˆsEÿ8Î¨ËêŒJïtÐšq°¡Ž(ÑhI·Qé$œ¸JÕ¤"uÑ¹˜;†s2\1PU—‘e'á­õ€4TD`MÑ›äb/¡²¥Pæì¼òU\ú/MÃ@™ÝùBµFm­±·Ç·ñÁ/wÞ6&˜Ù– ýd—¬àê^È’PDòÖÀd2Úfä )]òDa7e7ü\•^üGO°õžPúµdº0Î‘0ä©™IOäŽú™ñÐ×É“#âá ~å~÷;ùA¨.	à¨n—½m‰ßE©8D6„³Lû½¼ô^BƒÑµ/Ùþiòr<#zŠèÑW¤dZc‡É’xn|#MAt×¸y»yažnXÖF«‰]MÜ²áµŸ—¶ý{ª¢¤»¹Züß¯û‘ú~Xuâú¥ùDq½v]&•t©„öD¿†r”óÐ#¬E¿,â<£xzô„maÃLM“… “_á)!ÂeHD‰pó]ÒžhºÅ™[:'°ÁV¶¡búô3*)3.X»äŒ+[p‚p2ÐgnH~s¼W#Ìlœ2 ädæm¡k@„ªÇvZvOÒw“¬
-ì®uÔ1k½ÿkÞ#WppHòŒK’À"&}¢Svõ¹ÔqžH¯	+Ü˜çüê>{’C‡ÓDÐ^•·£Ù ,«${çªI/ð™-ï!Æíkõ˜¯•”ÄBÙvˆ?o!Ù–Ë‡â-X<¶úãÜcŒ7igøöýþÎ„—^X^¤ºËgÜ5Ê-ÝŽD×E­á“M_DkSdÒ"»C÷Gx^»iôÐ}kÖ°_)”àc—¯=Ev#4‹Á=t†n¡–‡\¢bS¸hÍ¢¨_>È
-‡x:ÁWBa5|qŽÔä»/šž Båþn+ÇÔˆ¾Œ,Ûœ#ðŸ¼dÆ£X^7ø^i‡ÜÑx²‡¬Ï34õf–í!ozÏèÄÅdwW%lMbK¨Üëó/ø|
-J´)Z_5£tñdbÔ­¤Æ7þqºÔL/=ÁA}?¡U¯Y÷.lU[ˆÍÏU‰è“¦¼ŽWÐÏ~
-Í]úc
-ã„œ§gÕ„Ã)¡ƒò8£	)“œ8±‹[ä~ìkûï%¼È*¹ãøžÛÇäçòƒ×xœ9è%ÀêÊo—5‹¾XÕ*ÖI+ôí@6ññ_ÊBŸ3»Õ˜S~¸Æ™î¢zÀk: ²%cÒ5ø±•íŒL^ôkÖz/.6t|ÑA-Á7®W™ó–´Sk¢™ºFê“Uÿ°£Ù-ˆîþ})—'3&f Ìz×}Û±¬#uì‹¨ºlqíÕÿ"†„¡pt+±••<9ª6~E—ò¸>£WFS7¤aüµSÒæRš§.Mqïaý¨$l^sÚTÅ˜;‡oê@?Gá¸ÐMgËâ@„š    ÌÏÇð%ç„ ¡€  ][¾±Ägû    YZ
+ý7zXZ  æÖ´FÀƒ€ !      JM²ãàOÿ{] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+?QõµUóW"¤Tw‡	Ö¿¡ [frd—K¦>@`-±@¾à¿4›–H´I7Z5Q$T^æ.)mF¸ÜD”‡únæÚiß°·'	MƒPÚ´vü´”	Ð=ã¬Þ(³·àóÃÆ44¨Ó´‚ÇéÕ†ÏôIDÔpI¶$’É&>±Lêž")0zšMU“sbZï<¯”yÜ5aQ]Âcïï•ò×k‡[ÓékÙãðÑ_¼8Tüîéáe6p—§Ñc~4Ü§¾ø™ŒAŽd7fÁâV\ÿAŸ²µõºYJÚðŸT¡|Ò$syt}10ySÉ¯zN¯p§›p‰Â=ˆ$¯ò*-!®{ühWTu7ÑŠÏp,H4v[qxÐ_öè)¹…¼_/³î·Ô¦D“ižÀŠìBTV”fÕHU§_h÷ßõTÈS/R{gÇ×^ÞÚ«3Fô|^LØÆú×?ãEŒñˆëQ0Ã~g§²h"i&O#€çFî¹?îxºÆ&n[¢‹…¦eAÄØR×›ºŒKÏ{ü.KØRÚ—ðRç}€/…ÿ:ÂŠuBÇÌ¤WFÒ—3
+àÓWÓ±€÷ A>˜FÏ³½·‰Áè‡–{r;Õ˜µW´@-Œ%Süôþ‰;Oá´øýçDuÝŽÔ;–¤#ª¡ê–Œ³Ý°.6qÄ½eqCW_“!nû¢£ÎUÄ(®yúRö‚ÊTZ2x©4W8&/=—µ‘~}JÒa’³…Ž<5Cû]Mö" ‡bþŠ÷1­òPÍ–-´ïüÊŠi&y®9Ã¸ÓµY>	îÚ{¤v+~?^ŽjŽ/Õ$ñm”P‡zféõ¨Ù!¶ÉžM³kqš‡xõ|šF·i%uÍ#/ƒõØ¤5Ÿ­ðÕÈ>¸[âŽ9gñ±r^qF¸T´nñ·@ªIÄ,$ol”Y¥£ûx´@ØÖÇQÄÄãîŠbž#¦ØÈÞì@ù¤³KÒ%ò“„täÉ£ß';PoåÔ¼ËüƒÝÉüI÷Ä›ú”ímO¬ßƒ4©~Ž&+[-TF?A¥ògÈ3§0­ƒÞ_+Œ*Öõ¯½£Ü·/¾OÇí•kMzH–Û…å¨=E;ê1þB³KhÓßø@°£¬×AÐ÷•äÇ8;ÐüäT˜,ááß·ÆßÓ¨/¬’ÕnO†ÝdLÑË‡]~ƒ§ëˆ{mñ¹ˆ­³+LÞ:«ï ;îbÍ˜•©Jk.ÃÖvôý™OR™]WWÎrZ¯¢1IcÓ/yPÊ^,I¥$ùÛg'³ŽZt‘»;˜ºŸ :Êo`zšºN%š_Xk«Öâ©-úxŸëÕã‹?0¸ÎAf# [((X‹[{Þx*<´5ùN~­¿ @UæcGJñÁ°È>+áe8n½¿é¿îã%52t)Èégž-Ê²óe¢^àùöµ[fU½ëã7©Mô'Ïù§dSjås0éÎÕ¯2eÙ²Þ#p›ì×˜è}M´Ã;Êsà)b¾˜W‰7AJ¦ï¼ìÂŸ”Át]pï=ãú$lÝÛd>îBÊX"ýÕ±O¦(Ä>8@òlTt,–®0
+ ¶]¦ŠÕøö€|({5.©³È1Ò«Û¡«ó/õKFðÉÓñV#Í¦ÇZÏM¢Ñ~³òêDö]ø‡Ý²Öœc3ñ>9
+Ð8óþ:yBN±®ž] “±©$xönEAt`)…éSm×6JGÆYÚÂ÷}@.Z"ªUñ‚rèîMS¯)iDÀÌ,!²gó Ë(¥§! XÈ—¢«²ã%—œi+=„Ú\÷Âi+,*­F1=â¯µÌv ³ˆ‚Î… 4®,€ÅÙµ@v¿¨ñã­\á8Ê‡¥²¹ik˜Z:÷G ÛX'3-#a×~N¾½˜$˜aWƒëC=´Âµ¬±Ó{Ž´IDœ”[uBÂƒJüyÎ#”Duy4°‹û@$Ž«¶õ¥—ü#Ù2Wö)o‘æc‹êW“-ÿ¢úYLñ‹H%£ëÎ7”•RuŸî—oÝI(³ƒý\ªâO|4‚_Ä¯– Ë¦jÐ/ÔìÝU·ä0jïûïä.­ï<Ñ¶My´IRƒÔ0 Ö€¤Tm½‰	ˆs)4J#	äXAÓ—¹)ÂÕÞ©Æ%¾0”˜2_ã¾1õ8ð´ŒSìbÚÉtwû-âv:·œÓñ"»]TÒØËSc=
+>Œ‰›j¥²Ä¨ŠAL^Çç4ØÂÔôAIJŠÝÊ‘¡„%À©¾;FL±Þ›ÅLÃQ—ô'G“&3ðDV³~CŽôÜÉŠ«¹T}‡ˆ~¿D*½'ÁÙ«8e,„Û{Z8§qÎf²€tyùWx;ofÚÇ} C‘9äà­mhbþÉfóµ3ßˆXñ—5ËÀªæÿ‚=…5&ðŒ„9Ü2 Ã
+Ókœ0ùÎ/xÉÇÁ@  ò22È00 Ÿ€  €=€±Ägû    YZ
