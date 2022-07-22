@@ -113,6 +113,7 @@ src() {
 
 # custom services support in $OMFDIR
 svc() {
+    $BOOTMODE || return
     local omfserv=$OMFDIR/service.d/*.sh
     local omfpost=$OMFDIR/post-fs-data.d/*.sh
     local omfunin=$OMFDIR/uninstall.d/*.sh
@@ -1135,9 +1136,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀƒ€ !      JM²ãàOÿ{] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+?QõµUóW"¤Tw‡	Ö¿¡ [frd—K¦>@`-±@¾à¿4›–H´I7Z5Q$T^æ.)mF¸ÜD”‡únæÚiß°·'	MƒPÚ´vü´”	Ð=ã¬Þ(³·àóÃÆ44¨Ó´‚ÇéÕ†ÏôIDÔpI¶$’É&>±Lêž")0zšMU“sbZï<¯”yÜ5aQ]Âcïï•ò×k‡[ÓékÙãðÑ_¼8Tüîéáe6p—§Ñc~4Ü§¾ø™ŒAŽd7fÁâV\ÿAŸ²µõºYJÚðŸT¡|Ò$syt}10ySÉ¯zN¯p§›p‰Â=ˆ$¯ò*-!®{ühWTu7ÑŠÏp,H4v[qxÐ_öè)¹…¼_/³î·Ô¦D“ižÀŠìBTV”fÕHU§_h÷ßõTÈS/R{gÇ×^ÞÚ«3Fô|^LØÆú×?ãEŒñˆëQ0Ã~g§²h"i&O#€çFî¹?îxºÆ&n[¢‹…¦eAÄØR×›ºŒKÏ{ü.KØRÚ—ðRç}€/…ÿ:ÂŠuBÇÌ¤WFÒ—3
-àÓWÓ±€÷ A>˜FÏ³½·‰Áè‡–{r;Õ˜µW´@-Œ%Süôþ‰;Oá´øýçDuÝŽÔ;–¤#ª¡ê–Œ³Ý°.6qÄ½eqCW_“!nû¢£ÎUÄ(®yúRö‚ÊTZ2x©4W8&/=—µ‘~}JÒa’³…Ž<5Cû]Mö" ‡bþŠ÷1­òPÍ–-´ïüÊŠi&y®9Ã¸ÓµY>	îÚ{¤v+~?^ŽjŽ/Õ$ñm”P‡zféõ¨Ù!¶ÉžM³kqš‡xõ|šF·i%uÍ#/ƒõØ¤5Ÿ­ðÕÈ>¸[âŽ9gñ±r^qF¸T´nñ·@ªIÄ,$ol”Y¥£ûx´@ØÖÇQÄÄãîŠbž#¦ØÈÞì@ù¤³KÒ%ò“„täÉ£ß';PoåÔ¼ËüƒÝÉüI÷Ä›ú”ímO¬ßƒ4©~Ž&+[-TF?A¥ògÈ3§0­ƒÞ_+Œ*Öõ¯½£Ü·/¾OÇí•kMzH–Û…å¨=E;ê1þB³KhÓßø@°£¬×AÐ÷•äÇ8;ÐüäT˜,ááß·ÆßÓ¨/¬’ÕnO†ÝdLÑË‡]~ƒ§ëˆ{mñ¹ˆ­³+LÞ:«ï ;îbÍ˜•©Jk.ÃÖvôý™OR™]WWÎrZ¯¢1IcÓ/yPÊ^,I¥$ùÛg'³ŽZt‘»;˜ºŸ :Êo`zšºN%š_Xk«Öâ©-úxŸëÕã‹?0¸ÎAf# [((X‹[{Þx*<´5ùN~­¿ @UæcGJñÁ°È>+áe8n½¿é¿îã%52t)Èégž-Ê²óe¢^àùöµ[fU½ëã7©Mô'Ïù§dSjås0éÎÕ¯2eÙ²Þ#p›ì×˜è}M´Ã;Êsà)b¾˜W‰7AJ¦ï¼ìÂŸ”Át]pï=ãú$lÝÛd>îBÊX"ýÕ±O¦(Ä>8@òlTt,–®0
- ¶]¦ŠÕøö€|({5.©³È1Ò«Û¡«ó/õKFðÉÓñV#Í¦ÇZÏM¢Ñ~³òêDö]ø‡Ý²Öœc3ñ>9
-Ð8óþ:yBN±®ž] “±©$xönEAt`)…éSm×6JGÆYÚÂ÷}@.Z"ªUñ‚rèîMS¯)iDÀÌ,!²gó Ë(¥§! XÈ—¢«²ã%—œi+=„Ú\÷Âi+,*­F1=â¯µÌv ³ˆ‚Î… 4®,€ÅÙµ@v¿¨ñã­\á8Ê‡¥²¹ik˜Z:÷G ÛX'3-#a×~N¾½˜$˜aWƒëC=´Âµ¬±Ó{Ž´IDœ”[uBÂƒJüyÎ#”Duy4°‹û@$Ž«¶õ¥—ü#Ù2Wö)o‘æc‹êW“-ÿ¢úYLñ‹H%£ëÎ7”•RuŸî—oÝI(³ƒý\ªâO|4‚_Ä¯– Ë¦jÐ/ÔìÝU·ä0jïûïä.­ï<Ñ¶My´IRƒÔ0 Ö€¤Tm½‰	ˆs)4J#	äXAÓ—¹)ÂÕÞ©Æ%¾0”˜2_ã¾1õ8ð´ŒSìbÚÉtwû-âv:·œÓñ"»]TÒØËSc=
->Œ‰›j¥²Ä¨ŠAL^Çç4ØÂÔôAIJŠÝÊ‘¡„%À©¾;FL±Þ›ÅLÃQ—ô'G“&3ðDV³~CŽôÜÉŠ«¹T}‡ˆ~¿D*½'ÁÙ«8e,„Û{Z8§qÎf²€tyùWx;ofÚÇ} C‘9äà­mhbþÉfóµ3ßˆXñ—5ËÀªæÿ‚=…5&ðŒ„9Ü2 Ã
-Ókœ0ùÎ/xÉÇÁ@  ò22È00 Ÿ€  €=€±Ägû    YZ
+ý7zXZ  æÖ´FÀƒ€ !      JM²ãàOÿ{] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²+?R0­æÄ†rfÜÕÛe±­T¨¶rä7Ú–§
+ðB“rm?nÄlZ9`óc ¡}ñíÞ1ë«æMÆ‹X$|Jõ5£+è9—M‹UÊ¸MK¯!hÂ2Œ¸'Ä„X(­X5ã"ºxùyt1Ã2ý<Þ.4RÊßlÚ°û¹8è'®¨Ãámla‰HXaôaSeÇˆ¬0±èñ+¬¹2)›2Á|ÐfyfµŒ{ŽŽ½(CRs g†¤ÎäP“FžæïÿšL)âÂž@K9†ßÒ‡ É0hõmÂh» ltr‚…:—Fxª'Ù5ÝÓ‘%›4’mšmøüQpù
+Á3OÙþPëË;%|˜'¡L/RÃ}û.ÌCtÚ†ïê›ƒaf>µÁËìˆ\qâ8»1Ÿ|Õè·êßo õåô×šr½(BNîkH‘m`ÒÅëÂ>È¨u\"àCrÊ‚7Š€ˆíåæì˜^,ÛÀ€—3¤pO5mTôtÚEŽõ¼3[òÞÒ¢qçnôëÄÔ…Q€€‹îœ¨¾ˆâCã±bJÖ‡¨¶¸¿®ÈqOPmLŽ.ÕJ¬GØ:¥L,KôBÅž¼½ ßSÊ./†üß5ðà~]î{?¹_§X¹:¨ž’°I»¹d>ÀHžÂf}aŸïÜÅõ¿ZX÷¹ 5%ã¤Ã¢¤ý/XŒðýL•fžºèìgz®CÄ4sZ¼>(kæqã–Êø¿Åg+TE¯9}ºé}&’DYÏHá[fó¶½MO3È'?gf·P…+¸Z¤!$©9ò×\	º¼9 )‘×cRh|7v£9üVLÜNHiØ×u9aë,]"JKHÍ£x°aÎà2f™ÌYÇ†R;à]±»Rik°F ¹øî›æy¯|c 5Å¦Tmð*(7è£íJ¼K~|¶®6¼—S1Ža‘Ç\0x#Ji.´3;î\ûÐŠ‘õ5D†%'xOº¹¯¡Åÿùþ.’ßÞñÖU>.Å„M…vJ]Zyã	‰7±E^×õ¥šE03R/§‘G]œûve~rPäURŠ¡‡4Q¡Ï{ÀÔ=¹iPø öfŠ/J¤ú|­œ+Âa¼¶‡²ñˆÐåC*`Åê4‹7ëï1Oß/îéÎr+Ÿ
+SS»C#ÜèÎ²}Î¨e_býä* *9…ÇŠ>1¡.¥ia	Ü'wˆÿ@‹Ì•ÌÁƒ»ú/…t2mâŸð|BÈc†¯g^_Ÿždˆ­Sð"'…ï{ÜÀŽYnÐ/$11ÂuÅ)IqÄ]Ì8zŠïÍŒ¾a¶rÐHO‚·=QíCÉú"µòã×á–`¬ã®OÉA@lÁ¿ïÒ´ÃfÈ‚9Æ^öf.¦ø˜úÛ}?ë­§7SÏà+¿N¼ÿÁm.x>ÇuµÓ.öçB^ÙæhÞðÙr$!&‡Úý1ákKˆ Þ”X‹\†™mÖYMªZ ÌŒ>ÕEx` gÛC¸Fzçi=VQU³{4ôàùÂÀŠ¹˜HÙ) ‹°ö:¡á«@áZgk²îÁd'µÎHî‰ÙÑtÔ“Ì&%9¹É1t¼´§÷õ»ú|Xø‹/ïÁþÉÿóz±©x„¥efw²~´>hw²ÿpš-»È£8	½£%ÓX
+o>×+÷Œµí…'¹s[aH˜¸Ð2¿ÒG›R-SÌn›ÐjÚÝÖç¤`Ú)'K¾U:jœïg€i;éõk…¯z÷6"\×:{öÎO„yé~¬uµ¡f|Ø(r#æð»ÈVrXfKlMœ‰¹”ë&Yt3©F,H©MœææÆuÝJÈÆ0³(n40DWslCÅ¾dìØ“"6cbÅÙkS5Ó»%6ÚaþWn˜JÁî$¬moD÷á3Añš††ÃiÅQy²¤Lyc†°äçb±ýË'÷#nµ@ï|¶UÜð|}›%J_öZãKX·$=¥lòî1È{i×4«U½6%¹»Dî¬Îƒ¦<×R<l}:pi aî[{þ·ò­jâ’ZëÊ³Ì(ªüKÊ§Áålð«eß¿¾ž…Cs&Bo	±<J'Ý…œQ²²<|mZÕqØÍ’:ä´z¯àJ‡ß¢ÓjrèÁ%–ßÖs	>Xo€¢dÃrá6G‰\OJMC™xºË¬Ñ.$´|8/ÕÜå>;˜DLÛ1 wg»ËqvyðAZ°úØŽ$Ê€mu »#3'Aì8}ˆãWñÚXùZÿóÌŒÍ•_šáîÎ`¨­Ž²%,#|N³M‚¡¬“ˆc”Ž`öÿÛ¥GNÍl¢"
+¸òó évaYðô¨…R0`o‹M<ÄS2hj§²'BÝH6Žn×.C‚`ƒ–^VM•Õ&¯¾…XùÇð´8<â$ªŒÙöI5‘ßÚô}rp¡ý)ÚlƒnpZ¯p4Ìã‘ýAz|W4
+©·ÌÉ¬°]J<  Ô‹o/ó~ Ÿ€  €=€±Ägû    YZ
