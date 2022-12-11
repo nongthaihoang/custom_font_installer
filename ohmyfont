@@ -78,7 +78,7 @@ xml() {
             # cut one line <font> tag to new lines
             sed -i "/<$F .*>/s|>|\n&|" $XML
             # merge multiple lines <font> tag into one line
-            sed -i "/[[:blank:]]<$F/{:a;N;/>/!ba;s|\n||g}" $XML
+            sed -i "/[[:blank:]]<$F /{:a;N;/>/!ba;s|\n||g}" $XML
             # cut <\font> tag to new line
             sed -i "/<$F.*$FE/s|$FE|\n&|" $XML
             # merge 2 lines <font> tag to one line
@@ -227,7 +227,9 @@ roms() {
 
         # remove GS from PRDXML
         $SANS && [ $GS = false ] && {
+            xml "s|$Gs-clock|GSC|"
             xml "/$FA.*$fa/,${FAE}d"
+            xml "s|GSC|$Gs-clock|"
             XML=
         }
 
@@ -256,6 +258,7 @@ roms() {
 
     # COS11/OOS12 (basexml)
     [ -f $ORISYSEXTETC/fonts_base.xml ] && {
+        falias sys-sans-en
         cp $SYSXML $SYSEXTETC/fonts_base.xml
         COS=true; ver xbasexml; return
     }
@@ -358,8 +361,9 @@ vars() {
     Ro=Roboto Ns=NotoSerif
     Ds=DroidSans$X Dm=DroidSansMono Cm=CutiveMono
     RR=$Ro-$Re$X RS=$Ro$St-$Re$X
-    GSR=GoogleSans-$Re$X GSI=GoogleSans-$It$X Gs=google-sans
-    readonly Ro Ns Ds Dm Cm RR RS GSR GSI Gs
+    GSR=GoogleSans-$Re$X GSI=GoogleSans-$It$X
+    Gs=google-sans GSC=GoogleSansClock-$Re$X
+    readonly Ro Ns Ds Dm Cm RR RS GSR GSI Gs GSC
 
     # family prefix
     Mo=Mono- Se=Serif- So=SerifMono-
@@ -827,25 +831,30 @@ otl() {
     OTL=
 }
 
-# replace GS Clock font in the systemui apk
+# replace GS Clock font in the systemui apk (A12)
+# replace GS Clock font (A13)
 lsc(){
     $SANS && [ $GS = false -a $LSC != false -a $API -ge 31 ] && afdko 1 || return
     ui_print '+ Lock Screen Clock'
     
-    local privapp=${ORISYSEXT//$ORIDIR\//}/priv-app
-    local app=$privapp/SystemUIGoogle
-    [ -d $ORIDIR/${app%G*} ] && app=${app%G*}
-    local apk=$app/SystemUIGoogle.apk
-    [ -f $ORIDIR/${apk%G*}.apk ] && apk=${apk%G*}.apk
-    local modprivapp=$SYS/${privapp//system\//}
-    local modapp=$SYS/${app//system\//}
-    local modapk=$SYS/${apk//system\//}
-    local fdir=$modapp/res/font
-    local font=$fdir/google_sans_clock$X
+    # A12
+    [ $API -lt 33 ] && {
+        local privapp=${ORISYSEXT//$ORIDIR\//}/priv-app
+        local app=$privapp/SystemUIGoogle
+        [ -d $ORIDIR/${app%G*} ] && app=${app%G*}
+        local apk=$app/SystemUIGoogle.apk
+        [ -f $ORIDIR/${apk%G*}.apk ] && apk=${apk%G*}.apk
+        local modprivapp=$SYS/${privapp//system\//}
+        local modapp=$SYS/${app//system\//}
+        local modapk=$SYS/${apk//system\//}
+        local fdir=$modapp/res/font
+        local font=$fdir/google_sans_clock$X
 
-    mkdir -p $fdir
-    cp $ORIDIR/$apk $modprivapp || abort
+        mkdir -p $fdir
+        cp $ORIDIR/$apk $modprivapp || abort
+    }
 
+    [ $font ] || local font=$PRDFONT/$GSC
     [ $LSC = def ] && cp $FONTS/LSC$X $font || {
         local lsc
         [ $SS ] && lsc=$SYSFONT/$SS || \
@@ -875,7 +884,11 @@ lsc(){
         [ ${LSCLINE:=`valof LSCLINE`} ] && $TOOLS/pyftline $font $LSCLINE
         $TOOLS/pyftlsc $font
     }
-    # patch apk
+
+    # A13 done here
+    [ $API -ge 33 ] && return
+
+    # patch apk (A12)
     ( cd $modapp
     $TMBIN/zip -qr $modapp.apk *
     $TMBIN/zipalign -p -f 4 $modapp.apk $modapk ) || abort
@@ -1157,14 +1170,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ‚€ !      <¬½~àOÿz] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²4•&bù9ï)†öp;eª„mÖÒßR¡Mo‰µbôF|xßc& æ»§°ö™(¶İJ› Ë$ĞUÛ'¼|ïcJá@9
-‡—hn2£ºËØÚvOï … ?Ç2CòÏK«ˆ÷‘CşAÊ{çb1YL*—ü¾2Bõl0*=ß!As.¦b½}„î˜«ğ¢léÂ´ÏÜ5‹Ç†FüáÌ#Ü®ÇAbVtr:Ò„pC¯Ào~Õ+¯æUY‚2¡eonËà§ËHÓÙßA{I%”¸V([œŒ¾æ½N9'wÊõ`•s,Ğæ‘‡Ó¨/.âyO I1aß*™Ä†’¸»=Â%5µQJCås9nc*ƒñæ`¼¦âÉ¬şÑÏR…|Ş¥¹¶BáÒó£¶x¿Ùåï3†8e%Ñ«ê»R6ã•íS¾š˜ˆ+å´K
-ƒüäEë¶Œ7FAm0KZApZf*kùø	ÂY$=ƒ¶–ñâgŞäÊÖdûcı?çéıbã”9Û6+-üDİ%>ÿÌE¾§“Ø`™œhQ.,…èĞætÑ÷Sºµù?VøA,öfuIîA2ùp?PñÜ"'´:=úı‡~óİ´”kê|â—¾yBÁKÎ³™Á›ç;;PHq‹.ÅEô–%êÉAİç0ÇÉ_¾U°µ«f•ïMYÑMxJ[ú®MO-ÖÙƒEô†TSÉQòâğ yu‹Ru+­ÀÕË|¢u!»OA£«×İt©]^º%Œçò»öôÎ©peÔá­üqSõ
-n>ÙíÄÃv)‡0ƒJÿœ1K[=nŒÜÁñŞGo2fa„JµØ¥ÅÆ-»uÈí¢K›Xø^3æ! Ën8=x³RÀ—'Öñ&-|sS £H=“$Ä—Çø¬!¿fŞ‚Øó…şXç±|UP08C·È¬Q“q€°Øİ
-g†suÿºêf-€­¸Ø ç™ ë‘Ñ¾cŠPM£âr½…¢üşÍ×d76SCÏ#‘¥@­e†'²:²¨;,ñDM'Fñ©’Dß@¿ hÜ-Z›
-0\ß×|»9”Ì*~õ8yï©3Àµôb•ÑèJ¸i]š‚DeÕ{ãı]ñøfJıp¨e„N
-EdŸ¤nTfÆÿ-.)ÑfI°œÍ{ÀüÃÊÚjXŞğ™	ªòW[¤ŒÔsJyaİ÷^gÁÕÉú¥ú„j¶Rç8š2,ßbÇdªÉôDwÎ…È¼~wäZ¶­˜íC{)ÙÓBØáêK”c¶`ô”*×Â#jªIO Jhü-
-X,ªü-Üôy¸"™¬î†â¤üß?C$”S~w<h·óPÜ£_G/½³8—¢0¹;]RM“sù¤1Cî 	@&O²…ml"JıMNmû4J=9ÈL}‘şå*#ãZ°™Ô+X`ÆÌ‹z¦ÇIb‹M¡-gd¸)3_—DPPñïÔ°€dyù;W/¤– Bûœ-$‡íí>‘Ö¿Š…÷ğö¯XÒŸğ§ŠÔXø>Aîúü¦úg§—¢>Ô5…h–n´Ñ:\9$¥ég'+õ&~iÈÅ…†M°w×CqÂ–Nûî»À£É?ŒÛgÛnØi²V¾û¿Oúy=î@ÿéø!¦œ»¤ z<x,»‰J×Ñfà(Ûÿ•ÛK!}¤Q’cõR{L¦Ğªaÿ¢ÏE°¥yşX
-C$_Y"Ï1&Ü#l7Ø"ïÓ7HáY7&„D”½ã*ó§wVnuM³¤  |"8„7wîWë{&åIğ; F=ûÌ,KH²$¨1jæå'µX…À\5¬âIê)dÚCÚ|&9mØÈÆR¿²È™½¡¢9 Ñ‚,}úWÅê3‡í?¨ôìf7€Yñá9$ºÚ€öô°Ô°ô\Mí1µE,(äÙ-$áùz‰Ab!…Ó<@ô€ÔÏ7B;i¤·øñäX³2’®qĞñãgg	»Ùb#E¼r>ìªRç/öNævğe"$( Am°TYzÛ’±Œ.¤S;ï\«™×—Ê¯‹ ıV0İ˜a.|DÏ±ğæÆ?n¥p¥Å#7Âñó34ne³ûÀYk–t³Ğ§[?€,ÛFÕ•e âA‘›K;öß	m¹ÇC•^ukta­$İf^}â¬n3œïTv8ê¿ÒÑ„2Ø§Ctpâ-ƒOkÜk.ÆÈmâpš›ëVÛü9ğ4ãª[Ğ¿ŠÛ56O2€ÙÀ²µ|p<®ÖQû|Ÿ×GK
-Êâ²ÜJÊ9rñ1J$ìF˜
-…E¢~A·¦™§:AZ'·@*½:S+Ì×¶J°#.3`C¿¼;‘{4%£ù¸¼¨íDœ”Ğä›I]ÎRııç	*ìÌÌ“®Ã–@¡i…ß¹›6ûm­	?ëÑ‡€â©öÀ{ç°¤¦   ‚Y5<„Â† €  %îSK±Ägû    YZ
+ı7zXZ  æÖ´FÀ„€ !      Šç†àOÿ|] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²0ø:a,adFÔ^à“ĞwÍts?ßrAü‰UŸ–à„Ü­““×ÚI#ç¡Â©}äAçâ÷æ?ê¢ƒ5H(ûJù7¬Á|_0à.v bgµæ9W˜mG¥xµÁö’p 0–•Y]ßëŒàí¼eš¼ÏÈ Ï¾ aL|ïGø®˜²ÑsÓV“/<j&£dH ¥²M¶g0Šëh&Şv@—vl.Y‹R64=OnßSŒvMò ã!Ú›:Ü¶˜Ó±EEl²g'÷q9ù˜Š€üº¾‡ı÷|"£ûïI,Šš³ÒÜy¹tìålÉ¿´¹„SÆbe•0(µ:ZÚ²¿{¾zårì†jNí¸ç‰½óŞ1Üó³H!äLYİÒ×…-1LoÓ@ÃË!Ô¸u:ê÷ä×17÷­+0]ãELÆ5'Z~´e)"s‰–ÙĞÙti6d{Â#qµP¹GùÏÅÕ3;é¯‹uYõ2G^t‹jL…B`¡Ï(!Äœ(l-¶=Óî¿<İJË²´*Î‹“ÃÙ¿SƒtKÔÏNv8À"‘­sÙÃ Å#Œô‡÷Ö9æ^œ/-ß—°RUPG¥å¹h½ÏZVÁË]‹[f5M†TÁN·>ÅC€^c£Î»ş?UÂ(ï›¯‚—ğJ„@¼4‹ç°Vå¶‡±İ0H:»[x…9§0¼‚q¶4ºŒåÕœÖ¥l½·½®,0jáŸkÚ º7´ÙËRx[¶pw•Ë,>İÌ´ÓÔ:œŒÙ¢ÿó†Ú.wÒ4jF)¢´…ÇÇ…É³å+GÃÖ 8Bœ%±¦§wi¦>®º¾°ª#/$u>ş|Ì¹(Oš)ÔÌÍ›†Ö.MzÁ5©eÅGË<¢°ó¸GêƒZ_— r³/>çXŠÂp¹$’Ò¹¥­Š°?ë¥¦¿T``wxDÑç¡l"|2ÂŠ“­KÓ]Ã¢BOñu 5Â¢„æ‚µÒ‰¹õ6\¾Ûwœq²%aJ„¿á
+Vùv½÷yãTYrç–si[)!Èç\p—·Ñ7+ı×+òÍ}+Á»B 
+yí”çM¹”ŞåšŞM7Éäz÷º–è¶¸tôà:…£Œ&Ü.ñËñL…yï÷F,±&šp–V‚$¾x$1µ˜ËÒ­;Œç·*œhİGà›ÁûÕ”µ€3˜Ì4d°mLÇÓ†%8¸+YM=dôNÖ{4y€aÜ {‰}óE&á\&­#!šİ?Á^Æ·N_d~c&ÊÛBµÅª8aÑ3ÇDğ‘}
+€v‰'|Å`z£»tøÂRz#µ¢2Ë0}»Ùrïº•Ö?œJ—,6•VMnm«ş>Üîø)9úB|yËèŞ'¼ÎÁ¬œğ³‰±Ân0ÅåóŞW˜Zø°DZdó+ëŞ}úlx´ó½2óì=Nh_¼ ª,Z:óÑ ÜD‰] jÆr'ºÅÂÏÃÖ'@á^<JĞ|‹/!ª‹Ñ–ñ¾ñb9nZ¤Àš?Gdnq¼,«9×¾e‘ŠwEÖõ$BIK]$JÆğ´5è±.ËiøÄÉ5[|xÿßî¾şt#ñÇ:ë›$OŸ3a£F'O£T×Š¼W§gºÉŒªVÖ­üš:~<h˜ùY¹yÃœv2,¤\œ!$Ğ-ª…ób¿g{÷Çø²{ªê¯Á,…=Ï¯ ?à¦Û{çÕQù65Í§áp ä	†”£SØ=™WH¥Ö›´¨%7w$ ×µºB£˜ÇÛïç›ÄE™(N`³su<uURL—†~6RH"êµZ–t³)B!»åœeÃ‚0û7ÍÕŒƒÊ*W¥ª£àeü\)âƒu„ç¯ãŠ¼èwæºJÇ,†^&Xıtİ˜0²µá,zÍ#ßU.ô_ÙeAÚÍLDì+^Ô*¿{#HS~Œ[$ñª–Áª‘İI^VM¬^‚DÒá	£ÉèŒL
+íHV³iˆr³ãd€†ÿ Æ5[¶Ê û¿™Ãcë§ë>6…Xj“K«ùMµ ¦ I+pÀòyQ*7dAÿyPnÊœTşÖ²ğ—fK4µrDÑ|Çâe=ä ¢İXv:Q˜=*•<OÄ”øÉêèæì0ZĞËş»­‘8wVL¡Ş"Nö`
+ªD¡‚NVÊy¹qGÉüOï Z1†ˆ¾ÈğG¨Rqb%‹ÚètŞÀ·äµeœ%å&dVšÛæ¼µB´RtÎ~à•¥ÅèH–ÜÛ9^fÚ=#÷(è0~®ä>5ÁÿOmMewê\ {jÌQP§Ntÿ «}Ô ò.›è¯…kÅ8Pî|>MæíøhÛ+Eruß#ƒ›
+]ô¼^k9Œ­hå`U¯CéZĞÉäUKºŸ…rÜmÖQÂBEHà>Kf­ŠØu¯"E©I›—¡ú­Èí«êÚòù,µ;eµ¢÷Æ>U­YzÊ†0M—T£CÄê÷¬”f:•»0 hÖXoT‚Ó  €  øˆ#u±Ägû    YZ
