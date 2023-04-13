@@ -5,8 +5,8 @@
 set -xv
 
 # Magisk and TWRP support
-[ -d ${MAGISKTMP:=`magisk --path`} ] && \
-      ORIDIR=$MAGISKTMP/.magisk/mirror
+[ -d ${ORIDIR:=`magisk --path`/.magisk/mirror} ] || \
+      ORIDIR=
 
 # Original paths
 [ -d ${ORIPRD:=$ORIDIR/product} ] || \
@@ -1174,10 +1174,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀ€ !      Ê)(àOÿ…] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¾íÍï#};vµ)Qí¼ûò.÷ÀÆ¨6(D
-ß{IùD!q.xìà’¾|ÁŠ#$]5k–¯ÜìƒŸM6|XJ&)þ6…ZŒÂÌF€^d÷HýÆù7$Â¤Ó»ïÜPz{‘Êv‡qI&³ÉËs99\D­8ê|–T‹)gæ3?(89°ôƒh%é>õc4é•å­—ð¯p+»l
-6â=$ÊëÓ2Œ"f¤æW‡z(Û[Ÿp<8©yÂö#,ÉOÈ=!g•DÞ‘MX¾7ØÈS Ý”I#ñMùŠjmµÎyoÙ.Ð!Ã`*2úcâÀ34Í„Õ F%¾™lc8÷Z87óÄP¹¿q¶ŽÃAù²í¬Îy N”©‚Ž@æÂ*e€hŽÚ¸…‹–.‘Ð2h0‚C—ð×–“W± -Tb:ìBÔ‡¹´ïì²Œ´ä0/ßJÔæ¡„‚ë‡ŸôñRêxûÈJ…‰`ïöA?-ß«sÆl7±bn–ÝF_Ð5]4 @¼KõV?bît¿÷	á¿yøõ¸èá+cv¬dælï€Qf¯"ø¼3F_bhuò¢#eÉ$ä:·¶ÆbÛ|Åx]e|óƒÞ·Äép¾[ïb™®O£¤C¥ÙèÓÁîžñ¥£Ûñ ê€ÃƒKÌÚ?ëM•NÏIµãÖdMòã¶±¬½QÔs·XQ(È´UãÉ#ÞÄŠŒÊ6)…ó;ñ¢êîª@°õr€G²„Ë@í¿›H4þýC ýç3—ˆ…~¨t‹5a.”û"æáXó ¼<&ðe‹Ozl1+÷½Ú7?xŽ¥vkXæ£ô¹$ŽeN˜§Î,ùxà¿<9hå»å7[Å1&G• ñe¼G 1«ÎVÉñw	ny1H­Jëú„ wÄGe2,¯®6¸B!UçÌ­Ü~‡JÂH„OQ‡®JÐëõÄÖyYüK©çÒÈÈ¶D€Ë•£WKÀ@å–#~¦ÁÜdK	—iã»–0|y¥—7¿ ï2Ioì‰Òçõ³DóŒjU¡î´qö!lüé‚Ôµß0—ü
-;´ß¹2/ý^fxLñ¼žø8Ë"–£#ðÛ­W‡ÑÓŸBîÀ¹26·w¹äã´˜âÏå½“5o sº¸vUÆóçËé\ƒpþžÓªÕQ9…æ…Ò÷Ü2­÷ü´øö”÷¢ÿQÎäL"%5\2ÍT €À`tÓ,BšoÇHC‹a$iEŠuC)ýpJ8#²íæ,¹—±uJ
-Õ2žË'Wv	Dy¦¯¼,Ç÷`{ÆÏ¿œÔô#)N	æ`E&ß>¹µß™TTy¥ÅC~À&Õ‚œ\À™›ð@NØ|1ÂwLu7â0yF~™äíƒ÷ý¨È×ÆT~c¬Å	BÐ‹±æ¾‚6×5»[ÑÞÌ¥®r³ôº¤!M¤:Sª¬†MzŽÁÁØøà¼ yfú_¼Õ -?K"Ý89d·‘=ÉM=§9wxðágá§Zé×3½	µt‚“Ä ï„¼ac¯ÔYò‘œdÅ<ã›¥+|°’)I;#Ç“4Þu0Á‰Xx’Ü+ðÄòÞ‡_ÕmI·ëy¨³›;I,Üîúnù÷ÁY`’1™éâdtD‰;ÖQú?-‹­
-Ò :ØnÎçwCµ÷Z§˜®†ÇnµÇm§o¸z¿t¯°ñúuîU£¹ÏÚBIÃª»­1,Ši?†™GM»¦üfZ¬n±jeåJI^?ÂˆÛ5*á+£,y•³2«o›ˆÝ&MÄ¾ïù(§Ò9¡â…²g†aÞ’8Æ*ç'¨!<¢B'†5 „˜°ªðNúÒ©MËÞ‡(ûñ–Ë¦Á¨ˆ1+;$9+ñØNóx3õ¯§až”ãìpÍµH@0¾¼¥ˆè²Ò¸RFäãÌ¬›K%³åB)ÛoëQkåãÔmE ç‹,'œ¤otS×Øšü£·F¥4¯¾škf#pæÄõmÆ½eÜðˆNÉìD÷žu³ï€*õ&¦épä\`¦úÔ5ö‚ía•¼®€dàò¶S:òòÎ+8Fëda'nø[ä¥
-Æ}öx0‚I¬Ùê#6¸64F¿ªÆ¢!Yvh…;³äUªèÑ·cÛý¾_6„ÁÎ!–òéäÒÈFªò|[‹Y¾àÃUÃáic€0¸™í;P€Ž$yì1ÁÑ\¿Ñ“¬+¡Xìž78Ò‘±y«dî=•›68­s‚¥RGÈž=ÉãŸÎ¡FÄÃ«	­öë×A·‚€EˆÖÅ«5RWÅ´sw,þ`QS¨ÇÀ€ëƒª¬¡­}8C·®ÝísÀ!ôöÑ@E²ËÓ[«ÔÃœG®v c_\aÆ$Àëõn}a2e€ø„§4©8gñ¼iCÄàÅÊÂ:·ø0JÛÆðÏš4ÒiþÇöèÁò=oÓS˜i-¬YóÉ®#Ì"â+ÝŠ9‰:l§cÇfG;8ÜäŸ¨vÙ|âŠÕaÀ,ÄOU7    v–JçÝ7¦ ©€  0Ù,R±Ägû    YZ
+ý7zXZ  æÖ´FÀ€ !      Ê)(àOÿ…] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²¾%PmbëPg¾¥„†ïÝ~­=±$Ãsê%o!Š¥5jJG ÑG÷qªÇ,N*r‘þÐuúÃû—¤FœÌH[Žþá¢Íd[µbhqxÖcBí±ñJ<}!Œþë¸‹Ô áq÷œÔy•Ípå$´­g£ùn‰4m‡=`;ÝfÇ~ÌóÑu;²3dÍ‰æ©	ZœR"íüSXrßãO7E2²á¯Fëæ%—‰åh#´&¶!Sç7ûPBKH+èúd³hñN¦Unië‡m=‚Ÿ£2rõÄ2‰Dâbž«vJ›öîëLƒ´IôÄñƒÐõ¡ˆ{¹öÀØ@,Y6>«PptØ*Éñë†âhPXg'“
+%z¸ègSSŸÔôFQÄáìe^&¿Çšä§ó‚%‰g€AúƒX95YßÉ ×*vÃ¡þû_IRE›Ê‚"KNsHŠÑ{ðû‚z§#ËZð`bÂyLD¹L ƒ-ü*<Ld¢tu¥>üØ@ÒY‹T3½*2@ˆ›»)¨ß=VVÑæÎœ=ˆn¬6(§.+Ùþ<Œ™dÜÀœ&¥vãWÜzÕCD¨šÞ ßßtÆŒ²)[²>Öê®qñžV fcÔ|&*½]…¶Ït±Ý¥›Þº…¯hþ‘ÎžgÓ[Ã ³» 9{c-Í¼æwÖd¤Ö·9bé•¸€iî¦|\DUÃû§ÞÉé\®Ù`ßªUÛºìãeÂøiz$¥x˜)æÈ÷%#Í„aÛú¬åê
+>ÒjË&uxŽH'æAF¯Ö»ÉÈóÈº__>J ©Û¥ä‡4åâzÀ¹@ =À#úÀYóÓÄn”B§dVšÞÒ'•Ûrw¹œöªKÌ|ÂCo×§"0žøzÈ2qr{ACØŸÈD~wÁV‰§Œì2Èù1Žý7OQ¼oTaÜwßöbmËÖàÂ„e—>oŒÅoQÕÑ_fúÒi^XopVvJVv0`ˆóq?®t**šˆuö2y]	'5›e–:3ÚFaGsn–Nšê²Õ€ïÈ	:¿p(¨Z. S™ËûâŸw™.Ý|SçÍŒT»šŽ4g…´ˆäUÿÃØ^á½ ‡?+Çý”PÑZþ$TÙ¡Ó‘8ò.£ €ŒáÏÿWé‚ç~îxÊé¥"ÉG†3åÂß–.åìõ+Ç‹\@µÊ®bz¢”ä?1xÛÆ—AÒè}D êŠC²‰CG°<«	°TÇuAXÌÉR nÀB(‚×ûÁ´¯F˜Ñ(/¦@T÷W·2¥ ÞÓ‹§ÌGÛb‘o<­·3ocÌ5Oµ+7ÞÓÕW—­*˜:!¾iuÒê<:/)?g§*¥`ºÇMùUö]{’µ‘±-±ß³ÞAþ©|Ò4ÆE'„ªŸ×– d?HÞ”µ÷Ì^ëQFmc®ó¬ê>öãmy%pî!,F9×÷@èÅÚbÇu7Eæ¿“•o‹fÀg]®ùIú:ùqf‘„†øßØ@on/¶'ô{tLn8ª»ª7o‚]ÊZi|‚¬&b™2 øû¤b›ÙÙ#\fGR;¿©Žo;…„º~"S¾Äç
+®(÷¨åD…â3ÍÖ›$±øŒZ,:Zg¯É6wþÆíCºRéÔ÷:„¥.Ó¿eÅ%ºúÓ³0ÒÈ$/»qKãÄÜú‹\WDMÇùÏ¯¿ÑR[Ô 9¯†Éhá2Iu8õžsJËVZôÔ±ÕÉš„¶lÃWÂ!+©=¼ùÿTËÃ¨³òº¨æ¼q|^³¼ÿÈŠ¹ÒP ë«‹[hyÏYIp©¡5aü+²
+B~5Ãù8Ñ8ì
+ÉñÏ!’&Dß=Òá„ùÐ:XÅ Ö1‰ë@ @XOOÆ•1ëÿ¤1ÓhÌÊØÖLw}0Î…ø"äÎ¿¾…†õAfM|Nò›ÓÒ¶æ#cKq-§ÙûaêYBICnœ‘Ñ 5Uè’?C+‹àÖl½mÝÜ­²í¢¿	œý¡!ztúêÉ…{ào/ÚJÆ~+†ÝZ AUùµo§’îÐ‘ƒ¶¡ƒŸyuãõ?€m­”H@Öœmz~³h®0yé÷¶òäï3BÈ‡F.®$Y¹O¸n²«O*$ 3KK9•d’4àž¯… vî‚ÚÛJ ´¢Âš~K€©è°ùzMpxÖ'Þ²¿4YBMçL½«Î
+Igéð‹f›zôQ|ú9£ŠÐ°ã4R²›Ûßþl‚O{;cÀEqÿ²»ó(ŸCèÑïá?Rnõ‚VéÛ¯éÖòŠ“Å`²¸gK¶¦Ã7âÕ‘WÿCl%vzLªþÊÞ¶‡¯háýîk…¥•E*º„K"Å8þvË·§Zƒ¸±ÊtšÒƒGŠ’o?\XGÌä^lò,”âÏÓ½Ì¼bÿ|3WHÚIALÝŸó(þoöªÂÃÆ€w%gôàŠ    ŠMmf'× ©€  0Ù,R±Ägû    YZ
