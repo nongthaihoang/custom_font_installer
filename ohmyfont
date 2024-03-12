@@ -24,6 +24,8 @@ ORISYSEXTETC=$ORISYSEXT/etc
    ORISYSXML=$ORISYSETC/fonts.xml
 
 # Modules paths
+        MODS=/data/adb/modules 
+     ModPath=$MODS/$MODID
          SYS=$MODPATH/system
          PRD=$SYS/product
      PRDFONT=$PRD/fonts
@@ -44,6 +46,7 @@ ORISYSEXTETC=$ORISYSEXT/etc
 
       OMFDIR=/sdcard/OhMyFont
       OMFVER=`grep ^omfversion= $MODPROP | sed 's|.*=||'`
+       UCONF=$OMFDIR/config.cfg
       
 # abbr. vars
      SysFont=/system/fonts
@@ -190,9 +193,12 @@ rom() {
         xml "/$m/r $xml"
         # Disable gms font service. Thanks to @MrCarb0n's discovery.
         $BOOTMODE && (
-            gms=com.google.android.gms/com.google.android.gms.fonts.provider.FontsProvider
-            echo "( until pm disable $gms; do sleep 60; done ) &" >> $SERV
-            echo "( until pm enable $gms; do sleep 5; done ) &" >> $UNIN
+            ${rmf:="rm /data/user/0/com.google.android.gms/files/fonts/opentype/Google_Sans*"}
+            gms=com.google.android.gms/com.google.android.gms.fonts
+            gms1=$gms.provider.FontsProvider
+            gms2=$gms.update.UpdateSchedulerService
+            echo "( until pm disable $gms1; do sleep 30; done; pm disable $gms2; $rmf ) &" >> $SERV
+            echo "( until pm enable $gms1; do sleep 5; done; pm enable $gms2 ) &" >> $UNIN
         )
         [ $PXL ] || {
             # VF
@@ -379,14 +385,35 @@ vars() {
 
 # prepare font xml for installation
 prep() {
-    [ -f $ORISYSXML ] || abort; vars; romprep
-    # check if fontxml is pre-patched for roboto fallback
-    ! grep -q "$FA >" $SysXml && {
-        # remove fontxml from installed modules to prevent conflicts 
-        find /data/adb/modules -type f -name fonts*xml -delete
-        false | cp -i $SysXml $SYSXML && ver '<!>'
-        # otherwise just use the maybe-modified one
-    } || false | cp -i $ORISYSXML $SYSXML
+    #[ -f $ORISYSXML ] || abort
+    vars; romprep
+
+    # if we're updating the module, use the original fontxml
+    [ -d $ModPath/system ] && {
+        false | cp -i $ORISYSXML $SYSXML || \
+        abort "! Please remove the module first. Then try again!"
+    }
+
+    # compatible mode
+    COMP=`valof COMP`
+    ${COMP:=false} && {
+        ui_print "! Compatible Mode!"
+        ver '<!>'
+        false | cp -i $SysXml $SYSXML
+        find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -delete
+        return
+    }
+
+    # remove fontxml from other installed modules to prevent conflicts 
+    [ "`find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -print -delete`" ] && {
+        ui_print "! Warning. Conflicted Module Detected!"
+        ver '<!>'
+        false | cp -i $ORISYSXML $SYSXML
+        REBOOT=false
+    }
+
+    #last resort - get fontxml from /system/etc
+    false | cp -i $SysXml $SYSXML
 }
 
 font() {
@@ -1023,8 +1050,9 @@ getsty() {
 config() {
     local dconf dver uver
     # 3 hash signs is used for integrity check
-    dconf=$MODPATH/config.cfg dver=`sed -n '/###/,$p' $dconf`
-    UCONF=$OMFDIR/config.cfg  uver=`sed -n '/###/,$p' $UCONF`
+    dconf=$MODPATH/config.cfg
+    dver=`sed -n '/###/,$p' $dconf`
+    uver=`sed -n '/###/,$p' $UCONF`
     [ "$uver" != "$dver" ] && {
         # backup old config and reset
         cp $UCONF $UCONF~; cp $dconf $UCONF
@@ -1162,7 +1190,7 @@ finish() {
 
 # quick reboot, suitable to see font styles config changes, i.e. change wght value
 restart() {
-    $BOOTMODE || return
+    $BOOTMODE && ${REBOOT:-true} || return
     REBOOT=`valof REBOOT`; ${REBOOT:=false} || return 
 
     local modpath=/data/adb/modules/$MODID
@@ -1178,10 +1206,10 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ€ !      Ê)(àOÿ…] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²=çÆcñÚ…8lÚn£R¹úºxJğèÖú3äSüÌ{\ùJÍr›hUYĞ™ÂA9ëˆDÓ[Ø%fÏ¿=w;a‡À_}r8ñ¾Š¥Ï@†Š¶kC‹qÂÜÆmÖ²_.\6îj½Äif ÕIB/¦£ë:+ÖEõ´AØ-’kˆıíšæƒÌ<0+äìVµbN“µOaÁM ¡«Zº'Då?¿ç·‡Â¾ Š;r/t‹¥P
-Ü/ûÃ×&ö­4µOëØ†eU\ŠQLÇşã¥¸…kÎ_	˜Cİ}ˆ×¯ƒG”ï®…Ç³‘$U‘‡¹@i:&?)äxğ©šI¸x3¿ùİÿaWù9¨`I©ÜOĞ<ƒ‚h3M%êıGo¹ÁKIù	?C&]{}†üFí£\^ÙAŸ-c«‡ù(ü¶µX7¦/¥ô1—å£ÚÛÉú34zÁ|'ræé—C» 8¸|ùÏëºÒ]rº¾g¨ØIğ4A«ëTşxŠvô˜öË[7<…À‚ˆT^f>·Uz éAjĞ€i`¯É…’æ¢ÄªÄôq;j¼^¥îJ¯¥l³½ê‘é=á<ÌK7dåzæ7­¿:•^Ğ•[hoˆóÁÑ%Ê¥·°à·ÕOÖTæq<$ÎÊq„$BÖoÿ×Jò÷Cğ\éUh±|*6ueÔÜæ¡åÍİïÑŠş/#
-¢ZsµGM#®Á<²¬»ê\¡VB'H°J¼9ø=ÆkÈâÖÆùùk]us¶®È0‰N?¡‹JĞ\[2j·aîIÈ!”îÔò¶Õëİ”¸VLÑeX”:ãÄüW»œ€„JGëËG$é'Æö/Ùqª¤x°yÓí¯¥ï]/ˆ‡}¸µªhµEšÁ¶Aæ‰B~F»o÷Y5ªèİwÄàJî‘ÓÊXğMÅ?•ºaäN)lÈ~ µ6¥,ºK5QmL«hUH^+¡Îööwü"ˆ·{ï-nŒOTîM¯§—®õ@ƒö.¿«¦Âğó« nPîZH?6á˜qœ–¼ŞzZÖı†³Æ(m&¼áñŸo?iHuJÃcK#¢<òÉ<‘¿*Ãë"ó¼¬”£ÿ£Ö¸Ú~X_gÂ\·¿/ ;€.ÎË`ÙjÑh×	¸ûaïi¸… Ÿ$XX…:PCÎ qsIGV²6 ~ÓõŸiø´ƒhŞ™o,=ş’t°À8Ì
-§]¥DAÇ¦Ö6f däG`æX[,ÓpÅÛ1Eì×h:†ÿã®„!”h§——æ_á­ƒçÈÿ )"“o=yëš~í$t
-ÁNÀ/ÛUÖ–X™QXkMİÕ6R¥g3øÓ/»¦ß<ÜÏlu‘¸Rˆ{X)©Àó—hĞ¡õôƒ½uã	n„•Æœu¿r8§œG°ßn.1ÔÄ˜í*™Kö›Ç3æƒ5k ±YïPƒLñ­<£™ÉWØYMäzFÊïº÷D%è³¢-uÂ•,Íì5Í„JáÇËí”­`!­?ğtE—“H-º|l6zĞ¤Şûü¡¿ğÿêø¿ B¡FÊ:£TÖ‰ÎÌŸ{¤{‡U6„9&MÀ·í ,ñ÷ë	ãgvK\Ùû(ú¶¦Ï3µš"} M"Ë¦+ñVF7‹¼>P„RÍ[·pˆuË˜@±h$°0‰ËøÅQ^
-#áò·/c›ÎÎRM5mÕG|Ó˜nt·W”Ój„Wíîü'y,’‰~ÆÜt8A!Ù„„]PtL‹ƒ`ÕÓ¬t¬îêÃš-¼Díz¼Ùı|aÇ>åÄ¢ƒw6!èn‹(‡ıŠ\êÑYe ŞúˆcjÑ‚ölb	2³2d‹²fõßåENÃ¨yR„œ7„ÕS˜èm×áı¹0?Sç¤ÈP”ä×L§ÄFxş^<»´É‰ñë?}¥&È^.ú¤J¥j÷4]^ÓKğ÷~Áe£Î£P$8‚í³[=SÇXrØâ^4¡©áísÿû28‘¬äÛÜUò(>L¦öX¼­÷L7WÇÜü[_DK­W5¾¦]€œ‘|¬Mî*•`ûç/ÖLIw:6î÷ô¸{91›{r…²Ë“(„ş¶Jú[~UöâZ0ßÅã)œ)VÎ¿|h~HˆEÙŠ^Æl/ƒ›ö¥:p¢56§£B‡ã5V'çˆÉ
-ºü«íµZà?çæ$çÅş™÷:cmNS¼@ë¯íˆe—éÑ_ñAîcÜ·¸?qÍÛŒ~²²¹Dã3¬TŸá ¡_|útNG=oÃê•4Œûeh†aÊjkîÙğqYGÎ×İ§z#¥ê!Ó:§ñ¾œ\5Şq,€ÓäIıPyµŒÉöéhÀyj{¾g„¡LŸæº¼êæTÖı0À…Õ#¶šş3=sqPĞX"9¥•öìdu[G“ü‚˜ü>¼`%ÒÍ¸x‰›Ì.zßazñ¬•Ù+    š;È°[¢> ©€  0Ù,R±Ägû    YZ
+ı7zXZ  æÖ´FÀ‘€ !      ‹µndàOÿ‰] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²=çÕD}£˜xA?còWJS®®GoÂnLK3Ò÷ºù
+rµ!Se¿
+^éÎ†Xİ®òYPsc?„ÿŒ–*HÆ?séh²;aba7ş¸ùŸ^ª°J»CCç“¢
+Ï”/hŸÍŞÈ7²*Ş°p§g@]@™/ùŒ‹úZŞ"bæXDtfI­r_Cq}éÕ›—1ÆÍjˆ™×ö2„Äïˆëúùw =”pÀ|rç¸éôĞ•uŸ]8¹«/«9,•D	ˆÎ–Í*I MÜÅë|3÷]ógX3QíÑ!_¼Ô2È¾EH2d÷0;vœ¶Hª¡z¬ıY[8ÌÂ˜ôÜ¡ñ	¯¯úoÃ¸n mw9W¬X:ß $%)%éO…`f»Äó›TBƒBVÑ{¦RA˜É-¬1ìÏqtôiÙ?[rñtë^N¨Y¯‚SÜïWüà±ÌÍ~şnX½Öá®Ë‡ àü6® KÈİÂqÃ|HÅ[Ì£ZÅSŒÁ×İÇİ¡T,SùMÛ3{ˆÚï#‰´–í0¦8ÆèKĞÿ»¤‘ÖÈ83f©øã¬Š`CBŒ‚Ã-¼“ø6!º§ K½¦VªnZhôkØc¸¤¿?‹^´¦òÁ"˜UùÑ‹Jfëâï'^
+”ïEÃíà£¾>eb+Î™÷³}[İ­‘ƒD†qr+ÄÃÁ38æ~ŸYŠP¨uté›`ı+0@ÌëŞªú"’¨ (eOØ¦¾ëö¤C ÀògÒÍJ÷›êËA ›õÄ¾œ²’÷Ÿâ¼|†jø,®°61°HÜ‹«U Å&2kâHÃYK/ü{Bz<·w¯"]‚p„ cL;ª,°y×£„3nW¼ùù“häÅÕG~|ƒš²Q~ÄOfø5Äue‡ËÃĞ{†Õo}y$%xi¸gQ¾ÀTj36GÆÛRMM}e‹š`I h…SšÑ—0eİ$æü¨‹0¸:1ÉÌÚxÙˆÕtys’ŠE)ú> 5\äáA´İvhD5*DDÎ²ÁŸç	û»ñ*ÿ­Ÿõ¯2ı¨Àg™eKòÿIßHwÏd…ua‘p.±ÄƒH¹¤Szmø•²ïÁğ¶GJ÷lv”`Åè]À°7WÉ^‘ÅÑØY¯(bæÈ-^]Gœ%Matæ?%bÅÁ­±jí•aë3şÉ¼9ÿÍˆİãæk4àoì’äÔÕúÁ/]ŞğmÖÂŞ=û˜Õárƒ!tÒ EW7$ó,údö.ÙÏOèÆ2¤6\å`¸·šÅdÅä+ˆL@q÷4åAÕu¶ª‘i
+.ü™M€<5Œóª1N/[j‹„M/6¥¯NKÖ·Å]Ø\%§€"!Â1âr¼©h(:O-³nîîÂŒ´ãzj½M¼ùÎ‹”¼³ä^«=ÔdD˜oğvm¼Ÿ×ŒÛ¿¢*OA„îîpôI$r(}Ûõ´ğ0ŒSÉgJøH…ÃÇH(÷§1Hç@ƒm£¥« ÏdWØıà%¸e:IªsC§m—¼ŸVåë1z» ”ÊsÒ¼³åòLÔv»©‡Í6&‹Bî¡¡j;.v`>POh%?©Õ3tH¨Ü’€ìok•×%äGlÆ¦>£ƒäıñêo€éÀÑ5•rNŠ3Å\Í¡»Á‡.4#Šè¢ªp´’y¼«¥¾ƒMz¾:¶(p;šŠÏ¹éOµ½ÈÙârÚo.Íâ}¼Ù}€ê 9ÉäçCg™1Äî{oly÷é•>i]ŞPar~AB	èDj¢uBOåÃ¿¶¿}ï§€ëÌ†eÙui0 ¿ƒZWNÅk4*üyq9î4­G¹Q®²ûvcé2ô—3U\‹ªò»5_æ¥˜­¶µ˜ğËğILR ÃæálÔFZ|§7J§ús¿ì}Ş‰¬é"»¥—©É¢šHÍâœ‘4#xùeåR=-ì»E‡Î½F+ìÕXêæ µEbÃa-	Š`Í„Â½Ë½Ê@²Ğé•Å˜¢H‹³u°Öå§ñƒéQ·“p9æ&3ÇïVc³Ê·Vª‡Í?ÕôZk2»ĞS€Îñe57â)ôôØ§İÚ{ x,Š„X'ÏR˜; œ¨›Ş³&å|îf¿æŒEºF=úwƒ/ËRÉp.ÍÖõ%ßG%¯yğŠÏ`Æƒ%¥%ğ­§»É/x,ËT‰8ête4“’©‡çÏËP{§*×[ƒqø®M"EàšóşÊåòiTÙ ÿ‚K„léL[lºÌ9 fÄÚÉTö‡jyQ{>¾{ga¡.‡èè‡!bqeî|IéàêŸ’gêz uïN¿xà±÷íDì‚ÿjFşhšövgğ¦5à†—EÓ¼ıbíË¨"r¤îŸóXbRnvšw¾X¤÷Y6ê¶¾½æmäË˜A·ıÂ³4<Ş²
+õ ¯õı<L2    vƒÛş°½Ä ­€  &›½É±Ägû    YZ
