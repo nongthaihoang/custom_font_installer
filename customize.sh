@@ -8,17 +8,17 @@ gfi_dl() {
     local zip=$OMFDIR/$zipfile
     local time=`valof GF_timeout`
     [ -f $zip ] && unzip -l $zip >/dev/null || {
-        ui_print "  Downloading $font (≤${time:=60}s)"
-        ui_print "  $link"
-        wget --spider --no-check-certificate $link || {
-            ui_print "! $@: no font match, make sure font name is correct"
-            return
-        }
-        timeout $time $MAGISKBIN/busybox wget --no-check-certificate -O $zip $link || {
-            ui_print "! Download failed"
-            ui_print "  Please download the font manually from the link above or Google Fonts"
-            abort "  Then move/rename the downloaded font to $zip"
-        }
+        #ui_print "  Downloading $font (≤${time:=60}s)"
+        #ui_print "  $link"
+        #wget --spider --no-check-certificate $link || {
+        #    ui_print "! $@: no font match, make sure font name is correct"
+        #    return
+        #}
+        #timeout $time $MAGISKBIN/busybox wget --no-check-certificate -O $zip $link || {
+            #ui_print "! Download failed"
+            ui_print "  Please download $@ font manually"
+            abort "  Then move/rename the downloaded zip to $zip"
+        #}
     }
     ui_print "  Extracting $zipfile"
     unzip -q $zip -d $gfidir
