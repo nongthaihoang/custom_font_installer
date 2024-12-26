@@ -1,12 +1,12 @@
 . ${SH:=$MODPATH/ohmyfont}
 
 gfi_dl() {
-    local family=`echo $@ | sed 's| |%20|g'`
+    #local family=`echo $@ | sed 's| |%20|g'`
     font=`echo $@ | sed 's| ||g'`
-    local link="https://fonts.google.com/download?family=$family"
+    #local link="https://fonts.google.com/download?family=$family"
     local zipfile=`echo $@ | sed 's| |_|g'`.zip
     local zip=$OMFDIR/$zipfile
-    local time=`valof GF_timeout`
+    #local time=`valof GF_timeout`
     [ -f $zip ] && unzip -l $zip >/dev/null || {
         #ui_print "  Downloading $font (≤${time:=60}s)"
         #ui_print "  $link"

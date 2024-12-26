@@ -50,6 +50,7 @@ ORISYSEXTETC=$ORISYSEXT/etc
       
 # abbr. vars
      SysFont=/system/fonts
+      SysEtc=/system/etc
       SysXml=/system/etc/fonts.xml
         Null=/dev/null
 
@@ -72,28 +73,31 @@ ver() { sed -i "/^version=/s|$|-$1|" $MODPROP; }
 # shortcut for sed fontxml
 xml() {
     [ ${XML:=$SYSXML} ]
-    case $XML_LIST in
-        *$XML*) ;;
-            # remove comments
-        *)  sed -i '/^[[:blank:]]*<!--.*-->/d;/<!--/,/-->/d' $XML
-            # change single quote to double quotes
-            sed -i "s|'|\"|g" $XML
-            # cut one line <font> tag to new lines
-            sed -i "/<$F .*>/s|>|\n&|" $XML
-            # merge multiple lines <font> tag into one line
-            sed -i "/[[:blank:]]<$F /{:a;N;/>/!ba;s|\n||g}" $XML
-            # cut <\font> tag to new line
-            sed -i "/<$F.*$FE/s|$FE|\n&|" $XML
-            # merge 2 lines <font> tag to one line
-            sed -i "/<$F .*>$/{N;s|\n||}" $XML
-            # join <\font> to <font> line if any
-            sed -i "/<$F /{N;s|\n$FE|$FE|}" $XML
-            # water mark
-            sed -i "2i<!-- OMF v$OMFVER -->\n" $XML
-            # save the font xml paths to xml list
-            XML_LIST="$XML $XML_LIST" ;;
-    esac
-    sed -i "$@" $XML
+    local xml
+    for xml in $XML; do
+        case $XML_LIST in
+            *$xml*) ;;
+                # remove comments
+            *)  sed -i '/^[[:blank:]]*<!--.*-->/d;/<!--/,/-->/d' $XML
+                # change single quote to double quotes
+                sed -i "s|'|\"|g" $XML
+                # cut one line <font> tag to new lines
+                sed -i "/<$F .*>/s|>|\n&|" $XML
+                # merge multiple lines <font> tag into one line
+                sed -i "/[[:blank:]]<$F /{:a;N;/>/!ba;s|\n||g}" $XML
+                # cut <\font> tag to new line
+                sed -i "/<$F.*$FE/s|$FE|\n&|" $XML
+                # merge 2 lines <font> tag to one line
+                sed -i "/<$F .*>$/{N;s|\n||}" $XML
+                # join <\font> to <font> line if any
+                sed -i "/<$F /{N;s|\n$FE|$FE|}" $XML
+                # water mark
+                sed -i "2i<!-- OMF v$OMFVER -->\n" $XML
+                # save the font xml paths to xml list
+                XML_LIST="$xml $XML_LIST" ;;
+        esac
+        sed -i "$@" $xml
+    done
 }
 
 # lowercase to uppercase
@@ -189,9 +193,9 @@ rom() {
 
     # inject GSVF into fontxml
     $SANS && [ $GS = false ] && {
-        local fa=$Gs.* xml=$FONTS/gsvf.xml m=verdana
-        xml "/$m/r $xml"
-        # Disable gms font service. Thanks to @MrCarb0n's discovery.
+        local fa=$Gs.* gsxml=$FONTS/gsvf.xml m=verdana
+        xml "/$m/r $gsxml"
+        # Disable gms font service. Thanks to @MrCarb0n
         $BOOTMODE && (
             ${rmf:="rm /data/user/0/com.google.android.gms/files/fonts/opentype/Google_Sans*"}
             gms=com.google.android.gms/com.google.android.gms.fonts
@@ -385,7 +389,20 @@ vars() {
 
 # prepare font xml for installation
 prep() {
-    #[ -f $ORISYSXML ] || abort
+    # Android 15, add the new font_fallback.xml
+    [ $API -ge 35 ] && {
+        SysXmlOld=$SysXml
+        SysXmlNew=$SysEtc/font_fallback.xml
+        SysXml="$SysXml $SysXmlNew"
+
+        SYSXMLOLD=$SYSXML
+        SYSXMLNEW=$SYSETC/font_fallback.xml
+        SYSXML="$SYSXML $SYSXMLNEW"
+
+        ORISYSXMLOLD=$ORISYSXML
+        ORISYSXMLNEW=$ORISYSETC/font_fallback.xml
+        ORISYSXML="$ORISYSXML $ORISYSXMLNEW"
+    }
     vars; romprep
 
     # updating the module but can't access the original fontxml, ABORT!
@@ -397,7 +414,7 @@ prep() {
     ${COMP:=false} && {
         ui_print "! Compatible Mode!"
         ver '<!>'
-        false | cp -i $SysXml $SYSXML &>$Null
+        false | cp -i $SysXml $SYSETC &>$Null
         find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -delete
         return
     }
@@ -406,12 +423,12 @@ prep() {
     [ "`find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -print -delete`" ] && {
         ui_print "! Warning. Conflicted Module Detected!"
         ver '<!>'
-        false | cp -i $ORISYSXML $SYSXML &>$Null
+        false | cp -i $ORISYSXML $SYSETC &>$Null
         REBOOT=false
         return
     }
 
-    false | cp -i $ORISYSXML $SYSXML &>$Null
+    false | cp -i $ORISYSXML $SYSETC &>$Null
 }
 
 font() {
@@ -617,9 +634,11 @@ fallback() {
         s| postScriptName=\"[^ ]*\"||}"
 }
 
+# check a family if it is already fallback
+# do not make a family fallback more than once
 fba() {
-    # List of fallback fonts. Used to avoid to make a family fallback twice
-    [ "${FBL:=`sed -n "/<$FA *>/,$FAE{/400.*$N/p}" $SYSXML`}" ]
+    # List fallback fonts
+    [ "${FBL:=`sed -n "/<$FA *>/,$FAE p" $SYSXML`}" ]
     # Roboto
     if   [ "$fa" = $SA ]; then echo $FBL | grep -q $Ro || fallback
     # NotoSerif
@@ -628,6 +647,8 @@ fba() {
     elif [ "$fa" = $MO ]; then echo $FBL | grep -q $Dm || fallback
     # Cutive Mono
     elif [ "$fa" = $SO ]; then echo $FBL | grep -q $Cm || fallback; fi
+    # update the list
+    FBL=`sed -n "/<$FA *>/,$FAE p" $SYSXML`
 }
 
 # assign closest styles to missing ones
@@ -1205,10 +1226,6 @@ return
 
 PAYLOAD:
 ı7zXZ  æÖ´FÀŠ€ !      
-²äMàOÿ‚] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²D¨ÿ¬3s¤7Ãxü¶1=ÎH¯.yXdòv€ò$…\=‡^Šæ3!T¾…e¿ª*[…‚¾y1Äïóa«®µ£“¥‘ªÛ©	±š÷-‚	Ge7núZ46¤•5Â7p]¤Ka‡O¹¾¿SÄPöJØVSCy$š<†Î=©µÉõ‰\Øl–,uuÒL$Á8ùÅÍÔ…*b	ÁİA©rF^ú—¹‡ˆ¦‚ô]nÿƒy*Rr</‰«”úÇÓ+ı Èc/2-P‡İ7„ªvÓU¥­
-ü3Ó>îš	¤áö¥¤rÆ†'_™"Â:ßU¥|ÑöaúM1 yE¯¸ƒ˜2V*ôx=ö)ø®ıÚ«ËTß„ôR¦®Alˆİš/†7pV]«‘£ìîÁäÓf=y.#ª†L«òüÌîãGl‰¤ÑäÇ‡1Ô	ğ0¥"*¼ß`ü\}”E—háaÕÃ¤¨ØšS•?¹\œAb\è¦ ûØ6mí]6R’3×åx;•³¦›ı¸Gò*V-_ØL'A_h€T—mÚØÕÄä¾S}ı‰Ÿ‡0D©–Š”K!úù£Ò€Ù3Û90rïâr8ºh)ÖMû«OºÒm_£;ÊšËDÍÁøÍMd– š0¥¥Iò~„ÔçíAŠ„‰é¸†z'õ›Í@­¢¶1¸íbh‘ß»™Åì©~ó2Ïÿo¬[uW’/´ÔŒ9—ç-‘ß|6˜ †@/vc<ÕfÌ‡EÃİu2.Zêc(¬áKùz(è4)ãk±z—o8Õ—àşÖ{ĞÑÑMÙn’~/Nùûé¼ÿÉ0V-€¢NLŞVŞV0¯d5å_­ü®v+=‰§İÀKV˜Â&t#2„‡ú­Á#wjÈD°{Œ€õù©=n¸œ®bV…Õƒ®Òa+2š˜«=U8¥*3*®çó—ä¹¶I	¹¿FÆÕõßÉfçi {êŠD…œGK²'‹zà
-<ÿiü5HÍ3ŸRe³‚-ÒõtËÁ;í»ëü6<Ñ½-ŞzºmP€hŠ“eÊLy9²qz´0Ô--èJ =oõGsºöçnÕRLje"åpO=ÿ>Õù³†UÇ´ù^ïÑªù´>²Qyf=ÃğxB] qôóçN»Aô
-·l/]K?l+ÚÏ+€nH˜xe½ÿ‰4H—ÇÒ˜–NÙüe-’•ˆ§˜ä‚â)@J­HÕSƒr@`…†&ˆUD§Èyí‹‡ænÖ»»},À÷SÈ^#á®…;~ØKK´—-T¿ìø’äp+~R ´DŞ£¾œOdÔeri¹]oõ¥‡ÌV0
-ªhÁ½·-°Õ‹‹qsäê¿+È‚Š¤ÊW ÙõMAŞÆ•ÑÒÑùˆPvcBY…˜Œä‡ %xà/ÚØisP4àÀÅ¹šæ”;%`Ş¢Ş^K„Ë¶ĞWıÆØÜÍä!¶o‚B]Išà2§±5%÷‹½Íñ™*—pía>ˆ®~vÍœPØOøN**úz²Ü°çšqõÚT8—õ«ÊEØ8Šêè7¯¦Ùà<¯—y­%<×qŠ#xôfdœ şxÔ—XŸÖÂ&H¦Uñ°ZPÇm$T•á5ÌÍæ•Ş»½;„Ïj‡u£xFoúƒŒ|ÁšÉtt¸CÇgof|ŒœŠÍ<Xı€¦u”gNiHıº¡¦ËÛI¾\ß¾)ÆhÅ¢íšÔ(uÒM,ãıŒQ"Ø•åÄ¾·Kœ
-XÈ ùfÀj4Yø¦¬ç–ø\õTp;W,ÿ Ÿ]O¥ZÜ<¡,ÂMÍ·ë¦Á£XÉï‘k‡°¹¸9ö(îÍeøÕbèìsú’sÍ»ª§^ù°qíkLt†ÆËÄ,y › !/2ex:ñ,]ºBıø6"\áÔT²Km#¸èŠ¨f89ÒéC8>z@0f‘*È`âÀ˜Ó¦µ†•5ı$$ı"Së—QJ¯ª›Ğí*pŸ é²ã’]¦‘‹¤Âå·…Ğ´Û/Ôæß§Ì—%Šş Â˜½õIHj4áÜ4í|YÈh”ç¡:dG¿€İqT3°u>ÂGÃ=Öâ©e!¸‡‹[€BÏXÈïgSèµT˜!1¶7Ï2¸şZéöëŸƒL–üÅñÓ@ñüó·Jm©¦(82ÈZÂ­ŸŠÈŸ¹™uY5¹]ÓÜ™³lÒ 2+Ó£ìqU+ÈŒ÷gL®#]C¥hz¯àmFSáCl˜’;Ô0lƒ!CÛ¸¹Ëd¨Ò×.¸ìš¨üÂ»İæÔÒ*¶TFù/›?¢0{çÒ÷wmÛ	wOÃ®AË Øÿªd%'­œÇn6Ù¤˜Ã£İÙµyu€.FßM|ğ‰  
-h*#¼¥<Â»½pm«3¦~¦™“Øy”Aİ7òÙ¢šNÍ“FÒU˜M©5Ëq6—ÇQ±e¿u=(íHÙÌ@ßÅÙB¬A†   ÜÚìŞ¤„ä; ¦€  åkz£±Ägû    YZ
+²äMàOÿ‚] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²KGZ'”,Ê¢Š§o÷®Ä:—4®UÄ,hu> HšŞM3¦Q^zëí¬<>@Pü!İ.|¸1¾x¦Æ¥ÿJ‹:aØ:,óQÊz|(EAX=Ã¦AÍ:¨‚NÄ‰¸óª­é9Y[ãXî#ís 
+ğÄëVŒ-	™}a³Óñj¼*@^M£"ô«8H»dZCŞ!øHÍÒ}‰¥3 b¤{îˆBšrUÅ+	ân#+ŞhÖ^°W£xq`<¯Q@ù×(ƒ(Üvò‘A\Õbf»ôìÄ¾^kJi TÈª jòQŠ´zR¾Íi)ô¥!øÄBplUyãŒ?8µ(Gş•é^JÒ³[ÔÍ-+²Šµ²¢öT[ü²%Š¥§BiAº|m×ğ³¾§så.ÇÚ£p"%_b¿hK‚lÆñ$3WP˜ã9šŠŸCÛ›)™yer•=4È²=.'yë¯ëÑmÒ<ü¿ùT”wÆê`xj•Çv&àAå'¶=òŞTíD.ˆmçØE|Óe^ªš7BH)âŞMŠ‘.¯ûM¥Ï&®«ÅŠÛØªƒ`áÚ›.Cw´Ü³?pw·+o ¸ê(e+ë¥×ÛFª>ÅIÅŞ±m#A‰b·ğ²†”Litš1œ •šö…l ´c`–}&¦Vß¬œ²Zõô
+lknÂ¤Æ -[ZÏ~Â"…¬Õ+[	%ÒÇ§-½ˆè”%†=×ËÑl8—HsÊdU*4ïc2hÅ`ÄD8"0C3+€Ô,[°cx€»¬¦wïÒFüf§Øàò:kÔ /º¯]Ÿ/¤7cß¿í¼O¸å”Èñ¤¬f)Oí®¢süy”Áæ\Œ€ıòù³ï`Dµø)şPÏĞN‚w³&NCü8zÇí¹tQûavàTá÷º—ªíø'©[v@÷y“ä/HéQÄ4Ê•qt¼yë~=®¬ªQ/ZLÊKñè6Âè;&6+®÷µvQ¦p8ÊÌ]5¨ÚRß¤¿ÒŸö_7‚:.ól…»ÆH‘”½ E—	TjV‡zÒ>_´ñÌácüO'MÀnÙ€.åÊiwdï?÷7L7}Ò3iîTt¹Øº•åÃ7é·ªˆo 1o)Äv$–{”É° Wjo1“¹ç%®“á-DıÇËF ^Ûi5Š†utÜ{ÿÙŸ¨ÍBŠÕâ¬ñp†ß+XOfËq&,D)"íÈa×a¹6,HØ"6éÜy‹_Éê{ß³øãj…ƒ;(5[|-La­Øfˆ¡Ø~gz«˜jTßi ´”°“q@‚&é¯@dMGNñ‘a¯ÈÂ•Çxã!Kğ}wÁ8úÒ¶ˆ<—¦éQ”¨¹#"eó/ˆÃkHıgÆ¿C¯·ë¡ØJÄIt¿“ÊE=ï?E’½p1kg	zHÅsçG¬²ÜXé"kèÆøƒ)xmA ü= ®=ºÖ&¤Ñ	” !ğnÌÙ›Âì—ı—pGvX?ÏŞÎˆ¥„üG­Ok7Î8ÜeşÛœ£™öĞ‰YKœ3MÉ"§a­çcÆº®ã7¿úyV|!á¥Í“ÊÊmÓfrç¾JfIî±…¾ïÅ¼Š¿vÌ°CŸ "–•jÂ´S>©@ÉÖY¹B¤õät{ë]ê7şŞTÇbzîªl7¥õÀ(`•ˆÀØ•ˆHtátK˜T É³Õx¯¤8×AwåzüçÖÛ^ùmÌÎË#wÖûÕËŸ¨58ì:—ßê¶=M—ÎôdoU‘æÌ-ıĞï	â§6m[áwgÅ¨ŒÌÄôH]äÎÉ,J#Øº”"9Î4îKÍ)Ÿ­ùÌGÁÕb„ÂX°Kéï‡âV)%ÛÖz4 >±L0—b>U>m£¾¸Jü˜].—õhã†*«?·I½xBÍêgUıTg2YnKwo”Ô-`úÊÁûIÂ#§q%Ÿ\VOÓ·!Y vw‡ØB ‚?[ÕÍÆ »¨£*¥2Ÿ_?J8äí-ı"gœº>ì±4£CSädâ$Õ ¿éóºu¾ú;Ešfv^¬P´O*±f¼­•n†­´p˜+×îdt¤"T9›f Yï;ÿ)1•GŞŠ5,Ì»iFÅ¼šÚ„Ä†,PªûÓÄ»ÀÖ&Ü°Ñ	t:6úäÕÃÎvâQe:é	°ÍÇ‘ã“6±9'rdmqôO^ù$1Så¹à_…ËÔ-Ë&õdë·¸¨T¸¼ ª©sã">=âÛólœ²¡Z¾™ümÈ0Òx ÏÌ>³¦t¨µDñú¶ü³×hT‰%·ÇMSI¬	Ç°ÛucŠ<	éAIø†X˜pÂoQäqSí‘’ƒnS“	#wº4 ¦ıå1¡TW™Jƒ!‰_5d?+0ï£Vù—æ¼H„VÛ±•/Ìvü)êá(ïº§Ê°¸Ñ{r{    W*ÇNLW ¦€  åkz£±Ägû    YZ

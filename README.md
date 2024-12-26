@@ -1,6 +1,6 @@
 # Custom Font Installer
 
-[![updated](https://img.shields.io/badge/Updated-Apr_23,_2024-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/Updated-Dec_26,_2024-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![donate](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/ohmyfont)
 [![download](https://img.shields.io/badge/Download-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
 [![changelog](https://img.shields.io/badge/Changelog-↻-lightgrey.svg)](https://github.com/nongthaihoang/custom_font_installer/commits/master/)
@@ -11,7 +11,7 @@ CFI is a flash-able zip (based on [OMF](https://gitlab.com/nongthaihoang/omftemp
 
 ## Usage
 ### Static fonts
-- Put your fonts in this path `/sdcard/OhMyFont/CFI`.
+- Put your fonts in this path `/Internal storage/OhMyFont/CFI`.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
   Black            -> ubl.ttf
@@ -70,9 +70,10 @@ All steps are the same as in static fonts. Except the followings.
 - For `sans-serif`, there must be at least one font `ur.ttf` or `ss.ttf`.
 - If using VF, flash the CFI zip for the first time to get the default config file.
 - For TWRP support, download the [TWRP](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract it to `OhMyFont` folder.
-- Be aware that not every font will work properly on Android.
+- Be aware not every font will work properly on Android.
 
 ## Google Font Installer
-- Download and install [Google Fonts](https://fonts.google.com) easily.
-- Just add `GF = <fontname>`, e.g. `GF = Open Sans`, to the config file `OhMyFont/config.cfg`.
-- Static fonts only.
+- Download a font from [Google Fonts](https://fonts.google.com).
+- Move the download font zip to `/Internal storage/OhMyFont/`
+- Set `GF = <font zip name>` (e.g. the downloaded font zip is `Roboto_Condensed.zip` then `GF = Roboto_Condensed`) in the config file `OhMyFont/config.cfg`.
+- Only works with static fonts.
