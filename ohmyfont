@@ -406,32 +406,26 @@ prep() {
         ORISYSXML="$ORISYSXML $ORISYSXMLNEW"
     }
 
-    # umount fontxml to get the original one before updating the module
-    [ -d $ModPath/system ] && ! [ $ORIDIR ] && {
-        ui_print '  Updating!'
+    # umount fontxml to get the original one before updating
+    [ -d $ModPath/system ] && ui_print '  Updating!'
+    COMP=`valof COMP`; ! ${COMP:=false} && ! [ $ORIDIR ] && \
         umount $ORISYSXML $ORIPRDXML &>$Null
-        #abort "! Please remove the module first. Then try again!"
-    }
 
     romprep
 
-    # compatible mode
-    COMP=`valof COMP`
-    ${COMP:=false} && {
-        ui_print "! Compatible Mode!"
-        ver '<!>'
-        false | cp -i $SysXml $SYSETC &>$Null
-        find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -delete
-        return
-    }
-
     # remove fontxml from other installed modules to prevent conflicts 
-    [ "`find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -print -delete`" ] && {
+    [ "`find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -print`" ] && {
         ui_print "! Warning. Conflicted Module Detected!"
-        ver '<!>'
-        false | cp -i $ORISYSXML $SYSETC &>$Null
-        REBOOT=false
-        return
+
+        # compatible mode
+        $COMP && {
+            ui_print "! Compatible Mode!"
+            ver '<!>'
+            false | cp -i $SysXml $SYSETC &>$Null
+            find $MODS* -not -path "*/$MODID/*" -type f -name "fonts*xml" -delete
+            return
+        }
+        abort
     }
 
     false | cp -i $ORISYSXML $SYSETC &>$Null
@@ -1231,16 +1225,16 @@ trap restart 0
 return
 
 PAYLOAD:
-ı7zXZ  æÖ´FÀ‹€ !      |SëĞàOÿƒ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²KÅ¥^Ïe"Ñği RHGÀ”ÛÅL´ÍI	XSYZµŞœêSµ½x‡Ùr?’â]K	£ìñNê—ğ©Xi@BšĞ)Îê8®|}Wu'«ãªÊà½ËµÇ~ÕE ëØü¶£1m¸cåyİä—Y[nJÙ%UßŠé†é°İãÑV¥÷ı3mñ‹TZ"‹‚apTã·ã÷éÈ
-•ÅšwZG‹jVév!ˆuƒÀN\y”†2–àQµŞ;A
-U!”y'£w~¨I’òy0\Ù×´	ÆU8`XE‰_y5ã÷g<Rş%{ƒv$ùü’ÎI²0<êñH}f:ù‚j>ôz¯ğT‘Ê‚Â€ê®]W‹Š3ÂÖ¸ßbÖ#>gzĞğL}±“@iÀïİÿúSBt_¦¤nÂŞxCÓİø!¤ËcÄjm×Ë¡ÙêÿÄúƒÉg…Ë$hYŸ]çì·X?Ô@,[»ÃušT¿¿Z+®äÄ†QÃx¶¢s"faì¿… 'p©XäŠk¥ğÎ0¨8²~XÛx±²¥bA×¹¤qÖq0yîŠĞyer-“	3õ±¬:mÙ5]eoåÙöÆY«'hZ6]r¸Òæ¥“µ»ø>¥w’à½7ñwk*,§ ›-Qé¿øòš¯ï-d~â­G]vÜX¥\®ôp9ğíÏÛ/på	‚n1H¹92Ïp ¸Ÿ7×ºr¨+"ı‘ÖÉÃ¹Õò½¹	­™ÃIvyI?+İVÜŠG˜†®¥(ªÔºšñÔ–0~ÄªEì6Ïf—ÔÌò4İÄ0»12Ó–©
-ˆ`oÏÑ^c+:*‘í%®pUºšöYP;²ÌÀ£îÒÈ¬zû‘å¾¬ÕÕ'/)© {cêáŒ†¶Aß´„42Lz#ı‚ZÃ±¿ZJû>>¦j	Mëm°xô)zù^9‰Øá³M:Şå§ ÃŠlûó‡ªè³Š.‘WµâCaÌÇæ<¸Ã+8á~·ÍSÅHQt»7§dv›€‚[%Úó›çI5qÒ–È ÿĞ{æ@eS‰—q<Iâ¶´¦Å€$!ş†>†zÔÈûêZl8»ËÍßÏ2‡Cí41íg¢~Å?t®è6>äÂêX-¬ú‡r®À_Ù’OØ\ arTµG2µh~ñ	–ox¨¤Ã¿Û~Ş:İ¤ÿ´]y›Ìæ]ûYnàuÂ™;
-zV*cvpá]‚;&ÈqüôĞÕ£8¢´Wî‚5ÂWh ßgë,œWhÛÉĞÏ~±Mj±6¢Á¹ùz.9›dÆhÊ 
-{İÀjÑE¸@eWĞ«EoÊõÊMv	NS¤6’qŸ]~ÊÔñç9TÚ…-³äóH;<1Ên!òIä#§CH•ŞtoÖ,[•Úø¢à
-úò‚ÊŸ€@oyaKmÙG€Íæ¹|ÖÅk}õwòkK·©W¸5šú}—¹D¯äø™¸Ş-ìn(¡‰xó—j³Ì»VøÍ aQpA€İ¨aVˆı§:òé{=ïjû…‰1Ò_Ûİ!@AÉ»4ñF¥ÍÉd7˜Ó5®aÆÊîĞêî•Ïˆ<Ü´šÆSE3.
-d †9İÖ …è:gXûaÜú1n/­š/¨b
-tc	ÚòzIÚ¥Râìbu·QjlÍ)¡ëJÍtYïÌØÅ¤ğ™3‚§Ş·Q.à2ë,`Ğ>I3Ô	oá^8hUé;2ä UWe ³±ùI•¬zcË1µZYñœ³{´Ú3È!
-6Ê‰şI“|µ°pt’m¡ö	LŠù‚ØLS¡´¡€~æI„fH#
-û :Íkh“f7ßœæàì3ÔfôÉi Á5€Ñàm±­ÄĞâIqÙä´<~'¨uéYÇIBA¤ ì=¿ç¬Yğ@Ós3À×½†T°â¤á€zÇ4õ1ùBÛ¡—·:2ä0Ü»
-XX¿à”¡%Ü[ĞL®Ñ^G“ÜÌ„ÜèÒIz²S‘ïJ:1—A®‰HXğqHá- "A2®¶ªXşæl/Tÿãçq0ÿ%N#ñ¾/tÓÑßÁ	­c6Ğ
-$J[%ZôÅõ‰4jó/+z²b»]*ôªë·ó”³#üZ2†ğ$@"Ğ¬lş@G·8£"	Ôã7ÜJğ·WäteÄ0´&X•¹§-ÂÜ©m;|\ˆfìø$­×8jÛKg-ŠŠ¢F¬ÎyÌ×B†sÄ‘£OÁX§}ó_zká¡»;ûK<QK™¹>0àS…¹­†ïPÁŠ¢|8sÃ*òèŒÒfV¾²&¶ßòB0(aÅ*¢[;¢îĞŞÉ •KS¶P³Søí•ğo½,4>¬ì'7İÀÍFšâûÀ` ëPƒê^8{³‘9çÒòî}A!®s2OØØÌ:"™øËèêÛ-dµ[í$•q   ötFpBä §€  @¸&h±Ägû    YZ
+ı7zXZ  æÖ´FÀŠ€ !      
+²äMàOÿ‚] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²KŸ¸ğâÅ;›ôd¡Ë·IÿÁ¶ù¢¡óÿşÅ?¼Ø›|êiÖªíÿ±æŒÉ|ê&²¾³¢Ö6_L~c‡Í^.¯Ê(5}méØ8d ¬‘]gvdè%êÛ®²ÚœøÂßwêˆPxÒÒêcäL÷1$r0Ie"*Šb?½*gˆeM~q›XÛ2%™%³¡FB…jıöaÇá³i½†¢Ø=¹M‰¶Š)á¶AGÃĞ\øËÃC£¹ñ0üĞÄFß÷S@ÓŠ¶@Õâ “\^Tö~,•‘æºô`0‚8ZO§z;;k9nˆÕš8=9¡ÄÑlå:ú#Ü/ ùß–Tš6m,¹dÊ©Æ ñR%ÈúÛ´y]š*Qî|Î¬È©±÷DÎ²™—'ÇG‘&£›ªrpü[võRİ4È¦2iÅÙ*gŞ	ï,c4yáZÎƒ—¡7‡H­˜ßú]Wş‚*Êp1¾çùqÖS*ø†JÏ«Ú”`Çop6DGßXMµqÉï‘ÙŸÜÅA&‡°G¢ªYtg¥/±RÌ+R€0à¨Á1¤_ûµÑÁÀR@§×’6Ï&æjc%ûáßCÒ#/ÜèM¡ˆ[øNÿvò
+^h{lGWÔèM7ğ MŒq0÷]kêwDË)ÔÔş%ïUgí'èÊ±œSÅ\$bvæâ°—ºÄ+JºÕ9Dó>sgZÁO2öÙ2³ƒ	Ê•ö.}¿¢yk7ê¨æã:³NláEÈSËìÓ<ç¡'9„èRhpÏ#¾¤ê7&¡8ù„¨÷ĞG4eÉ4jy| qš¯¿1y~4l¹VHÀ ôJ£ÇÄq6ŠY×êÌ¸ãûû œwx4ƒ×Äˆ1–ô\¨wÊÄJÕë4”¸¿tíHŒ£~ÙÑğÓä”¶¨ÜU‹êŒí­€öªQ’Iñ9n?±€Aÿül_—)ãÎlæÀp´ÚÏæ2GS“sjŠŠbÛâGØhõÃÇæúWy*Æh)Á)³ÔüñYhlnr…)^Ë8³šñ¯©¼]ï:î
+WèùtÔ¬-Õ§6Í ††Ou”êÄKûÀKˆ\|³CéªíWÃ€!A×inS¨¸œÁ$¾7“¶Eh	7uŠM×»õù×n{Gº®aHš>´–Äš­à—“á¦}yëv#ï
+p”Éòœğ¬÷¢ïÉÖ®°ü=±9D‹ÊÄèØâ4‹&”â|r×-Q­<‘\Y…1GéGX·†L:6lëú,­–
+sjÙèÆ“Kÿ{l!õE<#Ø"Å×m–]­„,²ÂçÙ}}âù¥Ğşj‚¨øÂ|{¯!=³BbŒ\R]€jå	F‡éæ4ÖêF6¯AğŒLïê– „zİ/ù>„hú©Ç¿Ô£#¦ê÷ùÄ¾ê¢9%e×:…ÊâÖˆl+ÖXnFê?&e
+.›Ì+Øc;´h»{ixŒ·Ñ9C:}úíÑ}0˜$qæÍ¯MîfRÇs‰!‚†ÆTËc5ç#áè\Üÿ4Ù[ÀzşL«e¼ÿsiŠÙÁ’3ˆZ‚æ„_ÀàtôZåguÁaÍ.ş¢ƒ#-ú»"vnĞÒ+u±T…ú°}™ß'ÇI‘¦ËúkôÁ
+
+rNkí.–51[&ÁPäf÷ß×nz<wônêĞT©çÖÑşz°ó¨'	\¬Pú_u¡¯2•’ "#µçŸ‰x)Çı¼ãÃœÆÛ,C§OÇ‹@q—Z´ùş@W-ƒ@úŸÆéøÔá 	«ËÍ‰ğ@Å/$qŞÎîWXhG
+¡Q>Á­­D¤ñÛüø(Ü{«î¾w×ˆy+"µà+/ÈJéäh«4’ÅÅ>¢*‡rŞ×=×¿u.éÉ|ebJ(*‹íBmAW—G}¡vÌ[¸Æd7YÕª
+˜ê§¯v##¹»ñšÌ<’AŒÛT5ëáG€h¢Ğæ÷ñ5ü°öô2ášõ¯S½µy]Fµ../9†j®ªhh²İÚa¶åÒä½İÚø¯YÈğ¼imàC§ÍÕ¨oD¢ÔéT(ÎGQv‹í\BY?¯L–	:SLÛèĞñPÌ½¯¶å?ÂSS¦¸ieúÂº´Ş6
+ˆëEc6Øæ,ÀğÓª-¡æ¸à…6³®Ñ²Å¨n¼Û<ŸU\ ¼S†_)Ñ¹w:|b¯ú	Eµ|®$?Mú€‚:d××ğMs8·!aÎ@xN…Îª¬û%IÛ*‘Âéä„1
+òœ˜.†N2Óû3«’ıfŠ‡møY`Sìsˆş!²…]CÏñ¸¥o‹íÈdÉ·pl{+{hóÑVğ|–CÉÜïªåübZwH{aMbÓ¡é2XH••º+Ïãä/ú=4N« ÇÇ§²1—4eÍŸE‡F)tì5h·sò*ìÛğ•ÊQÂ;Ö­íî›”<nÃHI1IF›   ‹è%èJ‹ê ¦€  åkz£±Ägû    YZ
