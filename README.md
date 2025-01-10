@@ -11,7 +11,7 @@ CFI is a flash-able zip (based on [OMF](https://gitlab.com/nongthaihoang/omftemp
 
 ## Usage
 ### Static fonts
-- Put your fonts in this path `/Internal storage/OhMyFont/CFI`.
+- Put your fonts in this path `Internal storage/OhMyFont/CFI`.
 - For `sans-serif` font family (i.e. Roboto), rename your fonts as below:
   ```
   Black            -> ubl.ttf
@@ -74,6 +74,7 @@ All steps are the same as in static fonts. Except the followings.
 
 ## Google Font Installer
 - Download a font from [Google Fonts](https://fonts.google.com).
-- Move the download font zip to `/Internal storage/OhMyFont/`
-- Set `GF = <font zip name>` (e.g. the downloaded font zip is `Roboto_Condensed.zip` then `GF = Roboto_Condensed`) in the config file `OhMyFont/config.cfg`.
+- Move the download font zip to `Internal storage/OhMyFont/`
+- Set `GF = <font zip name>` in the config file `OhMyFont/config.cfg`.  
+  E.g. The downloaded font zip is `Roboto_Condensed.zip` then `GF = Roboto_Condensed`)
 - Only works with static fonts.
