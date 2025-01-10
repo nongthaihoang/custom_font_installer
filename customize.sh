@@ -2,7 +2,7 @@
 
 gfi_dl() {
     #local family=`echo $@ | sed 's| |%20|g'`
-    font=`echo $@ | sed 's| ||g'`
+    font=`echo $@ | sed 's|_||g'`
     #local link="https://fonts.google.com/download?family=$family"
     local zipfile=`echo $@ | sed 's| |_|g'`.zip
     local zip=$OMFDIR/$zipfile
