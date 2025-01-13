@@ -72,7 +72,7 @@ ver() { sed -i "/^version=/s|$|-$1|" $MODPROP; }
 
 # shortcut for sed fontxml
 xml() {
-    [ ${XML:=$SYSXML} ]
+    [ "${XML:=$SYSXML}" ]
     local xml
     for xml in $XML; do
         case $XML_LIST in
@@ -864,7 +864,7 @@ otltag() {
 
 # font features
 otl() {
-    [ "$OTL" ] && afdko || return
+    [ "$OTL" ] && afdko 1 || return
 
     ui_print '  OpenType Layout'
     local font ttx otl
@@ -1163,13 +1163,13 @@ install_font() {
         if [ $SANS = true ]; then sans
         elif [ $SANS = $SE ]; then serf $SA; SS=$ORISER SSI=$ORISERI
         elif [ $SANS = $MO ]; then mono $SA; SS=$ORIMS SSI=$ORIMSI
-        elif [ $SANS = serif_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI; fi
+        elif [ $SANS = $SE_$MO ]; then srmo $SA; SS=$ORISRM SSI=$ORISRMI; fi
 
         # initially assign font file names to their corresponding variables
         local f; [ $Sa ] && \
         if [ $SANS = $SE ]; then f=$Se
         elif [ $SANS = $MO ]; then f=$Mo
-        elif [ $SANS = serif_$MO ]; then f=$So; fi
+        elif [ $SANS = $SE_$MO ]; then f=$So; fi
         set $Bl$It $Bl $EBo$It $EBo $Bo$It $Bo \
             $SBo$It $SBo $Me$It $Me $It $Re \
             $Li$It $Li $ELi$It $ELi $Th$It $Th
@@ -1199,14 +1199,14 @@ install_font() {
         if [ $SERF = true ]; then serf
         elif [ $SERF = sans_$SE ]; then sans $SE; SER=$ORISS SERI=$ORISSI
         elif [ $SERF = $MO ]; then mono $SE; SER=$ORIMS SERI=$ORIMSI
-        elif [ $SERF = serif_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI; fi
+        elif [ $SERF = $SE_$MO ]; then srmo $SE; SER=$ORISRM SERI=$ORISRMI; fi
     }
 
     # monospace fonts are only allowed to be switched to each other
     # monospace
     $MONO && {
         if [ $MONO = true ]; then mono
-        elif [ $MONO = serif_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI; fi
+        elif [ $MONO = $SE_$MO ]; then srmo $MO; MS=$ORISRM MSI=$ORISRMI; fi
     }
 
     # serif-monospace
@@ -1251,9 +1251,8 @@ trap restart 0
 return
 
 PAYLOAD:
-ý7zXZ  æÖ´FÀØ€ !      :½‹àOÿÐ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²K?‡Úaúº+§‹CiZ}Smƒ[Bþ þŒu0³o¹‚0A›[ªœhM³f^kUH‚|–FÈz9"WbÏ¨`×z(iqôi`e@3w\r¤…Š½ñ%€Õà àæ¯`#J¨±¯ð-ó ¿¥ŠQ]œð¸|…€µ¶"!?zªSÜXImý$Ç·cžDTæ„.Ï!ýB7£úVjÇHºQéäê6‚•#•Éx/™Àm/	Kç#¨ëŽ‰ÂOì{öïaÒfâ*zJ:Y¿±õßÿEÃmÚÉà@‡æÂÉHXU›#ýÖ}¥.½U”*Ñ¢è6ç—óµ¡‰ëO{Óñ¸\²è¦Ê*QU®^Evv‡¥%Ü±©MÜ/©ªÔ\³€‘*E ¸Nð—Îö3è.Ö›Ò²mAjà¢¾[‰KLCîTò¥¿ÇF¡­Ànæ4Ï–@J¾ÉÁ{ÊçÐ×ì„ÇÔûSå8M¥ w9Oç‰SU¬ÎåŒpª-®.bBg÷Ú½8çã	¼SªøB=k~²ÏçÄ­÷j+'ypÚßóÇb3>Oáìy°8|ÉÑ~Ëð¨qi;¯“ŠO"¯,¯RyKd1p­J
-ß¸ŸYMPzØ©Ú$“jÕ`­ž(sŒÍ¦O§vb4¸a¾Ö²B²õ\Œ'7m"@ŠyþsU¢Us¹é^“À"M?4"¦„SrNÝÄk|0ø%ù¼ã†ÍZPiÿÈ uýAîîqL{ò,vi]‹½‹R‘¿†¢³YEÎÂÈŒd<‡Åq™X¿vâ#WÖ_¦ŒöÑ¹q’ˆå¶÷Dp5$‡ÏŠŠ]¡ÁÈ?`{”å4É!ÎÀ²Š&‰Y¼EWcº£ëÝš˜¯`ˆ¨Ì‹]Ñ­Ù&ÉI©€fPpÆËÀÕVx3+6u¥Q5²®
-r<GÈÐå—j÷–õFEÞFTpž°1º—¢¯2#*«SlpQî†à¼6¹¥™z	#Ø.W/Ï)‚ðv²üºÊ†ìíÖ9£…HãŽºäaÀ['-Š$n[£)KKl3jÁ˜#¤¢Œçm¼æ=c—LM]”œwß‚zÆ8ƒX¦‰¼ÓcVîøšªlVï³þ ³&°Q§]œÎéßc7èÛPÖqÕnšë¶9J×pœ—Z·"ÐÔ*û/-ÉîK;'Žw·çögŸ?Ÿk~ˆÓ9èÚò†´;RUJE' 6Ùzg¼v6‰aë= g%%àÕ{beJßA±	Ÿ/l#Ž|1ry£ýqí+£†•
-ùWxö)"Çf¶#³rž@2}Èv‰DE2KJõAoÞûãGZ•Ê·Ê‚©æŠºÁ¾.Û¥lŒù§ð½,]zç†Üž - œüàXK“{ÑË£ÑV‰®ã¿ì„×Íí¢Ó–Yx
-òYf³³Jµ{or,B×f»¼§áeäö]ñXÀ–•—¡•[uëpð6Öw…‘Úµ‰‡™Ý‡ªçVgdbææëøµ|NqÙÉ~žž/ŽI¯ë³móò&&lÌ;ê£Ó”+Ð`7P5ßÇxiÁÿ-Ã‹p+C/e|?¯%+Z¸töó½DyåôZåÂˆ{fÇe›kˆÿY¥Aê:UO`ÕNÐ”uJÅb-^Ÿòþ»òó#qA™AžQü)¸7ÜþÞvÔõ§Ìdì#þp$´Ã²ÏG°pŽ/äŠÀÄüÖËãRK‡SPíDF†V_9TaùAàbêhïH˜]j\,@BWÊ ´¶„A[˜ß0g„OÈ…dËmN¥B»ÏG¸À˜mS4²RÁÅÞ9ÿŠ.Õè¥›¯fo‘¢PóŒ§$fD}Éy k†Ë”3;fŽ{„jÐöw2òHRÓÂ4ÈNyÔ»‡Ï­:³×\F'è{l&ˆ…ýK*ßIÎ“i†Ö!èëbB•‰g'¦3à½+	<ƒÓòý±«‰à¤«	j‚p"¤ºS:M–=Ú|œ~&ý†˜áèô@H6©c|†¯Á¸Ã±^]x³×™ììì×òQ/×%ˆs[ÛÍ%”ë’ç±‹v±ÿåx«Ïá‹î ÉÐØŽËÎ³´".IþÁÇ_oŒ×Ï'îfAbÚ%µ¤ü’)ˆ~²o/ðûºŠlM€|{o¸0eno‰¬~L^_ôùcÒñ¡—Q ì\ÆÅvÎ¥ú¬yväÂ.­’ƒ‚0¹Ç(‹AÂ%Ù¢«ÜP²"$I»ýqe©çñSh˜«±î¶¯N–ƒÍÞÏ3Ìÿ »œ<ZR>2†F»³ø²r •ýF©å~½ËŽ–ˆq6â « ™óÖ©à"b àé¡_œµ{mUðh |¼¦Ò¼
-tÂDÐ1·1¸×‚Ow†]tÈ‰ÁÓà‘¶„2ˆœ*,,"ùoJÛQeX©švåL^‡Š'bðÖï'¢‡ŒÊ ÁËlG²%c+,ô¹ÇBìõ¥ašÝµô‰³ó%~ÅÎ‚ïfá!0ú ¡@Ö¡HÚìÓÅD-TÕPÝœ“›ìö<ˆtð8ŸýQ	MÎPE?òö0ˆÃ%Þ‚úŸ+Ó8_VBÒ“Ït 2»R%x[ ô€  Â<â±Ägû    YZ
+ý7zXZ  æÖ´FÀÚ€ !      —yïjàOÿÒ] 3ÊÛ¹áhÈ?7äÛ=Pöc{AÒ6²KáÈ¤u@C¼ Šmj/+SIKìþkÏbZÅ¨¢8€Ä0,‰XÆoŽ=!Õž=u `<z˜·x}c—˜PWg/HÙ$˜-/Èy¬÷¯x~Áé.Ý¿`×k}´.l…S\S4Z¹g³wÑ»ŠÚ9Ø|Wˆ~b+ãU«Ì¥p~f±°Øvì8²Èòï'Y0r0ä_åCÏ*œW¹tGj\vw} ^–ÊÀªÑþ¨Ÿ¦M™Ê‚†|®úÔ	0bƒm‹”#Ô>gÕ"	›=$‚+$|=GÅ­¹u×Y™ýnžÊŒ—­£HéÌ¨+õµ\¯Ûf½¤gêqáBÇ¶·z$ÛïŸz¼WC‹kgèòÂÒ™äî;¥1üç¶ÑUV¬Ww6NˆÝo¯»ŒôÐNC;µ&;-Sã»þå®«¡ûV˜jùãômó’¶×ÿRÐ˜¦² ãcv¡z´·øl‡¡õ©RèÌ¡Ëè9Yî–!§ñžçÒ)ouN= *¹ðB†¾¦I–¿ fpÿC,JAuWFlq>Xƒ ^ÊÊ—.éŒ{Ìî{G@jì—aŽ{iF#3-2\ï˜þ¬¢³ÒoœÈ·âÐBô½®Æq°húï5/!Û.<d¾N°N?Fˆm<cî…*’¬›Ð¯žŸ¢ÔxOÐã¾é…çìg\4pÎì5™“P…;qà:êxÙk!&ÍÑZ¤,¨hQö+¸êÎ,NY4ó*Ûg­ñ~$Z ÕÍ°iN¡n¢ó-|Z¢
+¡Ë„n©×WôœXdÚåœN”:eŽ¾õ¾þ»…‘ŒF€_qTÛwsÆÊÃ‰p!qL#AîÛ]Vce«ÄžÍÛQïh‰¸êp3|vŽ•|˜ÐQKXøŽèm¡½uàîÕ‹æ:Ýžýè’S‡å¾jQˆCô±èX$–‘\#{ýübç…Ž)[®š+Éá´Õ	qa
+Š,í²{Ø’H{’­ŠÆãp2€˜_Ó4Fî	|ô*Æâ\B¤g$èôQQû.®ÜÎÓÁÚ6ým„¯÷göä7·VÇ $3k¼j)i½¾‘œd]hì~^ÞÈ„—mÚ6ËØàž¾,!·püÛ=sc2¯"àÄmØî‰Ô™bÆ`J]%üç»	:å>2¨ÇP¥€OîÜÄHR+ Š‚æ±ánðÿtù¢ó3=£™vSâÌ°‹Ý§8Ò†;8“='\BàìüE¡ð±¦yÂçq|ðøÞG†:²æ˜SñŽ†¬W’#pƒ¡Ÿ¥0S]ÿ±ÖèO±ã> aßÐž	QlZ£n“=t²È c¹œÂFÀE™’}k æî¶<R3-TU˜B·
+	3ÕO,Æ4Pcƒ@þ0 /µ1£k'ÈPÊs£ÍÓV»÷¯qâÂ0Œ¸ý”×CäÀg´±YÉ¼až?€ÿc?BîGã• R´+rÛ> õ(R…Âº¨ë>« šþL¼Ìtw÷	ƒ”C¹çy§‘rÑŒýuï³_¸;‹!ÃV¨úaét$>Ez(”œÛ¼”Mð¦=D	Á¢R/ºŽ\dvr(gYˆz÷þ6ŠpOÍÍ\—ü „ºÌÉ@´\¸ B8|öˆT}c–+ÕÑXÂÇcBÞuÁ86	ö@µDÞiJ¨V`-1	)ï¸üðnNÉ|DýebAÇ‘ÅçÃÏÖç’<ÊÖªYœònƒGuüªv“©x„“I¬¸ˆ#qõ´5ìµoQbS&ŸT—‚—:þ¯‚YÓûHêÄ‘Ë£P`^Ç:^™¼JÝ:<¼Ã<e'u*¤Ú‰©²ü=dÿ´TBT(FYh’ÎìkÁÞš#ðd¶=ºñ áÁÊ*j)·à ìQ½Pï] ÷4¯ø%Q†Sdò5!ýØ,'Ø^”òÀòôþÊ«jÆ¼züÿï7çÃÙW07^7×ÐpkaÀ¨~7ãÆôçC~Ÿ•2öÞ"Øº£=Â<ðN>ÙÎùÎU´ýú‘<Ûl©F&¹'GLx½ÐÏ6'jO„\n<
+²¼5kÛ¹D´]‡‘{qn€Dšûf˜vž™–€ËX¥YoQæ’¸Ù(£Q 99€m»¯üÅ&DTµ.°P”h†ÝAª¬y$Þ'vX—Œ‘0¿RwklÎcßWû¸ÌÆî8h„±ýÇ«¬pp4&_@ì’v‰“kX à%gÁLQÔïÕ˜ #  Bµ¹ì"#_M®Â|¾eŒ	o˜%mf¬é+ð½º}DÅ3R '¹Gi×1¶kx™ÈVÊíÖc_æïÁ]éqƒŸéÏúúã¿FÀõtÁå1—$M®m3Ÿ9‰zD@w+O­ÑMÜ5¢ZåŠÂ/\ÑÛÇ9Á-„¡ÂKMU®'v–”D¼@F«Ý:ß‘ Ñî^ÔÂÔ»Ö„{b`8©s3¸·ÿkä™'èp1gÒyýRMˆ–™OÊÚÌ6üsÑšëõ$€«Ø™‚Ì¾–ŽFe<}4ybâ{êº™‰©R›vÑg«À®‚ûgŽ÷w=®SÙÄ ¤¡/âºO)=&=ÃìÄŠ8Î7ë-±]    >£K¬­Eá ö€  cô¯±Ägû    YZ

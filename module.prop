@@ -1,7 +1,7 @@
 id=customfontinstaller
 name=Custom Font Installer
-version=2025.01.1301
-versionCode=2025011301
-omfversion=2025011201
+version=2025.01.1401
+versionCode=2025011401
+omfversion=2025011401
 author=nongthaihoang @ GitHub
 description=Install custom fonts manually.
