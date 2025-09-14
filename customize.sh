@@ -67,9 +67,9 @@ gfi() {
 
     $SANS && {
         [ "$GF" ] && {
-            ui_print "> Sans Serif"
+            ui_print "* sans-serif"
             [ -f $CFI/ur$XY -o  -f $CFI/$Re$XY -o -f $CFI/ss$X ] && {
-                ui_print "  Fonts exist in $CFI. Do nothing!"
+                ui_print "  Fonts exist in $CFI. Skip!"
             } || {
                 gfi_dl $GF
                 ui_print "  Preparing $font"
@@ -77,15 +77,15 @@ gfi() {
                 [ -f $CFI/ur$X ] && {
                     ui_print "  $font has been saved to $CFI!"
                 } || {
-                    ui_print "! Failed: there is no Regular font style"
+                    ui_print "! Failed: There is no Regular font style"
                     abort "  Please rename fonts manually in $CFI"
                 }
             }
         }
         [ "$GF_condensed" ] && {
-            ui_print "> Sans Serif Condensed"
+            ui_print "* sans-serif-condensed"
             [ -f $CFI/cr$XY -o  -f $CFI/$Cn$Re$XY ] && {
-                ui_print "  Fonts exist in $CFI. Do nothing!"
+                ui_print "  Fonts exist in $CFI. Skip!"
             } || {
                 gfi_dl $GF_condensed
                 ui_print "  Preparing $font"
@@ -93,7 +93,7 @@ gfi() {
                 [ -f $CFI/cr$X ] && {
                     ui_print "  $font has been saved to $CFI!"
                 } || {
-                    ui_print "! Failed: there is no Regular font style"
+                    ui_print "! Failed: There is no Regular font style"
                     abort "  Please rename fonts manually in $CFI"
                 }
             }
@@ -101,9 +101,9 @@ gfi() {
     }
 
     $MONO && [ "$GF_mono" ] && {
-        ui_print "> Monospace"
+        ui_print "* monospace"
         [ -f $CFI/mr$XY -o  -f $CFI/$Mo$Re$XY -o -f $CFI/ms$X ] && {
-            ui_print "  Fonts exist in $CFI. Do nothing!"
+            ui_print "  Fonts exist in $CFI. Skip!"
         } || {
             gfi_dl $GF_mono
             ui_print "  Preparing $font"
@@ -111,16 +111,16 @@ gfi() {
             [ -f $CFI/mr$X ] && {
                 ui_print "  $font has been saved to $CFI!"
             } || {
-                ui_print "! Failed: there is no Regular font style"
+                ui_print "! Failed: There is no Regular font style"
                 abort "  Please rename fonts manually in $CFI"
             }
         }
     }
 
     $SERF && [ "$GF_serif" ] && {
-        ui_print "> Serif"
+        ui_print "* serif"
         [ -f $CFI/sr$XY -o  -f $CFI/$Se$Re$XY -o -f $CFI/ser$X ] && {
-            ui_print "  Fonts exist in $CFI. Do nothing!"
+            ui_print "  Fonts exist in $CFI. Skip!"
         } || {
             gfi_dl $GF_serif
             ui_print "  Preparing $font"
@@ -128,16 +128,16 @@ gfi() {
             [ -f $CFI/sr$X ] && {
                 ui_print "  $font has been saved to $CFI!"
             } || {
-                ui_print "! Failed: there is no Regular font style"
+                ui_print "! Failed: There is no Regular font style"
                 abort "  Please rename fonts manually in $CFI"
             }
         }
     }
 
     $SRMO && [ "$GF_serif_mono" ] && {
-        ui_print "> Serif Monospace"
+        ui_print "* serif-monospace"
         [ -f $CFI/or$XY -o  -f $CFI/$So$Re$XY -o -f $CFI/srm$X ] && {
-            ui_print "  Fonts exist in $CFI. Do nothing!"
+            ui_print "  Fonts exist in $CFI. Skip!"
         } || {
             gfi_dl $GF_serif_mono
             ui_print "  Preparing $font"
@@ -145,7 +145,7 @@ gfi() {
             [ -f $CFI/or$X ] && {
                 ui_print "  $font has been saved to $CFI!"
             } || {
-                ui_print "! Failed: there is no Regular font style"
+                ui_print "! Failed: There is no Regular font style"
                 abort "  Please rename fonts manually in $CFI"
             }
         }
@@ -158,15 +158,15 @@ gfi() {
 
 ui_print '- Installing'
 
-ui_print '+ Prepare'
+ui_print '+ Preparing'
 prep
 
-ui_print '+ Configure'
+ui_print '+ Configuring'
 config
 
 mkdir $FONTS ${CFI:=$OMFDIR/CFI}
 gfi
-ui_print '+ Font'
+ui_print '+ Fonts'
 cp $CFI/*$XY $FONTS || ui_print "! $CFI: no font found"
 [ -f $FONTS/$SS ] || SS=
 [ -f $FONTS/`valof SSI` ] || { [ "`valof IR`" ] && SSI=$SS; } || SSI=
@@ -182,9 +182,7 @@ install_font
 cpf *$XY
 $SANS || $SERF || $MONO || $SRMO || $EMOJ || rm $SYSXML $PRDXML
 
-src
-
-ui_print '+ Rom'
+ui_print '+ ROM'
 rom
 
 ui_print '- Finalizing'
