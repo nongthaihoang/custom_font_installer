@@ -7,7 +7,7 @@
 [![donate](https://img.shields.io/badge/DONATE-$-pink.svg)](https://buymeacoffee.com/nongthaihoang)
 
 ## Description
-CFI is a flash-able zip (based on [OMF](https://gitlab.com/nongthaihoang/omftemplate)) that allows installing custom fonts manually via Magisk/TWRP.
+CFI is a Magisk module (based on [OMF](https://gitlab.com/nongthaihoang/omftemplate)) that allows installing custom fonts manually.
 
 ## Usage
 ### Static fonts
