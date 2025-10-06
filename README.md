@@ -1,6 +1,6 @@
 # Custom Font Installer
 
-[![updated](https://img.shields.io/badge/UPDATED-Sep_14,_2025-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
+[![updated](https://img.shields.io/badge/UPDATED-Oct_06,_2025-green.svg)](https://github.com/nongthaihoang/custom_font_installer)
 [![telegram](https://img.shields.io/badge/CHAT-Telegram-blue.svg)](https://t.me/ohmyfont_channel)
 [![download](https://img.shields.io/badge/DOWNLOAD-↓-yellow.svg)](https://github.com/nongthaihoang/custom_font_installer/raw/master/release/CFI.zip)
 [![changelog](https://img.shields.io/badge/CHANGELOG-↻-lightgrey.svg)](https://github.com/nongthaihoang/custom_font_installer/commits/master/)
