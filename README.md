@@ -69,7 +69,6 @@ All steps are the same as in static fonts. Except the followings.
 - You don't need to have all font files listed above, just use what available.
 - For `sans-serif`, there must be at least one font `ur.ttf` or `ss.ttf`.
 - If using VF, flash the CFI zip for the first time to get the default config file.
-- For TWRP support, download the [TWRP](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/twrp.zip) extension and extract it to `OhMyFont` folder.
 - Be aware not every font will work properly on Android.
 
 ## Google Font Installer
