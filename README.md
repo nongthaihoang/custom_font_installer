@@ -77,3 +77,5 @@ All steps are the same as in static fonts. Except the followings.
 - Set `GF = <font zip name>` in the config file `OhMyFont/config.cfg`.  
   E.g. The downloaded font zip is `Roboto_Condensed.zip` then `GF = Roboto_Condensed`.
 - Only works with static fonts.
+
+## [OMF Extensions](https://gitlab.com/nongthaihoang/oh_my_font#extensions)
