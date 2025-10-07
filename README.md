@@ -78,4 +78,7 @@ All steps are the same as in static fonts. Except the followings.
   E.g. The downloaded font zip is `Roboto_Condensed.zip` then `GF = Roboto_Condensed`.
 - Only works with static fonts.
 
-## [OMF Extensions](https://gitlab.com/nongthaihoang/oh_my_font#extensions)
+## OMF Extensions
+- [AFDKO](https://gitlab.com/nongthaihoang/oh_my_font/-/raw/master/extensions/afdko.zip) @ [_Source_](https://github.com/adobe-type-tools/afdko)  
+  Required for advanced functions (e.g. LINE, OTL, LSC) to work.  
+  Download and extract the zip content to the OMF folder.
