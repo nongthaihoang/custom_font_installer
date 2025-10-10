@@ -1,7 +1,7 @@
 id=customfontinstaller
 name=Custom Font Installer [M3E]
-version=2025.10.0601
-versionCode=2025100601
-omfversion=2025100601
+version=2025.10.0901
+versionCode=2025100901
+omfversion=2025100901
 author=nongthaihoang @ GitHub
 description=Install custom fonts manually.
